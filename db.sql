@@ -1,0 +1,45 @@
+CREATE DATABASE IF NOT EXISTS ccs_db;
+
+USE ccs_db;
+
+CREATE TABLE IF NOT EXISTS users(
+    id VARCHAR(16) PRIMARY KEY DEFAULT UUID(),
+    name VARCHAR(50) NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    year INT NOT NULL,
+    speciality VARCHAR(50) NOT NULL,
+    faculty VARCHAR(50) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chat_rooms(
+    id VARCHAR(16) PRIMARY KEY DEFAULT UUID(),
+    name VARCHAR(50) NOT NULL,
+    availabilityDate DATETIME DEFAULT NULL,
+    isActive BOOLEAN DEFAULT TRUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_chats(
+    id VARCHAR(16) PRIMARY KEY DEFAULT UUID(),
+    userId VARCHAR(16) NOT NULL,
+    chatId VARCHAR(16) NOT NULL,
+    isAnonymous BOOLEAN DEFAULT TRUE NOT NULL,
+
+    CONSTRAINT fk_user_chats__users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_chats__chat_rooms FOREIGN KEY(chatId) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+    UNIQUE(userId, chatId)
+);
+
+CREATE TABLE IF NOT EXISTS messages(
+    id VARCHAR(16) PRIMARY KEY DEFAULT UUID(),
+    userId VARCHAR(16) NOT NULL,
+    chatId VARCHAR(16) NOT NULL,
+    content VARCHAR(2000),
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    isDisabled BOOLEAN DEFAULT TRUE NOT NULL,
+
+    CONSTRAINT fk_messages__users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_messages__chat_rooms FOREIGN KEY(chatId) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+    UNIQUE(userId, chatId)
+);
+
