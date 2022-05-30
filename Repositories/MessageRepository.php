@@ -10,6 +10,22 @@ require_once(APP_ROOT . '/Models/Entities/Message.php');
 class MessageRepository
 {
 
+    public static function createMessage($userId, $chatRoomId, $content, $isDisabled)
+    {
+        $con = new DB();
+        $query = "INSERT INTO messages(userId, chatRoomId, content, isDisabled)\n" .
+            "VALUES (:userId, :chatRoomId, :content, :isDisabled)";
+
+        $params = [
+            "iserId" => $userId,
+            "chatRoomId" => $chatRoomId,
+            "content" => $content,
+            "isDisabled" => $isDisabled
+        ];
+
+        $con->query($query, $params);
+    }
+
     public static function getAllDisabledMessages()
     {
         $con = new DB();
@@ -17,6 +33,20 @@ class MessageRepository
             "WHERE isDisabled IS TRUE";
 
         $rows = $con->query($query)->fetchAll();
+
+        return array_map('CCS\Models\Entities\Message::fromArray', $rows);
+    }
+
+    public static function getAllChatRoomMessages($chatRoomId) {
+        $con = new DB();
+        $query = "SELECT * FROM messages\n".
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS TRUE";
+
+        $params = [
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $rows = $con->query($query, $params)->fetchAll();
 
         return array_map('CCS\Models\Entities\Message::fromArray', $rows);
     }
