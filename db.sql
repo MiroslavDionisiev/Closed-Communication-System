@@ -17,30 +17,29 @@ CREATE TABLE
   IF NOT EXISTS chat_rooms(
     id CHAR(36) PRIMARY KEY DEFAULT UUID(),
     name VARCHAR(50) NOT NULL,
-    availability_date DATETIME DEFAULT NULL,
-    is_active BOOLEAN DEFAULT TRUE NOT NULL
+    availabilityDate DATETIME DEFAULT NULL,
+    isActive BOOLEAN DEFAULT TRUE NOT NULL
   );
 
 CREATE TABLE
   IF NOT EXISTS user_chats(
     id CHAR(36) PRIMARY KEY DEFAULT UUID(),
-    user_id CHAR(36) NOT NULL,
-    chat_id CHAR(36) NOT NULL,
-    is_anonymous BOOLEAN DEFAULT TRUE NOT NULL,
-    CONSTRAINT fk_user_chats__users FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_user_chats__chat_rooms FOREIGN KEY(chat_id) REFERENCES chat_rooms(id) ON DELETE CASCADE,
-    UNIQUE(user_id, chat_id)
+    userId CHAR(36) NOT NULL,
+    chatRoomId CHAR(36) NOT NULL,
+    isAnonymous BOOLEAN DEFAULT TRUE NOT NULL,
+    CONSTRAINT fk_user_chats__users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_chats__chat_rooms FOREIGN KEY(chatRoomId) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+    UNIQUE(userId, chatRoomId)
   );
 
 CREATE TABLE
   IF NOT EXISTS messages(
     id CHAR(36) PRIMARY KEY DEFAULT UUID(),
-    user_id CHAR(36) NOT NULL,
-    chat_id CHAR(36) NOT NULL,
+    userId CHAR(36) NOT NULL,
+    chatRoomId CHAR(36) NOT NULL,
     content VARCHAR(2000),
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_disabled BOOLEAN DEFAULT TRUE NOT NULL,
-    CONSTRAINT fk_messages__users FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_messages__chat_rooms FOREIGN KEY(chat_id) REFERENCES chat_rooms(id) ON DELETE CASCADE
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    isDisabled BOOLEAN DEFAULT TRUE NOT NULL,
+    CONSTRAINT fk_messages__users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_messages__chat_rooms FOREIGN KEY(chatRoomId) REFERENCES chat_rooms(id) ON DELETE CASCADE
   );
-

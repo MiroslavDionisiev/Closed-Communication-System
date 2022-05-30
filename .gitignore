@@ -25,3 +25,7 @@
 /vendors/*
 /.idea
 /.vs
+
+# local
+
+/Configs/
