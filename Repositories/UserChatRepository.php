@@ -43,6 +43,21 @@ class UserChatRepository
         return $userChats;
     }
 
+    public static function getUserChatRoomByIds($userId, $chatRoomId) {
+        $con = new DB();
+        $query = "SELECT * FROM chat_room\n".
+            "WHERE user_chat.userId = :userId AND user_chat.chatRoomId = :chatRoomId";
+
+        $params = [
+            "userId" => $userId,
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return null;
+    }
+
     public static function createUserChat($chatRoomId, $userId, $isAnonymous)
     {
         $con = new DB();

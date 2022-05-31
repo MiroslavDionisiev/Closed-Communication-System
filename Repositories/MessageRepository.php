@@ -11,18 +11,17 @@ require_once(APP_ROOT . '/Models/Entities/Message.php');
 class MessageRepository
 {
 
-    public static function createMessage($userId, $chatRoomId, $content, $isDisabled, $isAnonymous)
+    public static function createMessage($userId, $chatRoomId, $content, $isDisabled)
     {
         $con = new DB();
-        $query = "INSERT INTO messages(userId, chatRoomId, content, isDisabled, isAnonymous)\n" .
-            "VALUES (:userId, :chatRoomId, :content, :isDisabled, :isAnonymous)";
+        $query = "INSERT INTO messages(userId, chatRoomId, content, isDisabled)\n" .
+            "VALUES (:userId, :chatRoomId, :content, :isDisabled)";
 
         $params = [
             "iserId" => $userId,
             "chatRoomId" => $chatRoomId,
             "content" => $content,
-            "isDisabled" => $isDisabled,
-            "isAnonymous" => $isAnonymous
+            "isDisabled" => $isDisabled
         ];
 
         $con->query($query, $params);

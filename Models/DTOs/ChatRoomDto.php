@@ -38,31 +38,6 @@ class ChatRoomDto implements \JsonSerializable
         }
     }
 
-    public static function fromObject($entity)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (is_object($key)) {
-                $instance->{$key} = (get_class($key)."Dto")::fromObject($entity->{$key});
-            }
-            else {
-                $instance->{$key} = $entity->{$key};
-            }
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $arr)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (isset($arr[$key])) {
-                $instance->{$key} = $arr[$key];
-            }
-        }
-        return $instance;
-    }
-
     public function jsonSerialize()
     {
         return get_object_vars($this);

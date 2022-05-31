@@ -69,6 +69,6 @@ class ChatRoomRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Entities\ChatRoom::fromArray', $rows);
+        return array_map('CCS\Mappers\UserChatMapper::convertToEntityFromArray', $rows);
     }
 }
