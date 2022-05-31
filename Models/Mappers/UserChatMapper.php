@@ -16,13 +16,13 @@ class UserChatMapper
         if (is_array($from)) {
             return Enti\UserChat::fill(
                 $from['id'] ?? null,
-                call_user_func('CCS\Models\Mappers\CharRoomMapper::toEntity', $from['chatRoom'] ?? null),
+                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from['chatRoom'] ?? null),
                 $from['isAnonymous'] ?? null,
             );
         } else if (is_object($from)) {
             return Enti\UserChat::fill(
                 $from->{'id'} ?? null,
-                call_user_func('CCS\Models\Mappers\CharRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
+                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
                 $from->{'isAnonymous'} ?? null,
             );
         }
@@ -35,13 +35,13 @@ class UserChatMapper
         if (is_array($from)) {
             return DTOs\UserChatDto::fill(
                 $from['id'] ?? null,
-                call_user_func('CCS\Models\Mappers\CharRoomMapper::toDto', $from['chatRoom'] ?? null),
+                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from['chatRoom'] ?? null),
                 $from['isAnonymous'] ?? null,
             );
         } else if (is_object($from)) {
             return DTOs\UserChatDto::fill(
                 $from->{'id'} ?? null,
-                call_user_func('CCS\Models\Mappers\CharRoomMapper::toDto', $from->{'chatRoom'} ?? null),
+                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null),
                 $from->{'isAnonymous'} ?? null,
             );
         }
