@@ -25,19 +25,19 @@ class AdminController {
     }
 
     public static function createChatRoom() {
-        $chatRoomDto = DTOs\ChatRoomDto::fromArray(json_decode(file_get_contents('php://input'), true));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
         AdminService::createChatRoom($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatroom created successfully."));
     }
 
     public static function addUserToChatRoom() {
-        $userChatDto = DTOs\UserChatDto::fromArray(json_decode(file_get_contents('php://input'), true));
+        $userChatDto = call_user_func('CCS\Models\Mappers\UserChatMapper::toDto', json_decode(file_get_contents('php://input'), true));
         AdminService::addUserToChatRoom($userChatDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User added to chatroom successfully."));
     }
 
     public static function updateChatRoomActive() {
-        $chatRoomDto = DTOs\ChatRoomDto::fromArray(json_decode(file_get_contents('php://input'), true));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
         AdminService::updateChatRoomActive($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom updated successfully."));
     }
@@ -50,13 +50,13 @@ class AdminController {
     }
 
     public static function deleteMessageById() {
-        $messageDto = DTOs\MessageDto::fromArray(json_decode(file_get_contents('php://input'), true));
+        $messageDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input'), true));
         AdminService::deleteMessageById($messageDto->{'id'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
 
     public static function deleteChatRoomById() {
-        $chatRoomDto = DTOs\ChatRoomDto::fromArray(json_decode(file_get_contents('php://input'), true));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
         AdminService::deleteMessageById($chatRoomDto->{'id'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom deleted successfully."));
     }

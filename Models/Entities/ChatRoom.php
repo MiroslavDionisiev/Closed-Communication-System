@@ -17,10 +17,10 @@ class ChatRoom
     public static function fill($id, $name, $availabilityDate, $isActive)
     {
         $instance = new self();
-        $instance->id = $id;
-        $instance->name = $name;
-        $instance->availabilityDate = $availabilityDate;
-        $instance->isActive = $isActive;
+        $instance->{'id'} = $id;
+        $instance->{'name'} = $name;
+        $instance->{'availabilityDate'} = $availabilityDate;
+        $instance->{'isActive'} = $isActive;
         return $instance;
     }
 

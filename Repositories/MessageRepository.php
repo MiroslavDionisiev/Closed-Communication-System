@@ -3,10 +3,9 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
-use CCS\Models\Entities as Entities;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Entities/Message.php');
+require_once(APP_ROOT . '/Models/Mappers/MessageMapper.php');
 
 class MessageRepository
 {
@@ -35,7 +34,7 @@ class MessageRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Entities\Message::fromArray', $rows);
+        return array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
     }
 
     public static function getAllChatRoomMessages($chatRoomId) {
@@ -51,11 +50,11 @@ class MessageRepository
 
         $rows = $con->query($query, $params)->fetchAll();
 
-        $messages = array_map('CCS\Models\Entities\Message::fromArray', $rows);
+        $messages = array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
 
         foreach ($rows  as $index => $row) {
             if (!$row["isAnonymous"]) {
-                $messages[$index]->user = Entities\User::fromArray($row);
+                $messages[$index]->user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             }
         }
 
