@@ -28,11 +28,11 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 session_start();
 
 ### FOR TESTING PURPOSES ###
-/* use CCS\Models\Entities\User; */
-/* require_once(APP_ROOT . '/Models/Entities/User.php'); */
-/* $u = new User(); */
-/* $u->role = 'ADMIN'; */
-/* $_SESSION['user'] = $u; */
+use CCS\Models\Entities\Teacher;
+require_once(APP_ROOT . '/Models/Entities/Teacher.php');
+$u = new Teacher();
+$u->role = 'ADMIN';
+$_SESSION['user'] = $u;
 ### FOR TESTING PURPOSES ###
 
 $routes = array_filter(ROUTES, function($k) use ($requestMethod) { return str_starts_with($k, $requestMethod); }, ARRAY_FILTER_USE_KEY);

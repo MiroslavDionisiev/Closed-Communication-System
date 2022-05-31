@@ -5,7 +5,8 @@ namespace CCS\Repositories;
 use CCS\Database\DatabaseConnection as DB;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Entities/UserChat.php');
+require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
+require_once(APP_ROOT . '/Models/Mappers/UserChatMapper.php');
 
 class UserChatRepository
 {
@@ -19,7 +20,7 @@ class UserChatRepository
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        return array_map('CCS\Models\Entities\UserChat::fromArray', $rows);
+        return array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows);
     }
 
     public static function getAllUserChats($userId) {
@@ -33,8 +34,8 @@ class UserChatRepository
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        $chatRooms = array_map('CSS\Models\Entities\ChatRoom::fromArray', $rows);
-        $userChats = array_map('CSS\Models\Entities\UserChat::fromArray', $rows);
+        $chatRooms = array_map('CSS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
+        $userChats = array_map('CSS\Models\Mappers\UserChatMapper::toEntity', $rows);
 
         foreach ($chatRooms as $index => $chatRoom) {
             $userChats[$index]->chatRoom = $chatRoom;

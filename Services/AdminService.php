@@ -17,17 +17,20 @@ class AdminService
 
     public static function getAllDisabledMessages()
     {
-        return array_map('CCS\Models\DTOs\MessageDto::fromEntity', Repo\MessageRepository::getAllDisabledMessages());
+        return array_map('CCS\Models\Mappers\MessageMapper::toDto', Repo\MessageRepository::getAllDisabledMessages());
     }
 
     public static function getAllUsers()
     {
-        return array_map('CCS\Models\DTOs\UserDto::fromEntity', Repo\UserRepository::getAllUsers());
+        return array_merge(
+            array_map('CCS\Models\Mappers\StudentMapper::toDto', Repo\UserRepository::getAllStudents()),
+            array_map('CCS\Models\Mappers\TeacherMapper::toDto', Repo\UserRepository::getAllTeachers())
+        );
     }
 
     public static function getAllChatRooms()
     {
-        return array_map('CCS\Models\DTOs\ChatRoomDto::fromEntity', Repo\ChatRoomRepository::getAllChatRooms());
+        return array_map('CCS\Models\Mappers\ChatRoomMapper::toDto', Repo\ChatRoomRepository::getAllChatRooms());
     }
 
     public static function createChatRoom($chatRoomDto)

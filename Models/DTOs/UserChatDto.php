@@ -16,9 +16,9 @@ class UserChatDto implements \JsonSerializable
     public static function fill($id, $chatRoom, $isAnonymous)
     {
         $instance = new self();
-        $instance->id = $id;
-        $instance->chatRoom = $chatRoom;
-        $instance->isAnonymous = $isAnonymous;
+        $instance->{'id'} = $id;
+        $instance->{'chatRoom'} = $chatRoom;
+        $instance->{'isAnonymous'} = $isAnonymous;
         return $instance;
     }
 
@@ -36,33 +36,10 @@ class UserChatDto implements \JsonSerializable
         }
     }
 
-    public static function fromObject($entity)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (is_object($key)) {
-                $instance->{$key} = (get_class($key)."Dto")::fromObject($entity->{$key});
-            }
-            else {
-                $instance->{$key} = $entity->{$key};
-            }
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $arr)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (isset($arr[$key])) {
-                $instance->{$key} = $arr[$key];
-            }
-        }
-        return $instance;
-    }
-
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return array_filter(get_object_vars($this), function ($val) {
+            return !is_null($val);
+        });
     }
 }

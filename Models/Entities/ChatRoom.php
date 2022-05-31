@@ -17,10 +17,10 @@ class ChatRoom
     public static function fill($id, $name, $availabilityDate, $isActive)
     {
         $instance = new self();
-        $instance->id = $id;
-        $instance->name = $name;
-        $instance->availabilityDate = $availabilityDate;
-        $instance->isActive = $isActive;
+        $instance->{'id'} = $id;
+        $instance->{'name'} = $name;
+        $instance->{'availabilityDate'} = $availabilityDate;
+        $instance->{'isActive'} = $isActive;
         return $instance;
     }
 
@@ -36,30 +36,5 @@ class ChatRoom
         if (property_exists($this, $prop)) {
             $this->{$prop} = $value;
         }
-    }
-
-    public static function fromObject($entity)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (is_object($key)) {
-                $instance->{$key} = (get_class($key))::fromObject($entity->{$key});
-            }
-            else {
-                $instance->{$key} = $entity->{$key};
-            }
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $arr)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (isset($arr[$key])) {
-                $instance->{$key} = $arr[$key];
-            }
-        }
-        return $instance;
     }
 }
