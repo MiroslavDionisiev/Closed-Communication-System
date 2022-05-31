@@ -40,10 +40,10 @@ class AdminService
 
     public static function addUserToChatRoom($userChatDto)
     {
-        if (Repo\ChatRoomRepository::existsById($userChatDto->{'chatRoomId'})) {
+        if (!Repo\ChatRoomRepository::existsById($userChatDto->{'chatRoomId'})) {
             throw new \InvalidArgumentException("Chatroom with ID {$userChatDto->{'chatRoomId'}} doesn't exist.");
         }
-        if (Repo\UserRepository::existsById($userChatDto->{'userId'})) {
+        if (!Repo\UserRepository::existsById($userChatDto->{'userId'})) {
             throw new \InvalidArgumentException("User with ID {$userChatDto->{'userId'}} doesn't exist.");
         }
         Repo\UserChatRepository::createUserChat($userChatDto->{'chatRoomId'}, $userChatDto->{'userId'}, $userChatDto->{'isAnonymous'});
@@ -51,7 +51,7 @@ class AdminService
 
     public static function updateChatRoomActive($chatRoomDto)
     {
-        if (Repo\ChatRoomRepository::existsById($chatRoomDto->{'id'})) {
+        if (!Repo\ChatRoomRepository::existsById($chatRoomDto->{'id'})) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomDto->{'id'}} doesn't exist.");
         }
         if (!is_bool($chatRoomDto->{'isActive'})) {
@@ -62,10 +62,10 @@ class AdminService
 
     public static function removeUserFromChat($userId, $chatRoomId)
     {
-        if (Repo\ChatRoomRepository::existsById($chatRoomId)) {
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomId} doesn't exist.");
         }
-        if (Repo\UserRepository::existsById($userId)) {
+        if (!Repo\UserRepository::existsById($userId)) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
         Repo\UserChatRepository::deleteUserChatByUserIdAndChatRoomId($userId, $chatRoomId);
@@ -73,7 +73,7 @@ class AdminService
 
     public static function deleteMessageById($messageId)
     {
-        if (Repo\MessageRepository::existsById($messageId)) {
+        if (!Repo\MessageRepository::existsById($messageId)) {
             throw new \InvalidArgumentException("Message with ID {$messageId} doesn't exist.");
         }
         Repo\MessageRepository::deleteMessageById($messageId);
@@ -81,7 +81,7 @@ class AdminService
 
     public static function deleteChatRoomById($chatRoomId)
     {
-        if (Repo\ChatRoomRepository::existsById($chatRoomId)) {
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomId} doesn't exist.");
         }
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);

@@ -44,9 +44,9 @@ class UserChatRepository
         return $userChats;
     }
 
-    public static function getUserChatRoomByIds($userId, $chatRoomId) {
+    public static function getUserChatByIds($userId, $chatRoomId) {
         $con = new DB();
-        $query = "SELECT * FROM chat_room\n".
+        $query = "SELECT * FROM user_chat\n".
             "WHERE user_chat.userId = :userId AND user_chat.chatRoomId = :chatRoomId";
 
         $params = [
@@ -56,7 +56,7 @@ class UserChatRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return null;
+        return call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
     }
 
     public static function createUserChat($chatRoomId, $userId, $isAnonymous)

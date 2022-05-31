@@ -35,17 +35,23 @@ use MessageManager;
             return array_map('CCS\Models\DTOs\MessageDto::fromObject', $chatRoomMessages);
         }
 
-        public static function createMessage($userId, $chatRoomId, $content,) {
-            $userChatRooms = Repo\UserChatRepository::getUserChatRoomByIds($userId, $chatRoomId);
-            if ($userChatRooms == false) {
+        public static function createMessage($userId, $chatRoomId, $message) {
+            $userChatRooms = Repo\UserChatRepository::getUserChatByIds($userId, $chatRoomId);
+            if (!$userChatRooms) {
                 throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} of user with Id {$userId}doesn't exist.");
             }
 
-            if ($userChatRooms->isAnonymous) {
-                MessageManager::checkForLeakedCredentials($content);
+            $user = Repo\UserRepository::existsById($userId);
+            if (!$user) {
+                throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
             }
 
-            return array_map('CCS\Models\DTOs\MessageDto::fromObject', $chatRoomMessages);
+            $isDisabled = false;
+            if ($userChatRooms->isAnonymous) {
+                $isDisabled = MessageManager::checkForLeakedCredentials($message, $user['email'], $user['name']);
+            }
+
+            Repo\MessageRepository::createMessage($userId, $chatRoomId, $message, $isDisabled);
         }
     }
 ?>

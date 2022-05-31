@@ -1,16 +1,16 @@
 <?php
     class MessageManager {
-        public static function checkForLeakedCredentials($message, $user) {
+        public static function checkForLeakedCredentials($message, $email, $name) {
             $timmedMessage = preg_replace("/\s+/", "", $message);
             
-            if (preg_match("/".$user->email."/i", $timmedMessage) != 0) {
-                return false;
+            if (preg_match("/".$email."/i", $timmedMessage) != 0) {
+                return true;
             }
-            if (preg_match("/".$user->name."/i", $timmedMessage) != 0) {
-                return false;
+            if (preg_match("/".$name."/i", $timmedMessage) != 0) {
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 ?>
