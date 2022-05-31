@@ -6,6 +6,7 @@ CREATE TABLE
   IF NOT EXISTS users(
     id CHAR(36) PRIMARY KEY DEFAULT UUID(),
     name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     year INT,
     speciality VARCHAR(50),

@@ -6,21 +6,19 @@ class UserChat
 {
 
     private ?string $id = null;
-    private ?string $userId = null;
-    private ?string $chatRoomId = null;
+    private ?ChatRoom $chatRoom = null;
     private ?bool $isAnonymous = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $userId, $chatRoomId, $isAnonymous)
+    public static function fill($id, $chatRoom, $isAnonymous)
     {
         $instance = new self();
         $instance->id = $id;
-        $instance->userId;
-        $instance->chatRoomId;
-        $instance->isAnonymous;
+        $instance->chatRoom = $chatRoom;
+        $instance->isAnonymous = $isAnonymous;
         return $instance;
     }
 
@@ -38,11 +36,16 @@ class UserChat
         }
     }
 
-    public static function fromEntity($entity)
+    public static function fromObject($entity)
     {
         $instance = new self();
         foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $entity->{$key};
+            if (is_object($key)) {
+                $instance->{$key} = (get_class($key))::fromObject($entity->{$key});
+            }
+            else {
+                $instance->{$key} = $entity->{$key};
+            }
         }
         return $instance;
     }

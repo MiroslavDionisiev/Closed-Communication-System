@@ -38,11 +38,16 @@ class ChatRoom
         }
     }
 
-    public static function fromEntity($entity)
+    public static function fromObject($entity)
     {
         $instance = new self();
         foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $entity->{$key};
+            if (is_object($key)) {
+                $instance->{$key} = (get_class($key))::fromObject($entity->{$key});
+            }
+            else {
+                $instance->{$key} = $entity->{$key};
+            }
         }
         return $instance;
     }

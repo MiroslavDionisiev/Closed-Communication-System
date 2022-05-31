@@ -6,8 +6,7 @@ class Message
 {
 
     private ?string $id = null;
-    private ?string $userId = null;
-    private ?string $chatRoomId = null;
+    private ?User $user = null;
     private ?string $content = null;
     private ?string $timestamp = null;
     private ?bool $isDisabled = null;
@@ -16,12 +15,11 @@ class Message
     {
     }
 
-    public static function fill($id, $userId, $chatRoomId, $content, $timestamp, $isDisabled)
+    public static function fill($id, $user, $content, $timestamp, $isDisabled)
     {
         $instance = new self();
         $instance->id = $id;
-        $instance->userId = $userId;
-        $instance->chatRoomId = $chatRoomId;
+        $instance->user = $user;
         $instance->content = $content;
         $instance->timestamp = $timestamp;
         $instance->isDisabled = $isDisabled;
@@ -42,11 +40,16 @@ class Message
         }
     }
 
-    public static function fromDto($dto)
+    public static function fromObject($entity)
     {
         $instance = new self();
         foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $dto->{$key};
+            if (is_object($key)) {
+                $instance->{$key} = (get_class($key))::fromObject($entity->{$key});
+            }
+            else {
+                $instance->{$key} = $entity->{$key};
+            }
         }
         return $instance;
     }
@@ -61,4 +64,5 @@ class Message
         }
         return $instance;
     }
+
 }

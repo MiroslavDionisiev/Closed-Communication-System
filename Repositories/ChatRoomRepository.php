@@ -71,31 +71,4 @@ class ChatRoomRepository
 
         return array_map('CCS\Models\Entities\ChatRoom::fromArray', $rows);
     }
-
-    public static function getAllChatRoomsOfUser($userId) {
-        $con = new DB();
-        $query = "SELECT chat_room.*, user_chats.isAnonymous FROM chat_room\n".
-            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_room.id\n".
-            "WHERE user_chat.userId = :userId";
-
-        $params = [
-            "userId" => $userId
-        ];
-
-        $rows = $con->query($query, $params)->fetchAll();
-        $chatRooms = array_map('CSS\Models\Entities\ChatRoom::fromArray', $rows);
-        $userAnonumousity = $rows["isAnonymous"];
-
-        $res = [];
-        foreach($chatRooms as $index => $chatRoom) {
-            $res += [
-                [
-                    "chatRoom" => $chatRoom,
-                    "isAnonymous" => $userAnonumousity[$index]
-                ]
-            ];
-        }
-
-        return $res;
-    }
 }
