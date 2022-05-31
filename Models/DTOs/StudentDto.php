@@ -2,25 +2,29 @@
 
 namespace CCS\Models\DTOs;
 
-class MessageDto implements \JsonSerializable
+require_once(APP_ROOT . '/Models/DTOs/UserDto.php');
+
+class StudentDto extends UserDto implements \JsonSerializable
 {
 
-    protected ?string $id = null;
-    protected ?UserDto $user = null;
-    protected ?string $content = null;
-    protected ?string $timestamp = null;
+    protected ?int $year = null;
+    protected ?string $speciality = null;
+    protected ?string $faculty = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp)
+    public static function fill($id, $name, $email, $role, $year, $speciality, $faculty)
     {
         $instance = new self();
         $instance->{'id'} = $id;
-        $instance->{'user'} = $user;
-        $instance->{'content'} = $content;
-        $instance->{'timestamp'} = $timestamp;
+        $instance->{'name'} = $name;
+        $instance->{'email'} = $email;
+        $instance->{'role'} = $role;
+        $instance->{'year'} = $year;
+        $instance->{'speciality'} = $speciality;
+        $instance->{'faculty'} = $faculty;
         return $instance;
     }
 

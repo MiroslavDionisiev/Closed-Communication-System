@@ -6,21 +6,19 @@ class UserChatDto implements \JsonSerializable
 {
 
     protected ?string $id = null;
-    protected ?string $userId = null;
-    protected ?string $chatRoomId = null;
+    protected ?ChatRoomDto $chatRoom = null;
     protected ?bool $isAnonymous = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $userId, $chatRoomId, $isAnonymous)
+    public static function fill($id, $chatRoom, $isAnonymous)
     {
         $instance = new self();
-        $instance->id = $id;
-        $instance->userId;
-        $instance->chatRoomId;
-        $instance->isAnonymous;
+        $instance->{'id'} = $id;
+        $instance->{'chatRoom'} = $chatRoom;
+        $instance->{'isAnonymous'} = $isAnonymous;
         return $instance;
     }
 
@@ -38,28 +36,10 @@ class UserChatDto implements \JsonSerializable
         }
     }
 
-    public static function fromEntity($entity)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $entity->{$key};
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $arr)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (isset($arr[$key])) {
-                $instance->{$key} = $arr[$key];
-            }
-        }
-        return $instance;
-    }
-
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return array_filter(get_object_vars($this), function ($val) {
+            return !is_null($val);
+        });
     }
 }

@@ -5,7 +5,7 @@ namespace CCS\Repositories;
 use CCS\Database\DatabaseConnection as DB;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Entities/ChatRoom.php');
+require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
 
 class ChatRoomRepository
 {
@@ -69,6 +69,6 @@ class ChatRoomRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Entities\ChatRoom::fromArray', $rows);
+        return array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
     }
 }

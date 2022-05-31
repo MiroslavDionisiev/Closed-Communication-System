@@ -2,25 +2,23 @@
 
 namespace CCS\Models\Entities;
 
-class Message
-{
+require_once(APP_ROOT . '/Models/Entities/User.php');
 
-    private ?string $id = null;
-    private ?User $user = null;
-    private ?string $content = null;
-    private ?string $timestamp = null;
+class Teacher extends User
+{
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp)
+    public static function fill($id, $name, $email, $password, $role)
     {
         $instance = new self();
         $instance->{'id'} = $id;
-        $instance->{'user'} = $user;
-        $instance->{'content'} = $content;
-        $instance->{'timestamp'} = $timestamp;
+        $instance->{'name'} = $name;
+        $instance->{'email'} = $email;
+        $instance->{'password'} = $password;
+        $instance->{'role'} = $role;
         return $instance;
     }
 

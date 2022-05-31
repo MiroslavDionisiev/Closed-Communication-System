@@ -17,10 +17,10 @@ class ChatRoomDto implements \JsonSerializable
     public static function fill($id, $name, $availabilityDate, $isActive)
     {
         $instance = new self();
-        $instance->id = $id;
-        $instance->name = $name;
-        $instance->availabilityDate = $availabilityDate;
-        $instance->isActive = $isActive;
+        $instance->{'id'} = $id;
+        $instance->{'name'} = $name;
+        $instance->{'availabilityDate'} = $availabilityDate;
+        $instance->{'isActive'} = $isActive;
         return $instance;
     }
 
@@ -38,28 +38,10 @@ class ChatRoomDto implements \JsonSerializable
         }
     }
 
-    public static function fromEntity($entity)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $entity->{$key};
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $arr)
-    {
-        $instance = new self();
-        foreach (get_object_vars($instance) as $key => $_) {
-            if (isset($arr[$key])) {
-                $instance->{$key} = $arr[$key];
-            }
-        }
-        return $instance;
-    }
-
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return array_filter(get_object_vars($this), function ($val) {
+            return !is_null($val);
+        });
     }
 }

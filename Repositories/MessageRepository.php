@@ -5,10 +5,26 @@ namespace CCS\Repositories;
 use CCS\Database\DatabaseConnection as DB;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Entities/Message.php');
+require_once(APP_ROOT . '/Models/Mappers/MessageMapper.php');
 
 class MessageRepository
 {
+
+    public static function createMessage($userId, $chatRoomId, $content, $isDisabled)
+    {
+        $con = new DB();
+        $query = "INSERT INTO messages(userId, chatRoomId, content, isDisabled)\n" .
+            "VALUES (:userId, :chatRoomId, :content, :isDisabled)";
+
+        $params = [
+            "iserId" => $userId,
+            "chatRoomId" => $chatRoomId,
+            "content" => $content,
+            "isDisabled" => $isDisabled
+        ];
+
+        $con->query($query, $params);
+    }
 
     public static function getAllDisabledMessages()
     {
@@ -18,7 +34,31 @@ class MessageRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Entities\Message::fromArray', $rows);
+        return array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
+    }
+
+    public static function getAllChatRoomMessages($chatRoomId) {
+        $con = new DB();
+        $query = "SELECT messages.*, user.*, user_chats.isAnonymous FROM messages\n".
+            "INNER JOIN user ON user.id = messages.userId\n".
+            "INNER JOIN user_chats ON user_chats.userId = user.id\n".
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS TRUE";
+
+        $params = [
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $rows = $con->query($query, $params)->fetchAll();
+
+        $messages = array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
+
+        foreach ($rows  as $index => $row) {
+            if (!$row["isAnonymous"]) {
+                $messages[$index]->user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            }
+        }
+
+        return $messages;
     }
 
     public static function deleteMessageById($msgId)
