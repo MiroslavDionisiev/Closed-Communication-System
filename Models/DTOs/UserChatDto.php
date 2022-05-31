@@ -1,32 +1,26 @@
 <?php
 
-namespace CCS\Models\Entities;
+namespace CCS\Models\DTOs;
 
-class User
+class UserChatDto implements \JsonSerializable
 {
 
-    private ?string $id = null;
-    private ?string $name = null;
-    private ?string $password = null;
-    private ?int $year = null;
-    private ?string $speciality = null;
-    private ?string $faculty = null;
-    private ?string $role = null;
+    protected ?string $id = null;
+    protected ?string $userId = null;
+    protected ?string $chatRoomId = null;
+    protected ?bool $isAnonymous = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $name, $password, $year, $speciality, $faculty, $role)
+    public static function fill($id, $userId, $chatRoomId, $isAnonymous)
     {
         $instance = new self();
         $instance->id = $id;
-        $instance->name = $name;
-        $instance->password = $password;
-        $instance->year = $year;
-        $instance->speciality = $speciality;
-        $instance->faculty = $faculty;
-        $instance->role = $role;
+        $instance->userId;
+        $instance->chatRoomId;
+        $instance->isAnonymous;
         return $instance;
     }
 
@@ -44,11 +38,11 @@ class User
         }
     }
 
-    public static function fromDto($dto)
+    public static function fromEntity($entity)
     {
         $instance = new self();
         foreach (get_object_vars($instance) as $key => $_) {
-            $instance->{$key} = $dto->{$key};
+            $instance->{$key} = $entity->{$key};
         }
         return $instance;
     }
@@ -62,5 +56,10 @@ class User
             }
         }
         return $instance;
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

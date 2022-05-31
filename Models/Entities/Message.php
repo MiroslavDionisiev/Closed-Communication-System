@@ -2,31 +2,29 @@
 
 namespace CCS\Models\Entities;
 
-class User
+class Message
 {
 
     private ?string $id = null;
-    private ?string $name = null;
-    private ?string $password = null;
-    private ?int $year = null;
-    private ?string $speciality = null;
-    private ?string $faculty = null;
-    private ?string $role = null;
+    private ?string $userId = null;
+    private ?string $chatRoomId = null;
+    private ?string $content = null;
+    private ?string $timestamp = null;
+    private ?bool $isDisabled = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $name, $password, $year, $speciality, $faculty, $role)
+    public static function fill($id, $userId, $chatRoomId, $content, $timestamp, $isDisabled)
     {
         $instance = new self();
         $instance->id = $id;
-        $instance->name = $name;
-        $instance->password = $password;
-        $instance->year = $year;
-        $instance->speciality = $speciality;
-        $instance->faculty = $faculty;
-        $instance->role = $role;
+        $instance->userId = $userId;
+        $instance->chatRoomId = $chatRoomId;
+        $instance->content = $content;
+        $instance->timestamp = $timestamp;
+        $instance->isDisabled = $isDisabled;
         return $instance;
     }
 
