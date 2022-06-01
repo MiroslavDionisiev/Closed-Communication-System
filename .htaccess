@@ -1,1 +1,3 @@
 Options -Indexes
+
+RedirectMatch ^(/|/index\.php)$ /Frontend/Admin

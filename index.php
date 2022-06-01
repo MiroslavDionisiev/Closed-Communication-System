@@ -4,6 +4,7 @@ namespace CCS;
 
 use CCS\Helpers as Help;
 use CCS\Models\DTOs as DTOs;
+use CCS\Database\DatabaseConnection;
 
 require_once('config.php');
 require_once(APP_ROOT . '/Models/DTOs/ResponseDto.php');
@@ -42,7 +43,7 @@ foreach ($routes as $key => $conf) {
     $routeMethod = $split[0];
     $route = $split[1];
 
-    if (preg_match("|" . $route . "|mi", $uri)) {
+    if (preg_match("#" . $route . "#mi", $uri)) {
         if ($routeMethod !== $requestMethod) {
             echo json_encode(
                 new DTOs\ResponseDtoError(
