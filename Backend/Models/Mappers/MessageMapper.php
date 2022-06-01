@@ -11,7 +11,7 @@
     require_once(APP_ROOT . '/Models/DTOs/StudentDto.php');
     require_once(APP_ROOT . '/Models/Entities/Student.php');
     require_once(APP_ROOT . '/Models/DTOs/TeacherDto.php');
-    require_once(APP_ROOT . '/Models/Entities/Teachere.php');
+    require_once(APP_ROOT . '/Models/Entities/Teacher.php');
     require_once(APP_ROOT . '/Models/Mappers/StudentMapper.php');
     require_once(APP_ROOT . '/Models/Mappers/TeacherMapper.php');
 
@@ -19,7 +19,7 @@
         public static function toEntity($from) {
             if (is_array($from)) {
                 $user = null;
-                if ($from.isset('speciality')) {
+                if (isset($from['speciality'])) {
                     $user = call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $from['user'] ?? null);
                 }
                 else {
@@ -50,7 +50,7 @@
         {
             if (is_array($from)) {
                 $user = null;
-                if ($from.isset('speciality')) {
+                if (isset($from['speciality'])) {
                     $user = call_user_func('CCS\Models\Mappers\StudentMapper::toDto', $from['user'] ?? null);
                 }
                 else {
