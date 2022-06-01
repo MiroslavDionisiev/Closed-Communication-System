@@ -1,7 +1,7 @@
 <?php
 
 define('APP_ROOT', __DIR__ . '/Backend');
-define('URL_ROOT', '/');
+define('URL_ROOT', '/Closed-Communication-System/');
 
 define('JSON_FLAGS', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
