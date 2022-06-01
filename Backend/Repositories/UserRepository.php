@@ -52,7 +52,7 @@ class UserRepository
     {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
-            "INNER JOIN students s ON s.userId = u.id" .
+            "INNER JOIN students ON userId = id\n" .
             "WHERE facultyNumber = :facultyNumber";
         $params = [
             "facultyNumber" => $facultyNumber

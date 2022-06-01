@@ -7,6 +7,7 @@ require_once(APP_ROOT . '/Models/Entities/User.php');
 class Student extends User
 {
 
+    private ?string $facultyNumber = null;
     private ?int $year = null;
     private ?string $speciality = null;
     private ?string $faculty = null;
@@ -15,7 +16,7 @@ class Student extends User
     {
     }
 
-    public static function fill($id, $name, $email, $password, $role, $year, $speciality, $faculty)
+    public static function fill($id, $name, $email, $password, $role, $facultyNumber, $year, $speciality, $faculty)
     {
         $instance = new self();
         $instance->{'id'} = $id;
@@ -23,6 +24,7 @@ class Student extends User
         $instance->{'email'} = $email;
         $instance->{'password'} = $password;
         $instance->{'role'} = $role;
+        $instance->{'facultyNumber'} = $facultyNumber;
         $instance->{'year'} = $year;
         $instance->{'speciality'} = $speciality;
         $instance->{'faculty'} = $faculty;
