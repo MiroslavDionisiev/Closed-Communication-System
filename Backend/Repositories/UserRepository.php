@@ -37,10 +37,25 @@ class UserRepository
     {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
-            "INNER JOIN students s ON s.userId = u.id";
-        "WHERE id = :userId";
+            "INNER JOIN students s ON s.userId = u.id" .
+            "WHERE id = :userId";
         $params = [
             "userId" => $userId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $row);
+    }
+
+    public static function findStudentByFacultyNumber($facultyNumber)
+    {
+        $con = new DB();
+        $query = "SELECT * FROM users\n" .
+            "INNER JOIN students s ON s.userId = u.id" .
+            "WHERE facultyNumber = :facultyNumber";
+        $params = [
+            "facultyNumber" => $facultyNumber
         ];
 
         $row = $con->query($query, $params)->fetch();

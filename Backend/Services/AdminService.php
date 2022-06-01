@@ -35,7 +35,8 @@ class AdminService
 
     public static function createChatRoom($chatRoomDto)
     {
-        Repo\ChatRoomRepository::createChatRoom($chatRoomDto->{'name'}, $chatRoomDto->{'availabilityDate'}, $chatRoomDto->{'isActive'});
+        $chatRoom = Repo\ChatRoomRepository::createChatRoom($chatRoomDto->{'name'}, $chatRoomDto->{'availabilityDate'}, $chatRoomDto->{'isActive'});
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $chatRoom);
     }
 
     public static function addUserToChatRoom($userChatDto)
@@ -87,6 +88,14 @@ class AdminService
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
     }
 
-    public static function createUserChatRoomFromCsv($csvData) {
+    public static function createUserChatRoomFromCsv($csvData)
+    {
+        foreach($csvData as $row) {
+            $chatRoom = Repo\ChatRoomRepository::createChatRoom($row[0], $row[1]);
+            for ($i = 2; $i < count($csvData); $i++) {
+                $student = Repo\UserRepository::findStudentByFacultyNumber($row[$i]);
+                Repo\UserChatRepository::createUserChat($chatRoom->{'id'}, $student->{'id'}, $row[$i + 1]);
+            }
+        }
     }
 }
