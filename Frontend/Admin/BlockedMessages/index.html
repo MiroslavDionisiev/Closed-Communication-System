@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Admin Panel</title>
+        <script src="script.js" type="module"></script>
+        <link href="style.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <header>
+            <p class="appName">Closed Communication System</p>
+            <section>
+                <p class="userName">Име</p>
+                <button class="logout">Изход</button>
+            </section>
+        </header>
+        <div class="wrapper">
+            <aside>
+                <a id="href-users" href="../Users" class="nav-a">Потребители</a>
+                <a id="href-blocked-messages" class="nav-a nav-a-selected">Блокирани съобщения</a>
+                <a id="href-user-chats" href="../ChatRooms" class="nav-a">Чат стаи</a>
+            </aside>
+            <main>
+                <h1 id="title">Блокирани съобщения</h1>
+                <section id="list-disabled-messages" class="wrapper-list">
+                    <div class="message-banner">
+                        <p id="chat-room-name">chatroom</p>
+                        <p id="sender-name">bai pesho</p>
+                        <p id="message-contents">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate facilis harum, repellat numquam odit esse ipsam repellendus voluptatem non repudiandae, voluptas, saepe maxime mollitia perferendis! Vitae reprehenderit dignissimos quasi</p>
+                        <button id="btn-approve" class="btn-green">Одобри</button>
+                        <button id="btn-deny" class="btn-red">Отхвърли</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
