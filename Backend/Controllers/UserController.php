@@ -12,13 +12,13 @@
 
     class UserController {
         public static function getAllUserChats() {
-            $body = json_decode(file_get_contents('php://input'), true);
-            echo json_encode(UserService::getAllUserChats($body['userId']));
+            $userId = $_SESSION['user']->{'id'};
+            echo json_encode(UserService::getAllUserChats($userId));
         }
 
         public static function getAllChatRoomMessages() {
-            $body = json_decode(file_get_contents('php://input'), true);
-            echo json_encode(UserService::getAllChatRoomMessages($body['chatRoomId']));
+            $chatRoomId = $_GET['chatRoomId'] ?? null;
+            echo json_encode(UserService::getAllChatRoomMessages($chatRoomId));
         }
 
         public static function createMessage() {
