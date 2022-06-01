@@ -9,18 +9,20 @@ class Message
     private ?User $user = null;
     private ?string $content = null;
     private ?string $timestamp = null;
+    private ?bool $isDisabled = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp)
+    public static function fill($id, $user, $content, $timestamp, $isDisabled)
     {
         $instance = new self();
         $instance->{'id'} = $id;
         $instance->{'user'} = $user;
         $instance->{'content'} = $content;
         $instance->{'timestamp'} = $timestamp;
+        $instance->{'isDisabled'} = $isDisabled;
         return $instance;
     }
 

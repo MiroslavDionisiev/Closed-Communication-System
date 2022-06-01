@@ -10,67 +10,73 @@ require_once(APP_ROOT . '/Configs/DatabaseConfig.php');
 $regex_uuid = '[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}';
 
 define('ROUTES', [
-    "GET ^/index.php/admin/disabled-messages$" => [
+    "GET ^" . URL_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllDisabledMessages'
     ],
-    "GET /index.php/admin/users" => [
+    "GET ^" . URL_ROOT . "/index.php/admin/users$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllUsers'
     ],
-    "GET /index.php/admin/chat-rooms" => [
+    "GET ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllChatRooms'
     ],
-    "GET /index.php/user/chat-rooms" => [
+    "GET ^" . URL_ROOT . "/index.php/user/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['USER', 'ADMIN'],
         'controller' => 'UserController',
         'controllerMethod' => 'getAllUserChats'
     ],
-    "GET /index.php/user/chat-rooms/messages" => [
+    "GET ^" . URL_ROOT . "/index.php/user/chat-rooms/messages$" => [
         'authenticate' => true,
         'authorize' => ['USER', 'ADMIN'],
         'controller' => 'UserController',
         'controllerMethod' => 'getAllChatRoomMessages'
     ],
-    "POST /index.php/admin/chat-rooms" => [
+    "POST ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'createChatRoom'
     ],
-    "POST /index.php/user/chat-rooms/messages" => [
+    "POST ^" . URL_ROOT . "/index.php/user/chat-rooms/messages$" => [
         'authenticate' => true,
         'authorize' => ['USER', 'ADMIN'],
         'controller' => 'UserController',
         'controllerMethod' => 'createMessage'
     ],
-    "PUT /index.php/admin/chat-rooms" => [
+    "POST ^" . URL_ROOT . "/index.php/admin/chat-rooms/from-csv$" => [
+        'authenticate' => true,
+        'authorize' => ['ADMIN'],
+        'controller' => 'AdminController',
+        'controllerMethod' => 'createUserChatRoomFromCsv'
+    ],
+    "PUT ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'updateChatRoomActive'
     ],
-    "DELETE /index.php/admin/chat-rooms" => [
+    "DELETE ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteChatRoomById'
     ],
-    "DELETE /index.php/admin/user-chats" => [
+    "DELETE ^" . URL_ROOT . "/index.php/admin/user-chats$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'removeUserFromChat'
     ],
-    "DELETE /index.php/admin/messages" => [
+    "DELETE ^" . URL_ROOT . "/index.php/admin/messages$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
