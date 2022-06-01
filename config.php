@@ -28,11 +28,29 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllChatRooms'
     ],
+    "GET /index.php/user/chat-rooms" => [
+        'authenticate' => true,
+        'authorize' => ['USER', 'ADMIN'],
+        'controller' => 'UserController',
+        'controllerMethod' => 'getAllUserChats'
+    ],
+    "GET /index.php/user/chat-rooms/messages" => [
+        'authenticate' => true,
+        'authorize' => ['USER', 'ADMIN'],
+        'controller' => 'UserController',
+        'controllerMethod' => 'getAllChatRoomMessages'
+    ],
     "POST /index.php/admin/chat-rooms" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'createChatRoom'
+    ],
+    "POST /index.php/user/chat-rooms/messages" => [
+        'authenticate' => true,
+        'authorize' => ['USER', 'ADMIN'],
+        'controller' => 'UserController',
+        'controllerMethod' => 'createMessage'
     ],
     "PUT /index.php/admin/chat-rooms" => [
         'authenticate' => true,

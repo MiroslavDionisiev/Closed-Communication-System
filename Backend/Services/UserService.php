@@ -22,7 +22,7 @@ use MessageManager;
 
             $userChatRooms = Repo\UserChatRepository::getAllUserChats($userId);
 
-            return array_map('CCS\Models\DTOs\UserChatDto::fromObject', $userChatRooms);
+            return array_map('CCS\Models\Mappers\UserChatMapper::toDTO', $userChatRooms);
         }
 
         public static function getAllChatRoomMessages($chatRoomId) {
@@ -32,7 +32,7 @@ use MessageManager;
             
             $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessages($chatRoomId);
 
-            return array_map('CCS\Models\DTOs\MessageDto::fromObject', $chatRoomMessages);
+            return array_map('CCS\Models\Mappers\MessageMapper::toDto', $chatRoomMessages);
         }
 
         public static function createMessage($userId, $chatRoomId, $message) {
