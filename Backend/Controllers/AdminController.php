@@ -60,4 +60,11 @@ class AdminController {
         AdminService::deleteMessageById($chatRoomDto->{'id'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom deleted successfully."));
     }
+
+    public static function createUserChatRoomFromCsv() {
+        $csvFile = $_FILES['file']['tmp_name'];
+        $csvData = array_map('str_getcsv', file($csvFile));
+        AdminService::createUserChatRoomFromCsv($csvData);
+        echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatrooms created successfully."));
+    }
 }

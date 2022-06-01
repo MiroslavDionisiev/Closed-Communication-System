@@ -14,6 +14,7 @@ CREATE TABLE
 CREATE TABLE
   IF NOT EXISTS students(
     userId CHAR(36) PRIMARY KEY,
+    facultyNumber VARCHAR(50) UNIQUE NOT NULL,
     year INT,
     speciality VARCHAR(50),
     faculty VARCHAR(50),
@@ -53,6 +54,7 @@ CREATE TABLE
     chatRoomId CHAR(36) NOT NULL,
     content VARCHAR(2000),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    isDisabled BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_messages__users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_messages__chat_rooms FOREIGN KEY(chatRoomId) REFERENCES chat_rooms(id) ON DELETE CASCADE
   );

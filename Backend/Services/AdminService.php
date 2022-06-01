@@ -86,4 +86,7 @@ class AdminService
         }
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
     }
+
+    public static function createUserChatRoomFromCsv($csvData) {
+    }
 }
