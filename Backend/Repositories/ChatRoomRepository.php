@@ -81,4 +81,18 @@ class ChatRoomRepository
 
         return array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
     }
+
+    public static function findById($chatRoomId) {
+        $con = new DB();
+        $query = "SELECT * FROM chat_rooms\n" .
+            "WHERE id = :chatRoomId";
+        $params = [
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
+
+    }
 }

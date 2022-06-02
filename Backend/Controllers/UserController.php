@@ -22,8 +22,8 @@
         }
 
         public static function createMessage() {
-            $body = json_decode(file_get_contents('php://input'), true);
-            UserService::createMessage($body['userId'], $body['chatRoomId'], $body['message']);
+            $body = json_decode(file_get_contents('php://input'));
+            UserService::createMessage($body->{'userId'}, $body->{'chatRoomId'}, $body->{'message'});
         }
     }
 ?>

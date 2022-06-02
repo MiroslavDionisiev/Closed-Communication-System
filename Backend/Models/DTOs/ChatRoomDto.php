@@ -5,10 +5,10 @@ namespace CCS\Models\DTOs;
 class ChatRoomDto implements \JsonSerializable
 {
 
-    protected ?string $id = null;
-    protected ?string $name = null;
-    protected ?string $availabilityDate = null;
-    protected ?bool $isActive = null;
+    protected $id = null;
+    protected $name = null;
+    protected $availabilityDate = null;
+    protected $isActive = null;
 
     public function __construct()
     {
@@ -20,7 +20,7 @@ class ChatRoomDto implements \JsonSerializable
         $instance->{'id'} = $id;
         $instance->{'name'} = $name;
         $instance->{'availabilityDate'} = $availabilityDate;
-        $instance->{'isActive'} = $isActive;
+        $instance->{'isActive'} = is_null($isActive) ? $isActive : (bool) $isActive;
         return $instance;
     }
 

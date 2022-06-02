@@ -5,8 +5,7 @@ namespace CCS\Repositories;
 use CCS\Database\DatabaseConnection as DB;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Mappers/StudentMapper.php');
-require_once(APP_ROOT . '/Models/Mappers/TeacherMapper.php');
+require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
 
 class UserRepository
 {
@@ -19,7 +18,7 @@ class UserRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\TeacherMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
     public static function getAllStudents()
@@ -30,14 +29,14 @@ class UserRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\StudentMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
     public static function findStudentById($userId)
     {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
-            "INNER JOIN students s ON s.userId = u.id" .
+            "INNER JOIN students ON userId = id\n" .
             "WHERE id = :userId";
         $params = [
             "userId" => $userId
@@ -45,7 +44,7 @@ class UserRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
     public static function findStudentByFacultyNumber($facultyNumber)
@@ -60,7 +59,7 @@ class UserRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
     public static function findTeacherById($userId)
@@ -75,7 +74,7 @@ class UserRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\TeacherMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
     public static function existsById($userId)

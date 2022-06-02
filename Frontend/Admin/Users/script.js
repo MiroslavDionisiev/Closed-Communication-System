@@ -11,15 +11,15 @@ window.onload = () => {
 
         banner.innerHTML = `
             <img src="img/img-user.png" alt="User profile picture">
-            <lu class="user-info">
-            </lu>
+            <ul class="user-info">
+            </ul>
         `;
 
         for (let key of Object.keys(user)) {
             if (key !== "id") {
                 let li = document.createElement("li");
                 li.innerHTML = `${user[key]}`;
-                banner.querySelector("lu").appendChild(li);
+                banner.querySelector("ul").appendChild(li);
             }
         }
 

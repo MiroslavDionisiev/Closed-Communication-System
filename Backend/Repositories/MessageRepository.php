@@ -3,6 +3,7 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
+use CCS\Models\Entities\User;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/MessageMapper.php');
@@ -30,11 +31,14 @@ class MessageRepository
     {
         $con = new DB();
         $query = "SELECT * FROM messages\n".
-            "INNER JOIN users ON users.id = messages.userId\n".
-            "INNER JOIN students ON users.id = students.userId\n".
-            "WHERE messages.isDisabled IS TRUE";
+            "WHERE isDisabled IS TRUE";
 
         $rows = $con->query($query)->fetchAll();
+
+        foreach ($rows as &$row) {
+            $row->{'user'} = call_user_func('CCS\Repositories\UserRepository::findStudentById', $row->{'userId'});
+            $row->{'chatRoom'} = call_user_func('CCS\Repositories\ChatRoomRepository::findById', $row->{'chatRoomId'});
+        }
 
         return array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
     }
@@ -104,17 +108,17 @@ class MessageRepository
 
     public static function updateMessage($messageDto) {
         $msg = MessageRepository::findById($messageDto->{'id'});
-        $msg->{'contents'} = $messageDto->{'contents'} ?? $msg->{'contents'};
-        $msg->{'isDisabled'} = $messageDto->{'contents'} ?? $msg->{'contents'};
+        $msg->{'content'} = $messageDto->{'content'} ?? $msg->{'content'};
+        $msg->{'isDisabled'} = $messageDto->{'content'} ?? $msg->{'content'};
 
         $con = new DB();
         $query = "UPDATE messages\n" .
-            "SET isDisabled = :isDisabled, contents = :contents\n" .
+            "SET isDisabled = :isDisabled, content = :content\n" .
             "WHERE id = :id";
         $params = [
             "id" => $msg->{'id'},
             "isDisabled" => $msg->{'isDisabled'},
-            "contents" => $msg->{'contents'},
+            "content" => $msg->{'content'},
         ];
 
         $row = $con->query($query, $params)->fetch();

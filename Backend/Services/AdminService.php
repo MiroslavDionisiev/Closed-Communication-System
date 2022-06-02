@@ -24,8 +24,8 @@ class AdminService
     public static function getAllUsers()
     {
         return array_merge(
-            array_map('CCS\Models\Mappers\StudentMapper::toDto', Repo\UserRepository::getAllStudents()),
-            array_map('CCS\Models\Mappers\TeacherMapper::toDto', Repo\UserRepository::getAllTeachers())
+            array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllStudents()),
+            array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllTeachers())
         );
     }
 
@@ -108,7 +108,6 @@ class AdminService
     }
 
     public static function updateMessageIsDisabled($msgDto) {
-        var_dump(Repo\MessageRepository::existsById($msgDto->{'id'}));
         if (!Repo\MessageRepository::existsById($msgDto->{'id'})) {
             throw new \InvalidArgumentException("Message with ID {$msgDto->{'id'}} doesn't exist.");
         }

@@ -25,19 +25,19 @@ class AdminController {
     }
 
     public static function createChatRoom() {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
         AdminService::createChatRoom($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatroom created successfully."));
     }
 
     public static function addUserToChatRoom() {
-        $userChatDto = call_user_func('CCS\Models\Mappers\UserChatMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        $userChatDto = call_user_func('CCS\Models\Mappers\UserChatMapper::toDto', json_decode(file_get_contents('php://input')));
         AdminService::addUserToChatRoom($userChatDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User added to chatroom successfully."));
     }
 
     public static function updateChatRoomActive() {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
         AdminService::updateChatRoomActive($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom updated successfully."));
     }
@@ -50,7 +50,7 @@ class AdminController {
     }
 
     public static function deleteMessageById() {
-        $messageDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        $messageDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
         AdminService::deleteMessageById($messageDto->{'id'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
@@ -69,7 +69,7 @@ class AdminController {
     }
 
     public static function updateMessageIsDisabled() {
-        $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
         AdminService::updateMessageIsDisabled($msgDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Message updated successfully."));
     }

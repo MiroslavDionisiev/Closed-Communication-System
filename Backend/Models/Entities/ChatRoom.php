@@ -5,10 +5,10 @@ namespace CCS\Models\Entities;
 class ChatRoom
 {
 
-    private ?string $id = null;
-    private ?string $name = null;
-    private ?string $availabilityDate = null;
-    private ?bool $isActive = null;
+    private $id = null;
+    private $name = null;
+    private $availabilityDate = null;
+    private $isActive = null;
 
     public function __construct()
     {
@@ -20,7 +20,7 @@ class ChatRoom
         $instance->{'id'} = $id;
         $instance->{'name'} = $name;
         $instance->{'availabilityDate'} = $availabilityDate;
-        $instance->{'isActive'} = $isActive;
+        $instance->{'isActive'} = is_null($isActive) ? $isActive : (bool) $isActive;
         return $instance;
     }
 

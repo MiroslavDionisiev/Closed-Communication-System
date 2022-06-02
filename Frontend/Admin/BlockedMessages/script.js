@@ -8,9 +8,11 @@ window.onload = () => {
     let getMessageBanner = (msg) => {
         let banner = document.createElement("div");
         banner.classList.add("message-banner");
+        console.log(msg);
         banner.setAttribute("msg-id", msg.id);
 
         banner.innerHTML = `
+            <p id="chat-room-name">${msg.chatRoom.name}</p>
             <p id="sender-name">${msg.user.name}</p>
             <p id="message-contents">${msg.content ?? ""}</p>
             <button id="btn-approve" class="btn-green">Одобри</button>
@@ -27,8 +29,12 @@ window.onload = () => {
                     id: event.target.parentNode.getAttribute("msg-id"),
                 }),
             };
-            fetch("/index.php/admin/disabled-messages", options).then((resp) =>
-                console.log(resp)
+            fetch("/index.php/admin/disabled-messages", options).then(
+                (resp) => {
+                    if (resp.ok) {
+                        event.target.parentNode.removeChild(event.target);
+                    }
+                }
             );
         });
 
@@ -46,7 +52,11 @@ window.onload = () => {
                     }),
                 };
                 fetch("/index.php/admin/disabled-messages", options).then(
-                    (resp) => console.log(resp.text())
+                    (resp) => {
+                        if (resp.ok) {
+                            event.target.parentNode.removeChild(event.target);
+                        }
+                    }
                 );
             });
 

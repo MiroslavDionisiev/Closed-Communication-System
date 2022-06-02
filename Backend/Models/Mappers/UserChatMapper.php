@@ -13,40 +13,21 @@ class UserChatMapper
 
     public static function toEntity($from)
     {
-        if (is_array($from)) {
-            return Enti\UserChat::fill(
-                $from['id'] ?? null,
-                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from['chatRoom'] ?? null),
-                $from['isAnonymous'] ?? null,
-            );
-        } else if (is_object($from)) {
-            return Enti\UserChat::fill(
-                $from->{'id'} ?? null,
-                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
-                $from->{'isAnonymous'} ?? null,
-            );
-        }
-
-        return null;
+        return Enti\UserChat::fill(
+            $from->{'id'} ?? null,
+            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'user'} ?? null),
+            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
+            $from->{'isAnonymous'} ?? null,
+        );
     }
 
     public static function toDto($from)
     {
-        if (is_array($from)) {
-            return DTOs\UserChatDto::fill(
-                $from['id'] ?? null,
-                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from['chatRoom'] ?? null),
-                $from['isAnonymous'] ?? null,
-            );
-        } else if (is_object($from)) {
-            return DTOs\UserChatDto::fill(
-                $from->{'id'} ?? null,
-                call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null),
-                $from->{'isAnonymous'} ?? null,
-            );
-        }
-
-        return null;
+        return DTOs\UserChatDto::fill(
+            $from->{'id'} ?? null,
+            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'user'} ?? null),
+            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null),
+            $from->{'isAnonymous'} ?? null,
+        );
     }
 }
-

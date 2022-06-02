@@ -7,10 +7,10 @@ require_once(APP_ROOT . '/Models/Entities/User.php');
 class Student extends User
 {
 
-    private ?string $facultyNumber = null;
-    private ?int $year = null;
-    private ?string $speciality = null;
-    private ?string $faculty = null;
+    private $facultyNumber = null;
+    private $year = null;
+    private $speciality = null;
+    private $faculty = null;
 
     public function __construct()
     {

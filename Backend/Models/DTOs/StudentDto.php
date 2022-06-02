@@ -7,10 +7,10 @@ require_once(APP_ROOT . '/Models/DTOs/UserDto.php');
 class StudentDto extends UserDto implements \JsonSerializable
 {
 
-    protected ?string $facultyNumber = null;
-    protected ?int $year = null;
-    protected ?string $speciality = null;
-    protected ?string $faculty = null;
+    protected $facultyNumber = null;
+    protected $year = null;
+    protected $speciality = null;
+    protected $faculty = null;
 
     public function __construct()
     {
