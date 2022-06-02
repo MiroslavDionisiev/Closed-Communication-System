@@ -10,23 +10,27 @@ require_once(APP_ROOT . '/Models/Entities/ChatRoom.php');
 
 class ChatRoomMapper
 {
-    public static function toEntity($from)
+    public static function toEntity(?object $from)
     {
+        if(is_null($from)) return null;
+
         return Enti\ChatRoom::fill(
-            $from->{'id'} ?? null,
-            $from->{'name'} ?? null,
-            $from->{'availabilityDate'} ?? null,
-            $from->{'isActive'} ?? null,
+            $from->{'chatRoomId'}               ?? null,
+            $from->{'chatRoomName'}             ?? null,
+            $from->{'chatRoomAvailabilityDate'} ?? null,
+            $from->{'chatRoomIsActive'}         ?? null,
         );
     }
 
-    public static function toDto($from)
+    public static function toDto(?object $from)
     {
+        if(is_null($from)) return null;
+
         return Dtos\ChatRoomDto::fill(
-            $from->{'id'} ?? null,
-            $from->{'name'} ?? null,
-            $from->{'availabilityDate'} ?? null,
-            $from->{'isActive'} ?? null,
+            $from->{'chatRoomId'}               ?? null,
+            $from->{'chatRoomName'}             ?? null,
+            $from->{'chatRoomAvailabilityDate'} ?? null,
+            $from->{'chatRoomIsActive'}         ?? null,
         );
     }
 }

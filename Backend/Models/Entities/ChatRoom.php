@@ -5,22 +5,26 @@ namespace CCS\Models\Entities;
 class ChatRoom
 {
 
-    private $id = null;
-    private $name = null;
-    private $availabilityDate = null;
-    private $isActive = null;
+    private $chatRoomId               = null;
+    private $chatRoomName             = null;
+    private $chatRoomAvailabilityDate = null;
+    private $chatRoomIsActive         = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $name, $availabilityDate, $isActive)
-    {
+    public static function fill(
+        $chatRoomId,
+        $chatRoomName,
+        $chatRoomAvailabilityDate,
+        $chatRoomIsActive
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'name'} = $name;
-        $instance->{'availabilityDate'} = $availabilityDate;
-        $instance->{'isActive'} = is_null($isActive) ? $isActive : (bool) $isActive;
+        $instance->{'chatRoomId'}               = $chatRoomId;
+        $instance->{'chatRoomName'}             = $chatRoomName;
+        $instance->{'chatRoomAvailabilityDate'} = $chatRoomAvailabilityDate;
+        $instance->{'chatRoomIsActive'}         = is_null($chatRoomIsActive) ? $chatRoomIsActive : (bool) $chatRoomIsActive;
         return $instance;
     }
 

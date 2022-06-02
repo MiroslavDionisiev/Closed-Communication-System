@@ -16,7 +16,7 @@ window.onload = () => {
         `;
 
         for (let key of Object.keys(user)) {
-            if (key !== "id") {
+            if (key !== "userId") {
                 let li = document.createElement("li");
                 li.innerHTML = `${user[key]}`;
                 banner.querySelector("ul").appendChild(li);

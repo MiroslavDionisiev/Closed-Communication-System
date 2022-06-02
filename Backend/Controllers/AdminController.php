@@ -51,13 +51,13 @@ class AdminController {
 
     public static function deleteMessageById() {
         $messageDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
-        AdminService::deleteMessageById($messageDto->{'id'});
+        AdminService::deleteMessageById($messageDto->{'messageId'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
 
     public static function deleteChatRoomById() {
         $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
-        AdminService::deleteMessageById($chatRoomDto->{'id'});
+        AdminService::deleteMessageById($chatRoomDto->{'chatRoomId'});
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom deleted successfully."));
     }
 

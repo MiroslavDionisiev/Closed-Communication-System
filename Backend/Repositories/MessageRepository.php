@@ -3,25 +3,30 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
-use CCS\Models\Entities\User;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/MessageMapper.php');
+require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
+require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
 
 class MessageRepository
 {
 
-    public static function createMessage($userId, $chatRoomId, $content, $isDisabled)
-    {
+    public static function createMessage(
+        $userId,
+        $chatRoomId,
+        $messageContent,
+        $messageIsDisabled
+    ) {
         $con = new DB();
-        $query = "INSERT INTO messages(userId, chatRoomId, content, isDisabled)\n" .
-            "VALUES (:userId, :chatRoomId, :content, :isDisabled)";
+        $query = "INSERT INTO messages(userId, chatRoomId, messageContent, messageIsDisabled)\n" .
+            "VALUES (:userId, :chatRoomId, :messageContent, :messageIsDisabled)";
 
         $params = [
-            "iserId" => $userId,
-            "chatRoomId" => $chatRoomId,
-            "content" => $content,
-            "isDisabled" => $isDisabled
+            "userId"            => $userId,
+            "chatRoomId"        => $chatRoomId,
+            "messageContent"    => $messageContent,
+            "messageIsDisabled" => $messageIsDisabled
         ];
 
         $con->query($query, $params);
@@ -30,25 +35,34 @@ class MessageRepository
     public static function getAllDisabledMessages()
     {
         $con = new DB();
-        $query = "SELECT * FROM messages\n".
-            "WHERE isDisabled IS TRUE";
+        $query = "SELECT * FROM messages\n" .
+            "INNER JOIN users ON users.userId = messages.userId\n" .
+            "INNER JOIN students ON students.userId = users.userId\n" .
+            "INNER JOIN chat_rooms ON chat_rooms.chatRoomId = messages.chatRoomId\n" .
+            "WHERE messageIsDisabled IS TRUE";
 
         $rows = $con->query($query)->fetchAll();
 
-        foreach ($rows as &$row) {
-            $row->{'user'} = call_user_func('CCS\Repositories\UserRepository::findStudentById', $row->{'userId'});
-            $row->{'chatRoom'} = call_user_func('CCS\Repositories\ChatRoomRepository::findById', $row->{'chatRoomId'});
+        $messages = [];
+
+        foreach ($rows as $row) {
+            $message               = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
+            $message->{'user'}     = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            $message->{'chatRoom'} = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
+            $messages[]            = $message;
         }
 
-        return array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
+        return $messages;
     }
 
-    public static function getAllChatRoomMessages($chatRoomId) {
+    public static function getAllChatRoomMessages(
+        $chatRoomId
+    ) {
         $con = new DB();
-        $query = "SELECT messages.*, users.*, user_chats.isAnonymous FROM messages\n".
-            "INNER JOIN users ON users.id = messages.userId\n".
-            "INNER JOIN user_chats ON user_chats.userId = users.id\n".
-            "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS FALSE";
+        $query = "SELECT * FROM messages\n" .
+            "INNER JOIN users ON users.userId = messages.userId\n" .
+            "INNER JOIN user_chats ON user_chats.userId = users.userId\n" .
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageIsDisabled IS FALSE";
 
         $params = [
             "chatRoomId" => $chatRoomId
@@ -59,30 +73,33 @@ class MessageRepository
         $messages = array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
 
         foreach ($rows  as $index => $row) {
-            if (!$row["isAnonymous"]) {
-                $messages[$index]->user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            if (!$row["userChatIsAnonymous"]) {
+                $messages[$index]->{'user'} = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             }
         }
 
         return $messages;
     }
 
-    public static function deleteMessageById($msgId)
-    {
+    public static function deleteMessageById(
+        $messageId
+    ) {
         $con = new DB();
         $query = "DELETE FROM messages\n" .
-            "WHERE id = :msgId";
+            "WHERE messageId = :messageId";
         $params = [
-            "msgId" => $msgId
+            "messageId" => $messageId
         ];
 
         $con->query($query, $params);
     }
 
-    public static function findById($messageId) {
+    public static function findById(
+        $messageId
+    ) {
         $con = new DB();
         $query = "SELECT * FROM messages\n" .
-            "WHERE id = :messageId";
+            "WHERE messageId = :messageId";
         $params = [
             "messageId" => $messageId
         ];
@@ -92,11 +109,12 @@ class MessageRepository
         return call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
     }
 
-    public static function existsById($messageId)
-    {
+    public static function existsById(
+        $messageId
+    ) {
         $con = new DB();
         $query = "SELECT * FROM messages\n" .
-            "WHERE id = :messageId";
+            "WHERE messageId = :messageId";
         $params = [
             "messageId" => $messageId
         ];
@@ -106,19 +124,21 @@ class MessageRepository
         return $row;
     }
 
-    public static function updateMessage($messageDto) {
-        $msg = MessageRepository::findById($messageDto->{'id'});
-        $msg->{'content'} = $messageDto->{'content'} ?? $msg->{'content'};
-        $msg->{'isDisabled'} = $messageDto->{'content'} ?? $msg->{'content'};
+    public static function updateMessage(
+        $messageDto
+    ) {
+        $msg                        = MessageRepository::findById($messageDto->{'messageId'});
+        $msg->{'messageContent'}    = $messageDto->{'messageContent'} ?? $msg->{'messageContent'};
+        $msg->{'messageIsDisabled'} = $messageDto->{'messageContent'} ?? $msg->{'messageContent'};
 
         $con = new DB();
         $query = "UPDATE messages\n" .
-            "SET isDisabled = :isDisabled, content = :content\n" .
-            "WHERE id = :id";
+            "SET messageIsDisabled = :messageIsDisabled, messageContent = :messageContent\n" .
+            "WHERE messageId = :messageId";
         $params = [
-            "id" => $msg->{'id'},
-            "isDisabled" => $msg->{'isDisabled'},
-            "content" => $msg->{'content'},
+            "messageId"         => $msg->{'messageId'},
+            "messageIsDisabled" => $msg->{'messageIsDisabled'},
+            "messageContent"    => $msg->{'messageContent'},
         ];
 
         $row = $con->query($query, $params)->fetch();

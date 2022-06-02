@@ -3,7 +3,6 @@
     namespace CCS\Controllers;
 
     use CCS\Services\UserService;
-    use CCS\Models\DTOs as DTOs;
 
     require_once(APP_ROOT . "/Services/AdminService.php");
     foreach (glob(APP_ROOT . '/Models/DTOs.php') as $file) {
@@ -12,7 +11,7 @@
 
     class UserController {
         public static function getAllUserChats() {
-            $userId = $_SESSION['user']->{'id'};
+            $userId = $_SESSION['user']->{'userId'};
             echo json_encode(UserService::getAllUserChats($userId));
         }
 

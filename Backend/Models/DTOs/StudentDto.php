@@ -7,26 +7,34 @@ require_once(APP_ROOT . '/Models/DTOs/UserDto.php');
 class StudentDto extends UserDto implements \JsonSerializable
 {
 
-    protected $facultyNumber = null;
-    protected $year = null;
-    protected $speciality = null;
-    protected $faculty = null;
+    protected $studentFacultyNumber = null;
+    protected $studentYear          = null;
+    protected $studentSpeciality    = null;
+    protected $studentFaculty       = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $name, $email, $role, $facultyNumber, $year, $speciality, $faculty)
-    {
+    public static function fill(
+        $userId,
+        $userName,
+        $userEmail,
+        $userRole,
+        $studentFacultyNumber,
+        $studentYear,
+        $studentSpeciality,
+        $studentFaculty
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'name'} = $name;
-        $instance->{'email'} = $email;
-        $instance->{'role'} = $role;
-        $instance->{'facultyNumber'} = $facultyNumber;
-        $instance->{'year'} = $year;
-        $instance->{'speciality'} = $speciality;
-        $instance->{'faculty'} = $faculty;
+        $instance->{'userId'}               = $userId;
+        $instance->{'userName'}             = $userName;
+        $instance->{'userEmail'}            = $userEmail;
+        $instance->{'userRole'}             = $userRole;
+        $instance->{'studentFacultyNumber'} = $studentFacultyNumber;
+        $instance->{'studentYear'}          = $studentYear;
+        $instance->{'studentSpeciality'}    = $studentSpeciality;
+        $instance->{'studentFaculty'}       = $studentFaculty;
         return $instance;
     }
 

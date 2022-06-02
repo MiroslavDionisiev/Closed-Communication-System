@@ -8,13 +8,12 @@ window.onload = () => {
     let getMessageBanner = (msg) => {
         let banner = document.createElement("div");
         banner.classList.add("message-banner");
-        console.log(msg);
-        banner.setAttribute("msg-id", msg.id);
+        banner.setAttribute("msg-id", msg.messageId);
 
         banner.innerHTML = `
-            <p id="chat-room-name">${msg.chatRoom.name}</p>
-            <p id="sender-name">${msg.user.name}</p>
-            <p id="message-contents">${msg.content ?? ""}</p>
+            <p id="chat-room-name">${msg.chatRoom.chatRoomName}</p>
+            <p id="sender-name">${msg.user.userName}</p>
+            <p id="message-contents">${msg.messageContent ?? ""}</p>
             <button id="btn-approve" class="btn-green">Одобри</button>
             <button id="btn-deny" class="btn-red">Отхвърли</button>
         `;
@@ -26,13 +25,15 @@ window.onload = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: event.target.parentNode.getAttribute("msg-id"),
+                    messageId: event.target.parentNode.getAttribute("msg-id"),
                 }),
             };
             fetch("/index.php/admin/disabled-messages", options).then(
                 (resp) => {
                     if (resp.ok) {
-                        event.target.parentNode.removeChild(event.target);
+                        event.target.parentNode.parentNode.removeChild(
+                            event.target.parentNode
+                        );
                     }
                 }
             );
@@ -47,14 +48,16 @@ window.onload = () => {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        id: event.target.parentNode.getAttribute("msg-id"),
-                        isDisabled: false,
+                        messageId: event.target.parentNode.getAttribute("msg-id"),
+                        messageIsDisabled: false,
                     }),
                 };
                 fetch("/index.php/admin/disabled-messages", options).then(
                     (resp) => {
                         if (resp.ok) {
-                            event.target.parentNode.removeChild(event.target);
+                            event.target.parentNode.parentNode.removeChild(
+                                event.target.parentNode
+                            );
                         }
                     }
                 );

@@ -14,7 +14,7 @@ class UserRepository
     {
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
-            "INNER JOIN teachers t ON t.userId = u.id";
+            "INNER JOIN teachers t ON t.userId = u.userId";
 
         $rows = $con->query($query)->fetchAll();
 
@@ -25,7 +25,7 @@ class UserRepository
     {
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
-            "INNER JOIN students s ON s.userId = u.id";
+            "INNER JOIN students s ON s.userId = u.userId";
 
         $rows = $con->query($query)->fetchAll();
 
@@ -35,9 +35,9 @@ class UserRepository
     public static function findStudentById($userId)
     {
         $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "INNER JOIN students ON userId = id\n" .
-            "WHERE id = :userId";
+        $query = "SELECT * FROM users u\n" .
+            "INNER JOIN students s ON s.userId = u.userId\n" .
+            "WHERE userId = :userId";
         $params = [
             "userId" => $userId
         ];
@@ -47,14 +47,15 @@ class UserRepository
         return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
-    public static function findStudentByFacultyNumber($facultyNumber)
-    {
+    public static function findStudentByFacultyNumber(
+        $studentFacultyNumber
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "INNER JOIN students ON userId = id\n" .
-            "WHERE facultyNumber = :facultyNumber";
+        $query = "SELECT * FROM users u\n" .
+            "INNER JOIN students s ON s.userId = u.userId\n" .
+            "WHERE studentFacultyNumber = :studentFacultyNumber";
         $params = [
-            "facultyNumber" => $facultyNumber
+            "studentFacultyNumber" => $studentFacultyNumber
         ];
 
         $row = $con->query($query, $params)->fetch();
@@ -62,12 +63,13 @@ class UserRepository
         return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
-    public static function findTeacherById($userId)
-    {
+    public static function findTeacherById(
+        $userId
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "INNER JOIN teachers t ON t.userId = u.id";
-        "WHERE id = :userId";
+        $query = "SELECT * FROM users u\n" .
+            "INNER JOIN teachers t ON t.userId = u.userId";
+        "WHERE userId = :userId";
         $params = [
             "userId" => $userId
         ];
@@ -77,11 +79,12 @@ class UserRepository
         return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
-    public static function existsById($userId)
-    {
+    public static function existsById(
+        $userId
+    ) {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
-            "WHERE id = :userId";
+            "WHERE userId = :userId";
         $params = [
             "userId" => $userId
         ];

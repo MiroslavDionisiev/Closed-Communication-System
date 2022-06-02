@@ -11,27 +11,37 @@ require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
 
 class MessageMapper
 {
-    public static function toEntity($from)
+    public static function toEntity(?object $from)
     {
+        if(is_null($from)) return null;
+
+        $user     = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $from->{'user'} ?? null);
+        $userRoom = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null);
+
         return Enti\Message::fill(
-            $from->{'id'} ?? null,
-            call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $from->{'user'} ?? null),
-            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
-            $from->{'content'} ?? null,
-            $from->{'timestamp'} ?? null,
-            $from->{'isDisabled'} ?? null
+            $from->{'messageId'}         ?? null,
+            $user,
+            $userRoom,
+            $from->{'messageContent'}    ?? null,
+            $from->{'messageTimestamp'}  ?? null,
+            $from->{'messageIsDisabled'} ?? null
         );
     }
 
-    public static function toDto($from)
+    public static function toDto(?object $from)
     {
+        if(is_null($from)) return null;
+
+        $user     = call_user_func('CCS\Models\Mappers\UserMapper::toDto', $from->{'user'} ?? null);
+        $userRoom = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null);
+
         return DTOs\MessageDto::fill(
-            $from->{'id'} ?? null,
-            call_user_func('CCS\Models\Mappers\UserMapper::toDto', $from->{'user'} ?? null),
-            call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null),
-            $from->{'content'} ?? null,
-            $from->{'timestamp'} ?? null,
-            $from->{'isDisabled'} ?? null
+            $from->{'messageId'}         ?? null,
+            $user,
+            $userRoom,
+            $from->{'messageContent'}    ?? null,
+            $from->{'messageTimestamp'}  ?? null,
+            $from->{'messageIsDisabled'} ?? null
         );
     }
 }
