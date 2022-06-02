@@ -5,28 +5,35 @@ window.onload = () => {
     authenticate();
     authorize();
 
+    // <div class="user-info-wrapper">
+    //     <ul class="user-info-keys">
+    //     </ul>
+    //     <ul class="user-info-values">
+    //     </ul>
+    // </div>
+
     let getUserBanner = (user) => {
         let banner = document.createElement("div");
-        banner.classList.add("user-banner");
 
         banner.innerHTML = `
-            <img src="img/img-user.png" alt="User profile picture">
-            <ul class="user-info">
-            </ul>
+        <a class="user-banner">
+            <figure>
+                <img src="img/img-user.png" alt="User profile picture">
+                <figcaption class="user-name"></figcaption>
+            </figure>
+        </a>
         `;
 
-        for (let key of Object.keys(user)) {
-            if (key !== "userId") {
-                let li = document.createElement("li");
-                li.innerHTML = `${user[key]}`;
-                banner.querySelector("ul").appendChild(li);
-            }
-        }
+        banner.querySelector(".user-name").innerHTML = user.userName;
+        banner
+            .querySelector("a")
+            .addEventListener("click", (event) => openUserInfo(event.target));
+        banner.querySelector("a").setAttribute("userId", user.userId);
 
-        return banner;
+        return banner.querySelector("a");
     };
 
-    let fetchUsers = () => {
+    function fetchUsers() {
         fetch("/index.php/admin/users")
             .then((resp) => resp.json())
             .then((users) => {
@@ -35,7 +42,19 @@ window.onload = () => {
                     list.appendChild(getUserBanner(user));
                 }
             });
-    };
+    }
 
     fetchUsers();
+
+    function openUserInfo(userId) {
+        console.log(userId);
+        fetch(`/index.php/admin/users/${userId}`)
+            .then((resp) => {
+                if(resp.status != 200) {
+                    alert("User doesn't exist");
+                }
+                return resp.json();
+            })
+            .then((user) => {});
+    }
 };
