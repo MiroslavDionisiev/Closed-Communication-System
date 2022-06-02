@@ -106,4 +106,12 @@ class AdminService
             }
         }
     }
+
+    public static function updateMessageIsDisabled($msgDto) {
+        var_dump(Repo\MessageRepository::existsById($msgDto->{'id'}));
+        if (!Repo\MessageRepository::existsById($msgDto->{'id'})) {
+            throw new \InvalidArgumentException("Message with ID {$msgDto->{'id'}} doesn't exist.");
+        }
+        Repo\MessageRepository::updateMessage($msgDto);
+    }
 }

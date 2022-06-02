@@ -9,18 +9,20 @@ class MessageDto implements \JsonSerializable
     protected ?UserDto $user = null;
     protected ?string $content = null;
     protected ?string $timestamp = null;
+    protected ?bool $isDisabled = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp)
+    public static function fill($id, $user, $content, $timestamp, $isDisabled)
     {
         $instance = new self();
         $instance->{'id'} = $id;
         $instance->{'user'} = $user;
         $instance->{'content'} = $content;
         $instance->{'timestamp'} = $timestamp;
+        $instance->{'isDisabled'} = $isDisabled;
         return $instance;
     }
 

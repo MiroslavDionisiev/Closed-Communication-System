@@ -4,7 +4,6 @@
 
     use CCS\Models\DTOs as DTOs;
     use CCS\Models\Entities as Enti;
-    use CCS\Models\Mappers as Mapper;
 
     require_once(APP_ROOT . '/Models/DTOs/MessageDto.php');
     require_once(APP_ROOT . '/Models/Entities/Message.php');
@@ -20,26 +19,32 @@
             if (is_array($from)) {
                 $user = null;
                 if (isset($from['speciality'])) {
-                    $user = call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $from['user'] ?? null);
+                    $user = call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $from);
                 }
                 else {
-                    $user = call_user_func('CCS\Models\Mappers\TeacherMapper::toEntity', $from['user'] ?? null);
+                    $user = call_user_func('CCS\Models\Mappers\TeacherMapper::toEntity', $from);
                 }
 
                 return Enti\Message::fill(
                     $from['id'] ?? null,
                     $user,
                     $from['content'] ?? null,
-                    $from['timestamp'] ?? null
+                    $from['timestamp'] ?? null,
+                    $from['isDisabled'] ?? null
                 );
             } else if (is_object($from)) {
-                $user = call_user_func('CCS\Models\Mappers\\'.$from->{'user'}->get_class().'Mapper::toEntity', $from->{'user'} ?? null);
+                $user = null;
+                if (!is_null($from->{'user'})) {
+                    $className = str_replace("Entities", "Mappers", get_class($from->{'user'}));
+                    $user = call_user_func($className . 'Mapper::toDto', $from->{'user'});
+                }
                 
                 return Enti\Message::fill(
                     $from->{'id'} ?? null,
                     $user,
                     $from->{'content'} ?? null,
-                    $from->{'timestamp'} ?? null
+                    $from->{'timestamp'} ?? null,
+                    $from->{'isDisabled'} ?? null
                 );
             }
     
@@ -51,34 +56,32 @@
             if (is_array($from)) {
                 $user = null;
                 if (isset($from['speciality'])) {
-                    $user = call_user_func('CCS\Models\Mappers\StudentMapper::toDto', $from['user'] ?? null);
+                    $user = call_user_func('CCS\Models\Mappers\StudentMapper::toDto', $from);
                 }
                 else {
-                    $user = call_user_func('CCS\Models\Mappers\TeacherMapper::toDto', $from['user'] ?? null);
+                    $user = call_user_func('CCS\Models\Mappers\TeacherMapper::toDto', $from);
                 }
 
                 return DTOs\MessageDto::fill(
                     $from['id'] ?? null,
                     $user,
                     $from['content'] ?? null,
-                    $from['timestamp'] ?? null
+                    $from['timestamp'] ?? null,
+                    $from['isDisabled'] ?? null
                 );
             } else if (is_object($from)) {
-                /*$user = null;
-                if (strcmp(get_class($from->{'user'}), "Student")) {
-                    $user = call_user_func('CCS\Models\Mappers\StudentMapper::toDto', $from->{'user'});
+                $user = null;
+                if (!is_null($from->{'user'})) {
+                    $className = str_replace("Entities", "Mappers", get_class($from->{'user'}));
+                    $user = call_user_func($className . 'Mapper::toDto', $from->{'user'});
                 }
-                else if (strcmp(get_class($from->{'user'}), "Student")) {
-                    $user = call_user_func('CCS\Models\Mappers\\'.$from->{'user'}.'Mapper::toDto', $from->{'user'});
-                }*/
-
-                $user = call_user_func('CCS\Models\Mappers\\'.$from->{'user'}->get_class().'Mapper::toDto', $from->{'user'} ?? null);
 
                 return DTOs\MessageDto::fill(
                     $from->{'id'} ?? null,
                     $user,
                     $from->{'content'} ?? null,
-                    $from->{'timestamp'} ?? null
+                    $from->{'timestamp'} ?? null,
+                    $from->{'isDisabled'} ?? null
                 );
             }
 

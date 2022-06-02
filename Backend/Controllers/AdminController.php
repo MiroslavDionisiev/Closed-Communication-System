@@ -67,4 +67,10 @@ class AdminController {
         AdminService::createUserChatRoomFromCsv($csvData);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatrooms created successfully."));
     }
+
+    public static function updateMessageIsDisabled() {
+        $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input'), true));
+        AdminService::updateMessageIsDisabled($msgDto);
+        echo json_encode(new DTOs\ResponseDtoSuccess(201, "Message updated successfully."));
+    }
 }

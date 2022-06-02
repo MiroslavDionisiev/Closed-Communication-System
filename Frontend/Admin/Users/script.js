@@ -12,14 +12,16 @@ window.onload = () => {
         banner.innerHTML = `
             <img src="img/img-user.png" alt="User profile picture">
             <lu class="user-info">
-                <li>${user.name}</li>
-                <li>${user.email}</li>
-                <li>${user.facultyNumber}</li>
-                <li>${user.speciality}</li>
-                <li>${user.faculty}</li>
-                <li>${user.role}</li>
             </lu>
         `;
+
+        for (let key of Object.keys(user)) {
+            if (key !== "id") {
+                let li = document.createElement("li");
+                li.innerHTML = `${user[key]}`;
+                banner.querySelector("lu").appendChild(li);
+            }
+        }
 
         return banner;
     };

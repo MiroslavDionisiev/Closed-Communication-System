@@ -67,7 +67,13 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'updateChatRoomActive'
     ],
-    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
+    "PUT ^" . URL_ROOT . "/index.php/admin/disabled-messages$" => [
+        'authenticate' => true,
+        'authorize' => ['ADMIN'],
+        'controller' => 'AdminController',
+        'controllerMethod' => 'updateMessageIsDisabled'
+    ],
+    "DELETE ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',

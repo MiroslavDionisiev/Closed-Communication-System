@@ -29,8 +29,10 @@ class MessageRepository
     public static function getAllDisabledMessages()
     {
         $con = new DB();
-        $query = "SELECT * FROM messages\n" .
-            "WHERE isDisabled IS TRUE";
+        $query = "SELECT * FROM messages\n".
+            "INNER JOIN users ON users.id = messages.userId\n".
+            "INNER JOIN students ON users.id = students.userId\n".
+            "WHERE messages.isDisabled IS TRUE";
 
         $rows = $con->query($query)->fetchAll();
 
@@ -39,10 +41,10 @@ class MessageRepository
 
     public static function getAllChatRoomMessages($chatRoomId) {
         $con = new DB();
-        $query = "SELECT messages.*, user.*, user_chats.isAnonymous FROM messages\n".
-            "INNER JOIN user ON user.id = messages.userId\n".
-            "INNER JOIN user_chats ON user_chats.userId = user.id\n".
-            "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS TRUE";
+        $query = "SELECT messages.*, users.*, user_chats.isAnonymous FROM messages\n".
+            "INNER JOIN users ON users.id = messages.userId\n".
+            "INNER JOIN user_chats ON user_chats.userId = users.id\n".
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS FALSE";
 
         $params = [
             "chatRoomId" => $chatRoomId
@@ -73,6 +75,19 @@ class MessageRepository
         $con->query($query, $params);
     }
 
+    public static function findById($messageId) {
+        $con = new DB();
+        $query = "SELECT * FROM messages\n" .
+            "WHERE id = :messageId";
+        $params = [
+            "messageId" => $messageId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
+    }
+
     public static function existsById($messageId)
     {
         $con = new DB();
@@ -80,6 +95,26 @@ class MessageRepository
             "WHERE id = :messageId";
         $params = [
             "messageId" => $messageId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return $row;
+    }
+
+    public static function updateMessage($messageDto) {
+        $msg = MessageRepository::findById($messageDto->{'id'});
+        $msg->{'contents'} = $messageDto->{'contents'} ?? $msg->{'contents'};
+        $msg->{'isDisabled'} = $messageDto->{'contents'} ?? $msg->{'contents'};
+
+        $con = new DB();
+        $query = "UPDATE messages\n" .
+            "SET isDisabled = :isDisabled, contents = :contents\n" .
+            "WHERE id = :id";
+        $params = [
+            "id" => $msg->{'id'},
+            "isDisabled" => $msg->{'isDisabled'},
+            "contents" => $msg->{'contents'},
         ];
 
         $row = $con->query($query, $params)->fetch();
