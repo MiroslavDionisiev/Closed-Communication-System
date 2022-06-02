@@ -25,7 +25,7 @@ class DatabaseConnection
             $password,
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
             ]
         );
 
@@ -39,16 +39,28 @@ class DatabaseConnection
         $this->connection = null;
     }
 
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
     public function query(string $query, array $params = [], array $options = [])
     {
         $stmt = $this->connection->prepare($query, $options);
 
-        if ($stmt === false) {
+        if (!$stmt) {
             throw new Exception("Unable to do prepared statement: " . $query);
         }
 
-        if ($stmt->execute($params) === false) {
-            throw new Exception("Statement execution failed: " . $query);
+        try {
+            $this->connection->beginTransaction();
+            if (!$stmt->execute($params)) {
+                throw new Exception("Statement execution failed: " . $query);
+            }
+            $this->connection->commit();
+        } catch (\PDOException $e) {
+            $this->connection->rollBack();
+            throw $e;
         }
 
         return $stmt;

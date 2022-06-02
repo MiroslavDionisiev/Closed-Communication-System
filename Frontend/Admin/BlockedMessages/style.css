@@ -1,0 +1,97 @@
+@import "../style.css";
+
+.wrapper-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.message-banner {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #aaaaaa;
+    color: #fff;
+    padding: 0 2rem;
+    margin: 1rem;
+    border-radius: 2rem;
+}
+
+.message-banner p {
+    padding: 0 2rem;
+    border-right: 1px solid #fff;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+#message-contents {
+    flex-grow: 1;
+    text-align: justify;
+}
+
+.message-banner:hover {
+    height: fit-content;
+}
+
+.message-banner p:last-child {
+    border: 0;
+}
+
+.message-banner button {
+    height: fit-content;
+    width: fit-content;
+    justify-self: flex-end;
+    align-self: center;
+    margin: 0 1rem;
+}
+
+.btn-green {
+    box-shadow: inset 0px 1px 0px 0px #a4e271;
+    background: linear-gradient(to bottom, #89c403 5%, #77a809 100%);
+    background-color: #89c403;
+    border-radius: 6px;
+    border: 1px solid #74b807;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+.btn-green:hover {
+    background: linear-gradient(to bottom, #77a809 5%, #89c403 100%);
+    background-color: #77a809;
+}
+.btn-green:active {
+    position: relative;
+    top: 1px;
+}
+
+.btn-red {
+    box-shadow: inset 0px 1px 0px 0px #f7c5c0;
+    background: linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
+    background-color: #fc8d83;
+    border-radius: 6px;
+    border: 1px solid #d83526;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+.btn-red:hover {
+    background: linear-gradient(to bottom, #e4685d 5%, #fc8d83 100%);
+    background-color: #e4685d;
+}
+.btn-red:active {
+    position: relative;
+    top: 1px;
+}

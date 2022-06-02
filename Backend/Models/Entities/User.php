@@ -4,9 +4,9 @@ namespace CCS\Models\Entities;
 
 abstract class User
 {
-    protected ?string $id = null;
-    protected ?string $name = null;
-    protected ?string $email = null;
-    protected ?string $password = null;
-    protected ?string $role = null;
+    protected $userId       = null;
+    protected $userName     = null;
+    protected $userEmail    = null;
+    protected $userPassword = null;
+    protected $userRole     = null;
 }

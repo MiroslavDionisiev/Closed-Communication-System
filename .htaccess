@@ -1,3 +1,4 @@
 Options -Indexes
 
 RedirectMatch ^(?!.*index.php)(?!.*Frontend)(.*)$ $1Frontend/ChatRoom
+

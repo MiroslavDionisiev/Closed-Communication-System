@@ -11,13 +11,17 @@ class TeacherDto extends UserDto implements \JsonSerializable
     {
     }
 
-    public static function fill($id, $name, $email, $role)
-    {
+    public static function fill(
+        $userId,
+        $userName,
+        $userEmail,
+        $userRole
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'name'} = $name;
-        $instance->{'email'} = $email;
-        $instance->{'role'} = $role;
+        $instance->{'userId'}    = $userId;
+        $instance->{'userName'}  = $userName;
+        $instance->{'userEmail'} = $userEmail;
+        $instance->{'userRole'}  = $userRole;
         return $instance;
     }
 

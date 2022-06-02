@@ -4,8 +4,8 @@ namespace CCS\Models\DTOs;
 
 abstract class UserDto
 {
-    protected ?string $id = null;
-    protected ?string $name = null;
-    protected ?string $email = null;
-    protected ?string $role = null;
+    protected $userId    = null;
+    protected $userName  = null;
+    protected $userEmail = null;
+    protected $userRole  = null;
 }

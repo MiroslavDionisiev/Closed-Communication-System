@@ -4,7 +4,6 @@ namespace CCS;
 
 use CCS\Helpers as Help;
 use CCS\Models\DTOs as DTOs;
-use CCS\Database\DatabaseConnection;
 
 require_once('config.php');
 require_once(APP_ROOT . '/Models/DTOs/ResponseDto.php');
@@ -28,24 +27,16 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 session_start();
 
-### FOR TESTING PURPOSES ###
-use CCS\Models\Entities\Teacher;
-require_once(APP_ROOT . '/Models/Entities/Teacher.php');
-$u = new Teacher();
-$u->id = '582dc020-e1e8-11ec-89fe-b05adad6ff7b';
-$u->role = 'ADMIN';
-$u->name = 'DOE';
-$_SESSION['user'] = $u;
-### FOR TESTING PURPOSES ###
-
-$routes = array_filter(ROUTES, function($k) use ($requestMethod) { return str_starts_with($k, $requestMethod); }, ARRAY_FILTER_USE_KEY);
+$routes = array_filter(ROUTES, function ($k) use ($requestMethod) {
+    return str_starts_with($k, $requestMethod);
+}, ARRAY_FILTER_USE_KEY);
 
 foreach ($routes as $key => $conf) {
-    $split = explode(' ', $key);
+    $split       = explode(' ', $key, 2);
     $routeMethod = $split[0];
-    $route = $split[1];
+    $route       = $split[1];
 
-    if (preg_match("#" . $route . "#mi", $uri)) {
+    if (preg_match("#" . $route . "#mi", URL_ROOT . $uri, $positionalParameters)) {
         if ($routeMethod !== $requestMethod) {
             echo json_encode(
                 new DTOs\ResponseDtoError(
@@ -59,7 +50,7 @@ foreach ($routes as $key => $conf) {
 
         if (isset($conf['authenticate']) && $conf['authenticate']) {
 
-            if (!Help\AuthorizationManager::authenticate()) {
+            if (is_null(Help\AuthorizationManager::authenticate())) {
                 echo json_encode(
                     new DTOs\ResponseDtoError(
                         401,
@@ -82,10 +73,22 @@ foreach ($routes as $key => $conf) {
             }
         }
 
-        $controller = $conf['controller'];
+        $controller       = $conf['controller'];
         $controllerMethod = $conf['controllerMethod'];
 
-        call_user_func(array("CCS\\Controllers\\" . $controller, $controllerMethod));
+        try {
+            call_user_func(array("CCS\\Controllers\\" . $controller, $controllerMethod), $positionalParameters);
+        } catch (\PDOException $e) {
+            echo json_encode(new DTOs\ResponseDtoError(
+                500,
+                $e->getMessage()
+            ), JSON_FLAGS);
+        } catch (\InvalidArgumentException $e) {
+            echo json_encode(new DTOs\ResponseDtoError(
+                400,
+                $e->getMessage()
+            ), JSON_FLAGS);
+        }
         exit();
     }
 }

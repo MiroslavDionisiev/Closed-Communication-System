@@ -5,22 +5,26 @@ namespace CCS\Models\Entities;
 class UserChat
 {
 
-    private ?string $id = null;
-    private ?ChatRoom $chatRoom = null;
-    private ?bool $isAnonymous = null;
-    private ?string $lastSeen = null;
+    private $userChatId          = null;
+    private $user                = null;
+    private $chatRoom            = null;
+    private $userChatIsAnonymous = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $chatRoom, $isAnonymous, $lastSeen)
-    {
+    public static function fill(
+        $userChatId,
+        $user,
+        $chatRoom,
+        $userChatIsAnonymous
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'chatRoom'} = $chatRoom;
-        $instance->{'isAnonymous'} = $isAnonymous;
-        $instance->{'lastSeen'} = $lastSeen;
+        $instance->{'userChatId'}          = $userChatId;
+        $instance->{'user'}                = $user;
+        $instance->{'chatRoom'}            = $chatRoom;
+        $instance->{'userChatIsAnonymous'} = $userChatIsAnonymous;
         return $instance;
     }
 
