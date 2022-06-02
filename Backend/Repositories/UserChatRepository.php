@@ -25,17 +25,17 @@ class UserChatRepository
 
     public static function getAllUserChats($userId) {
         $con = new DB();
-        $query = "SELECT * FROM chat_room\n".
-            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_room.id\n".
-            "WHERE user_chat.userId = :userId";
+        $query = "SELECT * FROM chat_rooms\n".
+            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_rooms.id\n".
+            "WHERE user_chats.userId = :userId";
 
         $params = [
             "userId" => $userId
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        $chatRooms = array_map('CSS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
-        $userChats = array_map('CSS\Models\Mappers\UserChatMapper::toEntity', $rows);
+        $chatRooms = array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
+        $userChats = array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows);
 
         foreach ($chatRooms as $index => $chatRoom) {
             $userChats[$index]->chatRoom = $chatRoom;
@@ -46,8 +46,8 @@ class UserChatRepository
 
     public static function getUserChatByIds($userId, $chatRoomId) {
         $con = new DB();
-        $query = "SELECT * FROM user_chat\n".
-            "WHERE user_chat.userId = :userId AND user_chat.chatRoomId = :chatRoomId";
+        $query = "SELECT * FROM user_chats\n".
+            "WHERE user_chats.userId = :userId AND user_chats.chatRoomId = :chatRoomId";
 
         $params = [
             "userId" => $userId,
@@ -68,6 +68,21 @@ class UserChatRepository
             "chatRoomId"    => $chatRoomId,
             "userId"        => $userId,
             "isAnonymous"   => $isAnonymous
+        ];
+
+        $con->query($query, $params);
+    }
+
+    public static function updateUserLastSeen($chatRoomId, $userId, $timestamp)
+    {
+        $con = new DB();
+        $query = "UPDATE chat_rooms\n" .
+            "SET lastSeen = :lastSeen\n" .
+            "WHERE chatRoomId = :chatRoomId AND userId = :userId";
+        $params = [
+            "chatRoomId" => $chatRoomId,
+            "userId" => $userId,
+            "lastSeen" => $timestamp
         ];
 
         $con->query($query, $params);

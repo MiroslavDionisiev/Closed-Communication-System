@@ -39,13 +39,38 @@ class MessageRepository
 
     public static function getAllChatRoomMessages($chatRoomId) {
         $con = new DB();
-        $query = "SELECT messages.*, user.*, user_chats.isAnonymous FROM messages\n".
-            "INNER JOIN user ON user.id = messages.userId\n".
-            "INNER JOIN user_chats ON user_chats.userId = user.id\n".
+        $query = "SELECT messages.*, users.*, user_chats.isAnonymous FROM messages\n".
+            "INNER JOIN users ON users.id = messages.userId\n".
+            "INNER JOIN user_chats ON user_chats.userId = users.id\n".
             "WHERE messages.chatRoomId = :chatRoomId AND messages.isDisabled IS TRUE";
 
         $params = [
             "chatRoomId" => $chatRoomId
+        ];
+
+        $rows = $con->query($query, $params)->fetchAll();
+
+        $messages = array_map('CCS\Models\Mappers\MessageMapper::toEntity', $rows);
+
+        foreach ($rows  as $index => $row) {
+            if (!$row["isAnonymous"]) {
+                $messages[$index]->user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            }
+        }
+
+        return $messages;
+    }
+
+    public static function getAllChatRoomMessagesFromTimestamp($chatRoomId, $timestamp) {
+        $con = new DB();
+        $query = "SELECT messages.*, users.*, user_chats.isAnonymous FROM messages\n".
+            "INNER JOIN users ON users.id = messages.userId\n".
+            "INNER JOIN user_chats ON user_chats.userId = users.id\n".
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.timestamp > :timestamp AND messages.isDisabled IS TRUE";
+
+        $params = [
+            "chatRoomId" => $chatRoomId,
+            "timestamp" => $timestamp
         ];
 
         $rows = $con->query($query, $params)->fetchAll();

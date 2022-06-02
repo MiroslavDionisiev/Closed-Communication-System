@@ -32,7 +32,9 @@ session_start();
 use CCS\Models\Entities\Teacher;
 require_once(APP_ROOT . '/Models/Entities/Teacher.php');
 $u = new Teacher();
+$u->id = '582dc020-e1e8-11ec-89fe-b05adad6ff7b';
 $u->role = 'ADMIN';
+$u->name = 'DOE';
 $_SESSION['user'] = $u;
 ### FOR TESTING PURPOSES ###
 

@@ -1,7 +1,7 @@
 <?php
 
 define('APP_ROOT', __DIR__ . '/Backend');
-define('URL_ROOT', '/Closed-Communication-System/');
+define('URL_ROOT', '/Closed-Communication-System');
 
 define('JSON_FLAGS', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -15,6 +15,12 @@ define('ROUTES', [
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllDisabledMessages'
+    ],
+    "GET ^" . URL_ROOT . "/index.php/user$" => [
+        'authenticate' => true,
+        'authorize' => ['USER', 'ADMIN'],
+        'controller' => 'UserController',
+        'controllerMethod' => 'getUserFromSession'
     ],
     "GET ^" . URL_ROOT . "/index.php/admin/users$" => [
         'authenticate' => true,

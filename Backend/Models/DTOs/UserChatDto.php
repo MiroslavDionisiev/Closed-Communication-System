@@ -8,17 +8,19 @@ class UserChatDto implements \JsonSerializable
     protected ?string $id = null;
     protected ?ChatRoomDto $chatRoom = null;
     protected ?bool $isAnonymous = null;
+    protected ?string $lastSeen = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $chatRoom, $isAnonymous)
+    public static function fill($id, $chatRoom, $isAnonymous, $lastSeen)
     {
         $instance = new self();
         $instance->{'id'} = $id;
         $instance->{'chatRoom'} = $chatRoom;
         $instance->{'isAnonymous'} = $isAnonymous;
+        $instance->{'lastSeen'} = $lastSeen;
         return $instance;
     }
 

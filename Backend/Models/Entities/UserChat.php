@@ -8,17 +8,19 @@ class UserChat
     private ?string $id = null;
     private ?ChatRoom $chatRoom = null;
     private ?bool $isAnonymous = null;
+    private ?string $lastSeen = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $chatRoom, $isAnonymous)
+    public static function fill($id, $chatRoom, $isAnonymous, $lastSeen)
     {
         $instance = new self();
         $instance->{'id'} = $id;
         $instance->{'chatRoom'} = $chatRoom;
         $instance->{'isAnonymous'} = $isAnonymous;
+        $instance->{'lastSeen'} = $lastSeen;
         return $instance;
     }
 

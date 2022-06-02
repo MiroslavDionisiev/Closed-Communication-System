@@ -18,12 +18,14 @@ class UserChatMapper
                 $from['id'] ?? null,
                 call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from['chatRoom'] ?? null),
                 $from['isAnonymous'] ?? null,
+                $from['lastSeen'] ?? null
             );
         } else if (is_object($from)) {
             return Enti\UserChat::fill(
                 $from->{'id'} ?? null,
                 call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $from->{'chatRoom'} ?? null),
                 $from->{'isAnonymous'} ?? null,
+                $from->{'lastSeen'} ?? null
             );
         }
 
@@ -37,12 +39,14 @@ class UserChatMapper
                 $from['id'] ?? null,
                 call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from['chatRoom'] ?? null),
                 $from['isAnonymous'] ?? null,
+                $from['lastSeen'] ?? null
             );
         } else if (is_object($from)) {
             return DTOs\UserChatDto::fill(
                 $from->{'id'} ?? null,
                 call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $from->{'chatRoom'} ?? null),
                 $from->{'isAnonymous'} ?? null,
+                $from->{'lastSeen'} ?? null
             );
         }
 

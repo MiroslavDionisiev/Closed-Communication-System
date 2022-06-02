@@ -83,6 +83,7 @@ main p {
     justify-content: space-between;
     align-items: center;
     background-color: #04aa6d;
+    border: 2px solid #0b5817;
     margin-top: 1rem;
     padding: 1.5rem;
 }
@@ -102,12 +103,28 @@ main p {
     color: #ffffff;
 }
 
-.unread {
-    background-color: #ffc0c7;
-    color: #fc072c;
-    border: 2px solid #ff3251;
+.unreadChatRoom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ef6272;
+    border: 2px solid rgb(133, 14, 14);
+    margin-top: 1rem;
+    padding: 1.5rem;
+}
+
+.unreadChatRoom:hover {
+    background-color: #d14051;
+}
+
+.unreadChatRoom li:not(:first-child) {
+    margin-top: 0.5rem;
+}
+
+.unreadMessage {
+    color: #ffffff;
     font-family: sans-serif;
-    font-size: 18x;
+    font-size: 20px;
     font-weight: bold;
-    padding: 8px 16px;
 }
