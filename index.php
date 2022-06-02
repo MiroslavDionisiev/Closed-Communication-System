@@ -4,7 +4,6 @@ namespace CCS;
 
 use CCS\Helpers as Help;
 use CCS\Models\DTOs as DTOs;
-use CCS\Database\DatabaseConnection;
 
 require_once('config.php');
 require_once(APP_ROOT . '/Models/DTOs/ResponseDto.php');
@@ -39,11 +38,11 @@ $_SESSION['user'] = $u;
 $routes = array_filter(ROUTES, function($k) use ($requestMethod) { return str_starts_with($k, $requestMethod); }, ARRAY_FILTER_USE_KEY);
 
 foreach ($routes as $key => $conf) {
-    $split = explode(' ', $key);
+    $split = explode(' ', $key, 2);
     $routeMethod = $split[0];
     $route = $split[1];
 
-    if (preg_match("#" . $route . "#mi", $uri)) {
+    if (preg_match("#" . $route . "#mi", URL_ROOT . $uri)) {
         if ($routeMethod !== $requestMethod) {
             echo json_encode(
                 new DTOs\ResponseDtoError(

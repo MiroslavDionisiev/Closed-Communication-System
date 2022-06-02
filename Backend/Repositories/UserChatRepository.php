@@ -62,7 +62,7 @@ class UserChatRepository
     public static function createUserChat($chatRoomId, $userId, $isAnonymous)
     {
         $con = new DB();
-        $query = "INSERT INTO user_chats(chatId, userId, isAnonymous)\n" .
+        $query = "INSERT INTO user_chats(chatRoomId, userId, isAnonymous)\n" .
             "VALUES (:chatRoomId, :userId, :isAnonymous)";
         $params = [
             "chatRoomId"    => $chatRoomId,

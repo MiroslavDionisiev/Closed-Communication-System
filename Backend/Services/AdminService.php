@@ -7,6 +7,7 @@ use CCS\Repositories as Repo;
 require_once(APP_ROOT . "/Repositories/UserRepository.php");
 require_once(APP_ROOT . "/Repositories/MessageRepository.php");
 require_once(APP_ROOT . "/Repositories/ChatRoomRepository.php");
+require_once(APP_ROOT . "/Repositories/UserChatRepository.php");
 
 foreach (glob(APP_ROOT . '/Models/DTOs/*.php') as $file) {
     require_once($file);
@@ -35,7 +36,8 @@ class AdminService
 
     public static function createChatRoom($chatRoomDto)
     {
-        Repo\ChatRoomRepository::createChatRoom($chatRoomDto->{'name'}, $chatRoomDto->{'availabilityDate'}, $chatRoomDto->{'isActive'});
+        $chatRoom = Repo\ChatRoomRepository::createChatRoom($chatRoomDto->{'name'}, $chatRoomDto->{'availabilityDate'}, $chatRoomDto->{'isActive'});
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $chatRoom);
     }
 
     public static function addUserToChatRoom($userChatDto)
@@ -87,6 +89,21 @@ class AdminService
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
     }
 
-    public static function createUserChatRoomFromCsv($csvData) {
+    public static function createUserChatRoomFromCsv($csvData)
+    {
+        foreach ($csvData as $row) {
+            $chatRoom = Repo\ChatRoomRepository::createChatRoom($row[0], $row[1]);
+
+            for ($i = 2; $i < count($row); $i+=2) {
+                $facultyNumber = $row[$i];
+                $isAnonymous = filter_var($row[$i + 1] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+                $student = Repo\UserRepository::findStudentByFacultyNumber($facultyNumber);
+                if (!$student) {
+                    throw new \InvalidArgumentException("Student with faculty number {$facultyNumber} doesn't exist.");
+                }
+                Repo\UserChatRepository::createUserChat($chatRoom->{'id'}, $student->{'id'}, $isAnonymous);
+            }
+        }
     }
 }
