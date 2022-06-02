@@ -1,14 +1,9 @@
-import { authenticate } from '../utils.js';
+import { authenticate, GLOBALS } from '../utils.js';
 
-export function authorize(authority) {
-    fetch(`/index.php/auth/authorize?authority=${authority}`).then((resp) => {
-        if (resp.status == 401) {
-            window.location.replace("../Frontend/Login");
-        }
-    });
-}
+window.onload = async () => {
+    let user = await authenticate();
 
-window.onload = () => {
-    authenticate();
-    authorize('ADMIN');
+    if (user.userRole !== GLOBALS.ADMIN_ROLE) {
+        window.location.replace("/Frontend/User");
+    }
 };

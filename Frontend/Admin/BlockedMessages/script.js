@@ -1,9 +1,11 @@
-import { authenticate } from "../../utils.js";
-import { authorize } from "../script.js";
+import { authenticate, GLOBALS } from "../../utils.js";
 
-window.onload = () => {
-    authenticate();
-    authorize();
+window.onload = async () => {
+    // let user = await authenticate();
+
+    // if (user.userRole !== GLOBALS.ADMIN_ROLE) {
+    //     window.location.replace("/Frontend/User");
+    // }
 
     let getMessageBanner = (msg) => {
         let banner = document.createElement("div");

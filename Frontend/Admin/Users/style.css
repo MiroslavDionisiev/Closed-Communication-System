@@ -72,7 +72,37 @@ h1 {
     overflow: hidden;
 }
 
+.curtain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    opacity: 0.5;
+    z-index: 99;
+}
+
 .user-info-wrapper {
+    position: fixed;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    flex-direction: row;
+    justify-self: center;
+    align-self: center;
+    width: 50%;
+    height: 50%;
+    margin: 0;
+    padding: 0;
+    background-color: #ccc;
+    opacity: 1;
+}
+
+.user-details {
     display: flex;
     flex-direction: row;
+    font-size: 1vmax;
+    align-items: center;
 }
