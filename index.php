@@ -29,20 +29,23 @@ session_start();
 
 ### FOR TESTING PURPOSES ###
 use CCS\Models\Entities\Teacher;
+
 require_once(APP_ROOT . '/Models/Entities/Teacher.php');
 $u = new Teacher();
-$u->role = 'ADMIN';
+$u->{'userRole'} = 'ADMIN';
 $_SESSION['user'] = $u;
 ### FOR TESTING PURPOSES ###
 
-$routes = array_filter(ROUTES, function($k) use ($requestMethod) { return str_starts_with($k, $requestMethod); }, ARRAY_FILTER_USE_KEY);
+$routes = array_filter(ROUTES, function ($k) use ($requestMethod) {
+    return str_starts_with($k, $requestMethod);
+}, ARRAY_FILTER_USE_KEY);
 
 foreach ($routes as $key => $conf) {
-    $split = explode(' ', $key, 2);
+    $split       = explode(' ', $key, 2);
     $routeMethod = $split[0];
-    $route = $split[1];
+    $route       = $split[1];
 
-    if (preg_match("#" . $route . "#mi", URL_ROOT . $uri)) {
+    if (preg_match("#" . $route . "#mi", URL_ROOT . $uri, $positionalParameters)) {
         if ($routeMethod !== $requestMethod) {
             echo json_encode(
                 new DTOs\ResponseDtoError(
@@ -79,10 +82,22 @@ foreach ($routes as $key => $conf) {
             }
         }
 
-        $controller = $conf['controller'];
+        $controller       = $conf['controller'];
         $controllerMethod = $conf['controllerMethod'];
 
-        call_user_func(array("CCS\\Controllers\\" . $controller, $controllerMethod));
+        try {
+            call_user_func(array("CCS\\Controllers\\" . $controller, $controllerMethod), $positionalParameters);
+        } catch (\PDOException $e) {
+            echo json_encode(new DTOs\ResponseDtoError(
+                500,
+                $e->getMessage()
+            ), JSON_FLAGS);
+        } catch (\InvalidArgumentException $e) {
+            echo json_encode(new DTOs\ResponseDtoError(
+                400,
+                $e->getMessage()
+            ), JSON_FLAGS);
+        }
         exit();
     }
 }

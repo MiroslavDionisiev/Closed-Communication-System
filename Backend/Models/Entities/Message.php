@@ -5,24 +5,32 @@ namespace CCS\Models\Entities;
 class Message
 {
 
-    private ?string $id = null;
-    private ?User $user = null;
-    private ?string $content = null;
-    private ?string $timestamp = null;
-    private ?bool $isDisabled = null;
+    private $messageId         = null;
+    private $user              = null;
+    private $chatRoom          = null;
+    private $messageContent    = null;
+    private $messageTimestamp  = null;
+    private $messageIsDisabled = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp, $isDisabled)
-    {
+    public static function fill(
+        $messageId,
+        $user,
+        $chatRoom,
+        $messageContent,
+        $messageTimestamp,
+        $messageIsDisabled
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'user'} = $user;
-        $instance->{'content'} = $content;
-        $instance->{'timestamp'} = $timestamp;
-        $instance->{'isDisabled'} = $isDisabled;
+        $instance->{'messageId'}         = $messageId;
+        $instance->{'user'}              = $user;
+        $instance->{'chatRoom'}          = $chatRoom;
+        $instance->{'messageContent'}    = $messageContent;
+        $instance->{'messageTimestamp'}  = $messageTimestamp;
+        $instance->{'messageIsDisabled'} = is_null($messageIsDisabled) ? $messageIsDisabled : (bool) $messageIsDisabled;
         return $instance;
     }
 

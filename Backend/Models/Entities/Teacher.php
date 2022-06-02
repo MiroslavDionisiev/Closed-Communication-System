@@ -11,14 +11,19 @@ class Teacher extends User
     {
     }
 
-    public static function fill($id, $name, $email, $password, $role)
-    {
+    public static function fill(
+        $userId,
+        $userName,
+        $userEmail,
+        $userPassword,
+        $userRole
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'name'} = $name;
-        $instance->{'email'} = $email;
-        $instance->{'password'} = $password;
-        $instance->{'role'} = $role;
+        $instance->{'userId'}       = $userId;
+        $instance->{'userName'}     = $userName;
+        $instance->{'userEmail'}    = $userEmail;
+        $instance->{'userPassword'} = $userPassword;
+        $instance->{'userRole'}     = $userRole;
         return $instance;
     }
 

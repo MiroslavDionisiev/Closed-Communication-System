@@ -5,84 +5,72 @@ namespace CCS\Repositories;
 use CCS\Database\DatabaseConnection as DB;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
-require_once(APP_ROOT . '/Models/Mappers/StudentMapper.php');
-require_once(APP_ROOT . '/Models/Mappers/TeacherMapper.php');
+require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
 
 class UserRepository
 {
 
-    public static function getAllTeachers()
+    public static function getAllUsers()
     {
         $con = new DB();
-        $query = "SELECT * FROM users u\n" .
-            "INNER JOIN teachers t ON t.userId = u.id";
+        $query = "SELECT u.*, s.studentFacultyNumber, s.studentYear, s.studentSpeciality, s.studentFaculty FROM users u\n" .
+            "LEFT OUTER JOIN teachers t ON t.userId = u.userId\n" .
+            "LEFT OUTER JOIN students s ON s.userId = u.userId";
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\TeacherMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
     public static function getAllStudents()
     {
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
-            "INNER JOIN students s ON s.userId = u.id";
+            "INNER JOIN students s ON s.userId = u.userId";
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\StudentMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
-    public static function findStudentById($userId)
+    public static function findById($userId)
     {
         $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "INNER JOIN students s ON s.userId = u.id" .
-            "WHERE id = :userId";
+        $query = "SELECT u.*, s.studentFacultyNumber, s.studentYear, s.studentSpeciality, s.studentFaculty FROM users u\n" .
+            "LEFT OUTER JOIN students s ON s.userId = u.userId\n" .
+            "LEFT OUTER JOIN teachers t ON t.userId = u.userId\n" .
+            "WHERE u.userId = :userId";
         $params = [
             "userId" => $userId
         ];
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
-    public static function findStudentByFacultyNumber($facultyNumber)
-    {
+    public static function findStudentByFacultyNumber(
+        $studentFacultyNumber
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "INNER JOIN students ON userId = id\n" .
-            "WHERE facultyNumber = :facultyNumber";
+        $query = "SELECT * FROM users u\n" .
+            "INNER JOIN students s ON s.userId = u.userId\n" .
+            "WHERE s.studentFacultyNumber = :studentFacultyNumber";
         $params = [
-            "facultyNumber" => $facultyNumber
+            "studentFacultyNumber" => $studentFacultyNumber
         ];
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\StudentMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
     }
 
-    public static function findTeacherById($userId)
-    {
+    public static function existsById(
+        $userId
+    ) {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
-            "INNER JOIN teachers t ON t.userId = u.id";
-        "WHERE id = :userId";
-        $params = [
-            "userId" => $userId
-        ];
-
-        $row = $con->query($query, $params)->fetch();
-
-        return call_user_func('CCS\Models\Mappers\TeacherMapper::toEntity', $row);
-    }
-
-    public static function existsById($userId)
-    {
-        $con = new DB();
-        $query = "SELECT * FROM users\n" .
-            "WHERE id = :userId";
+            "WHERE userId = :userId";
         $params = [
             "userId" => $userId
         ];

@@ -5,22 +5,32 @@ namespace CCS\Models\DTOs;
 class MessageDto implements \JsonSerializable
 {
 
-    protected ?string $id = null;
-    protected ?UserDto $user = null;
-    protected ?string $content = null;
-    protected ?string $timestamp = null;
+    protected $messageId         = null;
+    protected $user              = null;
+    protected $chatRoom          = null;
+    protected $messageContent    = null;
+    protected $messageTimestamp  = null;
+    protected $messageIsDisabled = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $user, $content, $timestamp)
-    {
+    public static function fill(
+        $messageId,
+        $user,
+        $chatRoom,
+        $messageContent,
+        $messageTimestamp,
+        $messageIsDisabled
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'user'} = $user;
-        $instance->{'content'} = $content;
-        $instance->{'timestamp'} = $timestamp;
+        $instance->{'messageId'}         = $messageId;
+        $instance->{'user'}              = $user;
+        $instance->{'chatRoom'}          = $chatRoom;
+        $instance->{'messageContent'}    = $messageContent;
+        $instance->{'messageTimestamp'}  = $messageTimestamp;
+        $instance->{'messageIsDisabled'} = is_null($messageIsDisabled) ? $messageIsDisabled : (bool) $messageIsDisabled;
         return $instance;
     }
 

@@ -1,0 +1,171 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-bottom: 30px solid #272934;
+}
+
+header section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1rem;
+}
+
+.appName {
+    font-size: 2rem;
+    margin: 1rem;
+    color: #04aa6d;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+.userName {
+    margin-right: 1.5rem;
+    color: #04aa6d;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 18px;
+}
+
+.logout {
+    width: 130px;
+    padding: 8px 16px;
+    background-color: #ffc0c7;
+    color: black;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 18px;
+    border-radius: 25px;
+    border: none;
+}
+
+.logout:hover {
+    background-color: #04aa6d;
+}
+
+.wrapper {
+    display: grid!important;
+    grid-template-columns: 2fr 11fr;
+    grid-template-areas: 
+        "aside title"
+        "aside wrapper-list";
+    height: 100%;
+    width: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    margin: 0 2rem;
+}
+
+h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.panel-tab {
+    text-decoration: none;
+    background-color: #04aa6d;
+    border-radius: 1rem;
+    color: #fff;
+    font-weight: bold;
+    font-family: sans-serif;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+aside {
+    height: 100%;
+    min-width: fit-content;
+    background-color: #E7E9EB;
+    font-family: Impact;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    grid-area: aside;
+}
+
+#href-users::before {
+    content: "🙍";
+}
+
+#href-blocked-messages::before {
+    content: "🛇";
+}
+
+#href-user-chats::before {
+    content: "🗪";
+}
+
+.nav-a {
+    height: fit-content;
+    background-color: inherit;
+    padding: 1rem;
+    text-decoration: none;
+    color: #120F16;
+}
+
+.nav-a:hover {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.nav-a::before {
+    margin-right: 0.5rem;
+}
+
+.nav-a-selected {
+    pointer-events: none;
+    background-color: #ccc;
+}
+
+.user-banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    max-width: fit-content;
+    height: 9em;
+    font-size: 20pt;
+    flex-grow: 1;
+    background-color: #aaaaaa;
+    color: #fff;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.panel-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}

@@ -11,7 +11,7 @@ class ResponseDto implements \JsonSerializable
     public function __construct($status)
     {
         http_response_code($status);
-        $this->status = $status;
+        $this->status    = $status;
         $this->timestamp = date(DATE_ATOM);
     }
 

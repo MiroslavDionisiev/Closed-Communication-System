@@ -10,49 +10,55 @@ require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
 class ChatRoomRepository
 {
 
-    public static function createChatRoom($name, $availabilityDate = null, $isActive = true)
-    {
+    public static function createChatRoom(
+        $chatRoomName,
+        $chatRoomAvailabilityDate = null,
+        $chatRoomIsActive = true
+    ) {
         $con = new DB();
-        $query = "INSERT INTO chat_rooms(name, availabilityDate, isActive)\n" .
-            "VALUES (:name, :availabilityDate, :isActive)";
+        $query = "INSERT INTO chat_rooms(chatRoomName, chatRoomAvailabilityDate, chatRoomIsActive)\n" .
+            "VALUES (:chatRoomName, :chatRoomAvailabilityDate, :chatRoomIsActive)";
         $params = [
-            "name"              => $name,
-            "availabilityDate"  => $availabilityDate,
-            "isActive"          => $isActive ?? true
+            "chatRoomName"             => $chatRoomName,
+            "chatRoomAvailabilityDate" => $chatRoomAvailabilityDate,
+            "chatRoomIsActive"         => $chatRoomIsActive ?? true
         ];
 
         $con->query($query, $params);
 
-        $query = "SELECT * FROM chat_rooms WHERE name = :name";
+        $query = "SELECT * FROM chat_rooms WHERE chatRoomName = :chatRoomName";
 
         $params = [
-            "name" => $name,
+            "chatRoomName" => $chatRoomName,
         ];
 
-        $result = $con->query($query, $params);
+        $result = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $result->fetch());
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $result);
     }
 
-    public static function updateChatRoomActive($chatRoomId, $isActive)
-    {
+    public static function updateChatRoomActive(
+        $chatRoomId,
+        $chatRoomIsActive
+    ) {
         $con = new DB();
         $query = "UPDATE chat_rooms\n" .
-            "SET isActive = :isActive\n" .
-            "WHERE id = :chatRoomId";
+            "SET chatRoomIsActive = :chatRoomIsActive\n" .
+            "WHERE chatRoomId = :chatRoomId";
         $params = [
-            "chatRoomId"    => $chatRoomId,
-            "isActive"      => $isActive,
+            "chatRoomId"       => $chatRoomId,
+            "chatRoomIsActive" => $chatRoomIsActive,
         ];
 
         $con->query($query, $params);
     }
 
-    public static function deleteChatRoomById($chatRoomId)
-    {
+    public static function deleteChatRoomById(
+        $chatRoomId
+    ) {
         $con = new DB();
         $query = "DELETE FROM chat_rooms\n" .
-            "WHERE id = :chatRoomId";
+            "WHERE chatRoomId = :chatRoomId";
         $params = [
             "chatRoomId" => $chatRoomId
         ];
@@ -60,10 +66,12 @@ class ChatRoomRepository
         $con->query($query, $params);
     }
 
-    public static function existsById($chatRoomId) {
+    public static function existsById(
+        $chatRoomId
+    ) {
         $con = new DB();
         $query = "SELECT * FROM chat_rooms\n" .
-            "WHERE id = :chatRoomId";
+            "WHERE chatRoomId = :chatRoomId";
         $params = [
             "chatRoomId" => $chatRoomId
         ];
@@ -73,12 +81,28 @@ class ChatRoomRepository
         return $row;
     }
 
-    public static function getAllChatRooms() {
+    public static function getAllChatRooms()
+    {
         $con = new DB();
         $query = "SELECT * FROM chat_rooms";
 
         $rows = $con->query($query)->fetchAll();
 
         return array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
+    }
+
+    public static function findById(
+        $chatRoomId
+    ) {
+        $con = new DB();
+        $query = "SELECT * FROM chat_rooms\n" .
+            "WHERE chatRoomId = :chatRoomId";
+        $params = [
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
     }
 }

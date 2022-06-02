@@ -11,22 +11,27 @@ require_once(APP_ROOT . '/Models/Mappers/UserChatMapper.php');
 class UserChatRepository
 {
 
-    public static function getUsersInChatRoom($chatRoomId) {
+    public static function getUsersInChatRoom(
+        $chatRoomId
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM user_chats WHERE user_chats.chatRoomId = :chatRoomId";
+        $query = "SELECT * FROM user_chats" .
+            "WHERE user_chats.chatRoomId = :chatRoomId";
 
         $params = [
-            "chatRoomId"    => $chatRoomId
+            "chatRoomId" => $chatRoomId
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
         return array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows);
     }
 
-    public static function getAllUserChats($userId) {
+    public static function getAllUserChats(
+        $userId
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM chat_room\n".
-            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_room.id\n".
+        $query = "SELECT * FROM chat_room\n" .
+            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_room.chatRoomId\n" .
             "WHERE user_chat.userId = :userId";
 
         $params = [
@@ -34,23 +39,29 @@ class UserChatRepository
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        $chatRooms = array_map('CSS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
-        $userChats = array_map('CSS\Models\Mappers\UserChatMapper::toEntity', $rows);
 
-        foreach ($chatRooms as $index => $chatRoom) {
-            $userChats[$index]->chatRoom = $chatRoom;
+        $userChats = [];
+
+        foreach ($rows as $row) {
+            $chatRoom               = call_user_func('CSS\Models\Mappers\ChatRoomMapper::toEntity', $row);
+            $userChat               = call_user_func('CSS\Models\Mappers\UserChatMapper::toEntity', $row);
+            $userChat->{'chatRoom'} = $chatRoom;
+            $userChats[]            = $userChat;
         }
 
         return $userChats;
     }
 
-    public static function getUserChatByIds($userId, $chatRoomId) {
+    public static function getUserChatByIds(
+        $userId,
+        $chatRoomId
+    ) {
         $con = new DB();
-        $query = "SELECT * FROM user_chat\n".
+        $query = "SELECT * FROM user_chat\n" .
             "WHERE user_chat.userId = :userId AND user_chat.chatRoomId = :chatRoomId";
 
         $params = [
-            "userId" => $userId,
+            "userId"     => $userId,
             "chatRoomId" => $chatRoomId
         ];
 
@@ -59,28 +70,33 @@ class UserChatRepository
         return call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
     }
 
-    public static function createUserChat($chatRoomId, $userId, $isAnonymous)
-    {
+    public static function createUserChat(
+        $chatRoomId,
+        $userId,
+        $userChatIsAnonymous
+    ) {
         $con = new DB();
-        $query = "INSERT INTO user_chats(chatRoomId, userId, isAnonymous)\n" .
-            "VALUES (:chatRoomId, :userId, :isAnonymous)";
+        $query = "INSERT INTO user_chats(chatRoomId, userId, userChatIsAnonymous)\n" .
+            "VALUES (:chatRoomId, :userId, :userChatIsAnonymous)";
         $params = [
-            "chatRoomId"    => $chatRoomId,
-            "userId"        => $userId,
-            "isAnonymous"   => $isAnonymous
+            "chatRoomId"          => $chatRoomId,
+            "userId"              => $userId,
+            "userChatIsAnonymous" => $userChatIsAnonymous
         ];
 
         $con->query($query, $params);
     }
 
-    public static function deleteUserChatByUserIdAndChatRoomId($userId, $chatRoomId)
-    {
+    public static function deleteUserChatByUserIdAndChatRoomId(
+        $userId,
+        $chatRoomId
+    ) {
         $con = new DB();
         $query = "DELETE FROM user_chats\n" .
             "WHERE userId = :userId AND chatRoomId = :chatRoomId";
         $params = [
-            "userId"        => $userId,
-            "chatRoomId"    => $chatRoomId
+            "userId"     => $userId,
+            "chatRoomId" => $chatRoomId
         ];
 
         $con->query($query, $params);

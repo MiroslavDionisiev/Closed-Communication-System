@@ -5,20 +5,26 @@ namespace CCS\Models\DTOs;
 class UserChatDto implements \JsonSerializable
 {
 
-    protected ?string $id = null;
-    protected ?ChatRoomDto $chatRoom = null;
-    protected ?bool $isAnonymous = null;
+    protected $userChatId          = null;
+    protected $user                = null;
+    protected $chatRoom            = null;
+    protected $userChatIsAnonymous = null;
 
     public function __construct()
     {
     }
 
-    public static function fill($id, $chatRoom, $isAnonymous)
-    {
+    public static function fill(
+        $userChatId,
+        $user,
+        $chatRoom,
+        $userChatIsAnonymous
+    ) {
         $instance = new self();
-        $instance->{'id'} = $id;
-        $instance->{'chatRoom'} = $chatRoom;
-        $instance->{'isAnonymous'} = $isAnonymous;
+        $instance->{'userChatId'}          = $userChatId;
+        $instance->{'user'}                = $user;
+        $instance->{'chatRoom'}            = $chatRoom;
+        $instance->{'userChatIsAnonymous'} = is_null($userChatIsAnonymous) ? $userChatIsAnonymous : (bool) $userChatIsAnonymous;
         return $instance;
     }
 
