@@ -8,7 +8,10 @@ assert(URL_ROOT === ENTRY_ROOT, "Make sure the DocumentRoot matches this configu
 
 define('JSON_FLAGS', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
+use CCS\Helpers\GlobalConstants as Globals;
+
 require_once(APP_ROOT . '/Configs/DatabaseConfig.php');
+require_once(APP_ROOT . '/Helpers/GlobalConstants.php');
 
 $pathParam = function ($name) {
     return "(?'${name}'[^/]*)";
@@ -37,91 +40,91 @@ define('ROUTES', [
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllDisabledMessages'
     ],
     "GET ^" . URL_ROOT . "/index.php/admin/users$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllUsers'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/users/{$pathParam('userId')}$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'getUserById'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllChatRooms'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/user/chat-rooms$" => [
         'authenticate' => true,
-        'authorize' => ['USER', 'ADMIN'],
+        'authorize' => [Globals::$USER_ROLE, Globals::$ADMIN_ROLE],
         'controller' => 'UserController',
         'controllerMethod' => 'getAllUserChats'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/{$pathParam('chatRoomId')}/messages$" => [
         'authenticate' => true,
-        'authorize' => ['USER', 'ADMIN'],
+        'authorize' => [Globals::$USER_ROLE, Globals::$ADMIN_ROLE],
         'controller' => 'UserController',
         'controllerMethod' => 'getAllChatRoomMessages'
     ],
     "POST ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'createChatRoom'
     ],
     "POST ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/{$pathParam('chatRoomId')}/messages$" => [
         'authenticate' => true,
-        'authorize' => ['USER', 'ADMIN'],
+        'authorize' => [Globals::$USER_ROLE, Globals::$ADMIN_ROLE],
         'controller' => 'UserController',
         'controllerMethod' => 'createMessage'
     ],
     "POST ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms/from-csv$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'createUserChatRoomFromCsv'
     ],
     "PUT ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'updateChatRoomActive'
     ],
     "PUT ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'updateMessageIsDisabled'
     ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteMessageById'
     ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteChatRoomById'
     ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/user-chats$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'removeUserFromChat'
     ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/messages$" => [
         'authenticate' => true,
-        'authorize' => ['ADMIN'],
+        'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteMessageById'
     ],

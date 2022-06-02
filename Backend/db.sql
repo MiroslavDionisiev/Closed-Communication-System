@@ -58,3 +58,13 @@ CREATE TABLE
     CONSTRAINT fk_messages__users FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE,
     CONSTRAINT fk_messages__chat_rooms FOREIGN KEY(chatRoomId) REFERENCES chat_rooms(chatRoomId) ON DELETE CASCADE
   );
+
+INSERT INTO
+  users(userEmail, userPassword, userName, userRole)
+VALUES
+  (
+    'admin@fmi.bg',
+    '$2a$12$nIxRw/T7lQDeoN.lTSsoBOagLl50GjOJmPNMpBebv88wqaWeVx8Ke',
+    'Admin Adminchev',
+    'ADMIN'
+  );

@@ -14,27 +14,41 @@ foreach (glob(APP_ROOT . '/Models/DTOs/*.php') as $file) {
 
 class AccountService
 {
-    public static function createStudent($studentDto) {
-        if( Repo\UserRepository::existsByEmail($studentDto->{'userEmail'})){
+    public static function createStudent(
+        $studentDto
+    ) {
+        if (Repo\UserRepository::existsByEmail($studentDto->{'userEmail'})) {
             throw new \InvalidArgumentException("User with email '{$studentDto->{'userEmail'}}' already exists!");
         }
 
-        Repo\UserRepository::createStudent($studentDto->{'userName'}, $studentDto->{'studentFacultyNumber'} ,$studentDto->{'userEmail'}, $studentDto->{'UserPassword'}, $studentDto->{'studentYear'}, $studentDto->{'studentSpeciality'}, $studentDto->{'studentFaculty'});
+        Repo\UserRepository::createStudent(
+            $studentDto->{'userName'},
+            $studentDto->{'studentFacultyNumber'},
+            $studentDto->{'userEmail'},
+            $studentDto->{'UserPassword'},
+            $studentDto->{'studentYear'},
+            $studentDto->{'studentSpeciality'},
+            $studentDto->{'studentFaculty'}
+        );
     }
 
-    public static function loginUser($email, $password) {
+    public static function loginUser(
+        $email,
+        $password
+    ) {
         $user = Repo\UserRepository::existsByEmail($email);
 
-       if(!$user) {
+        if (!$user) {
             throw new \InvalidArgumentException("Invalid email address or password");
-       }
+        }
 
-       if(password_verify($password, $user->{'userPassword'})) {
-        throw new \InvalidArgumentException("Invalid email address or password");
-       }
+        if (password_verify($password, $user->{'userPassword'})) {
+            var_dump($password);
+            throw new \InvalidArgumentException("Invalid email address or password");
+        }
 
-       Helpers\AuthorizationManager::login($user);
+        Helpers\AuthorizationManager::login($user);
 
-       return $user;
-    }  
+        return $user;
+    }
 }
