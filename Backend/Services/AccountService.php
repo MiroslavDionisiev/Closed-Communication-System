@@ -42,8 +42,7 @@ class AccountService
             throw new \InvalidArgumentException("Invalid email address or password");
         }
 
-        if (password_verify($password, $user->{'userPassword'})) {
-            var_dump($password);
+        if (!password_verify($password, $user->{'userPassword'})) {
             throw new \InvalidArgumentException("Invalid email address or password");
         }
 

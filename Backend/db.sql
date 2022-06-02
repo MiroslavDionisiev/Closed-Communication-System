@@ -64,7 +64,7 @@ INSERT INTO
 VALUES
   (
     'admin@fmi.bg',
-    '$2a$12$nIxRw/T7lQDeoN.lTSsoBOagLl50GjOJmPNMpBebv88wqaWeVx8Ke',
+    '$2y$10$paihtzq7QNZ7LagK7nTx9ezh3oSyZxSyTQNQWWZ67HeqZHWXEVhTe',
     'Admin Adminchev',
     'ADMIN'
   );
