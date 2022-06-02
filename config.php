@@ -15,6 +15,26 @@ $pathParam = function ($name) {
 };
 
 define('ROUTES', [
+    "GET ^" . ENTRY_ROOT . "/index.php/account/logout$" => [
+        'authenticate' => true,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'logout'
+    ],
+    "GET ^" . ENTRY_ROOT . "/index.php/account/isAuthenticated$" => [
+        'authenticate' => true,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'isAuthenticated'
+    ],
+	"POST ^" . ENTRY_ROOT . "/index.php/account/register$" => [
+        'authenticate' => false,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'register'
+    ],
+	"POST ^" . ENTRY_ROOT . "/index.php/account/login$" => [
+        'authenticate' => false,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'login'
+    ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
@@ -75,19 +95,19 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'updateChatRoomActive'
     ],
-    "PUT ^" . URL_ROOT . "/index.php/admin/disabled-messages$" => [
+    "PUT ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'updateMessageIsDisabled'
     ],
-    "DELETE ^" . URL_ROOT . "/index.php/admin/disabled-messages$" => [
+    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteMessageById'
     ],
-    "DELETE ^" . URL_ROOT . "/index.php/admin/chat-rooms$" => [
+    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',

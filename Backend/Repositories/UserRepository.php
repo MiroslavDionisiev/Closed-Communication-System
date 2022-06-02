@@ -2,8 +2,10 @@
 
 namespace CCS\Repositories;
 
+use CCS\Helpers as HELPERS;
 use CCS\Database\DatabaseConnection as DB;
 
+require_once(APP_ROOT . "/Repositories/UserRepository.php");
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
 
@@ -78,5 +80,45 @@ class UserRepository
         $row = $con->query($query, $params)->fetch();
 
         return $row;
+    }
+
+    public static function existsByEmail($email)
+    {
+        $con = new DB();
+        $query = "SELECT * FROM users\n" .
+            "WHERE userEmail = :userEmail";
+        $params = [
+            "userEmail" => $email
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return $row;
+    }
+
+    public static function createStudent($name, $facultyNumber ,$email, $password, $year, $speciality, $faculty)
+    {
+        $con = new DB();
+        $query = "INSERT INTO users(userName, userEmail, userPassword, userRole)\n" .
+            "VALUES (:userName, :userEmail, :userPassword, :userRole)";
+        $params = [
+            "userName" => $name,
+            "userEmail" => $email,
+            "userPassword" => password_hash($password, PASSWORD_BCRYPT),
+            "userRole" => HELPERS\GlobalConstants::$USER_ROLE
+        ];
+
+        $con->query($query, $params);
+
+        $query = "INSERT INTO students(userId, studentFacultyNumber,studentYear, studentSpeciality, studentFaculty)\n" .
+            "VALUES (:userId, :studentFacultyNumber, :studentYear, :studentSpeciality, :studentFaculty)";
+        $params = [
+            "userId" => UserRepository::existsByEmail($email) -> {'userId'},
+            "studentFacultyNumber" => $facultyNumber,
+            "studentYear" => $year,
+            "studentSpeciality" => $speciality,
+            "studentFaculty" => $faculty
+        ];
+        $con->query($query, $params);
     }
 }
