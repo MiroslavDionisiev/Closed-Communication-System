@@ -23,17 +23,14 @@ class AdminService
 
     public static function getAllUsers()
     {
-        return array_merge(
-            array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllStudents()),
-            array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllTeachers())
-        );
+        return array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllUsers());
     }
 
     public static function getUserById($userId) {
         if (!Repo\UserRepository::existsById($userId)) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
-        return call_user_func('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::findStudentById($userId));
+        return call_user_func('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::findById($userId));
     }
 
     public static function getAllChatRooms()

@@ -10,11 +10,12 @@ require_once(APP_ROOT . '/Models/Mappers/UserMapper.php');
 class UserRepository
 {
 
-    public static function getAllTeachers()
+    public static function getAllUsers()
     {
         $con = new DB();
-        $query = "SELECT * FROM users u\n" .
-            "INNER JOIN teachers t ON t.userId = u.userId";
+        $query = "SELECT u.*, s.studentFacultyNumber, s.studentYear, s.studentSpeciality, s.studentFaculty FROM users u\n" .
+            "LEFT OUTER JOIN teachers t ON t.userId = u.userId\n" .
+            "LEFT OUTER JOIN students s ON s.userId = u.userId";
 
         $rows = $con->query($query)->fetchAll();
 
@@ -32,11 +33,12 @@ class UserRepository
         return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
-    public static function findStudentById($userId)
+    public static function findById($userId)
     {
         $con = new DB();
-        $query = "SELECT * FROM users u\n" .
-            "INNER JOIN students s ON s.userId = u.userId\n" .
+        $query = "SELECT u.*, s.studentFacultyNumber, s.studentYear, s.studentSpeciality, s.studentFaculty FROM users u\n" .
+            "LEFT OUTER JOIN students s ON s.userId = u.userId\n" .
+            "LEFT OUTER JOIN teachers t ON t.userId = u.userId\n" .
             "WHERE u.userId = :userId";
         $params = [
             "userId" => $userId
@@ -56,22 +58,6 @@ class UserRepository
             "WHERE s.studentFacultyNumber = :studentFacultyNumber";
         $params = [
             "studentFacultyNumber" => $studentFacultyNumber
-        ];
-
-        $row = $con->query($query, $params)->fetch();
-
-        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
-    }
-
-    public static function findTeacherById(
-        $userId
-    ) {
-        $con = new DB();
-        $query = "SELECT * FROM users u\n" .
-            "INNER JOIN teachers t ON t.userId = u.userId\n" .
-            "WHERE u.userId = :userId";
-        $params = [
-            "userId" => $userId
         ];
 
         $row = $con->query($query, $params)->fetch();
