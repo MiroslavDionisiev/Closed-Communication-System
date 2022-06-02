@@ -29,6 +29,13 @@ class AdminService
         );
     }
 
+    public static function getUserById($userId) {
+        if (!Repo\UserRepository::existsById($userId)) {
+            throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
+        }
+        return call_user_func('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::findStudentById($userId));
+    }
+
     public static function getAllChatRooms()
     {
         return array_map('CCS\Models\Mappers\ChatRoomMapper::toDto', Repo\ChatRoomRepository::getAllChatRooms());

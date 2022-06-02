@@ -20,6 +20,10 @@ class AdminController {
         echo json_encode(AdminService::getAllUsers(), JSON_FLAGS);
     }
 
+    public static function getUserById($path) {
+        echo json_encode(AdminService::getUserById($path['userId']), JSON_FLAGS);
+    }
+
     public static function getAllChatRooms() {
         echo json_encode(AdminService::getAllChatRooms(), JSON_FLAGS);
     }

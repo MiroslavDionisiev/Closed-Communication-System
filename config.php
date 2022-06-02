@@ -10,7 +10,9 @@ define('JSON_FLAGS', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED
 
 require_once(APP_ROOT . '/Configs/DatabaseConfig.php');
 
-$regex_uuid = '[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}';
+$pathParam = function ($name) {
+    return "(?'${name}'[^/]*)";
+};
 
 define('ROUTES', [
     "GET ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
@@ -24,6 +26,12 @@ define('ROUTES', [
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllUsers'
+    ],
+    "GET ^" . ENTRY_ROOT . "/index.php/admin/users/{$pathParam('userId')}$" => [
+        'authenticate' => true,
+        'authorize' => ['ADMIN'],
+        'controller' => 'AdminController',
+        'controllerMethod' => 'getUserById'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,

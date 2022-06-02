@@ -37,7 +37,7 @@ class UserRepository
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
             "INNER JOIN students s ON s.userId = u.userId\n" .
-            "WHERE userId = :userId";
+            "WHERE u.userId = :userId";
         $params = [
             "userId" => $userId
         ];
@@ -53,7 +53,7 @@ class UserRepository
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
             "INNER JOIN students s ON s.userId = u.userId\n" .
-            "WHERE studentFacultyNumber = :studentFacultyNumber";
+            "WHERE s.studentFacultyNumber = :studentFacultyNumber";
         $params = [
             "studentFacultyNumber" => $studentFacultyNumber
         ];
@@ -68,8 +68,8 @@ class UserRepository
     ) {
         $con = new DB();
         $query = "SELECT * FROM users u\n" .
-            "INNER JOIN teachers t ON t.userId = u.userId";
-        "WHERE userId = :userId";
+            "INNER JOIN teachers t ON t.userId = u.userId\n" .
+            "WHERE u.userId = :userId";
         $params = [
             "userId" => $userId
         ];
