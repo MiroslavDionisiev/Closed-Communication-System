@@ -55,15 +55,12 @@ class AdminService
         Repo\UserChatRepository::createUserChat($userChatDto->{'chatRoomId'}, $userChatDto->{'userId'}, $userChatDto->{'userChatIsAnonymous'});
     }
 
-    public static function updateChatRoomActive($chatRoomDto)
+    public static function updateChatRoom($chatRoomDto)
     {
         if (!Repo\ChatRoomRepository::existsById($chatRoomDto->{'id'})) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomDto->{'chatRoomId'}} doesn't exist.");
         }
-        if (!is_bool($chatRoomDto->{'chatRoomIsActive'})) {
-            throw new \InvalidArgumentException("isActive should be boolean, you gave ${gettype($chatRoomDto->{'chatRoomIsActive'})}.");
-        }
-        Repo\ChatRoomRepository::updateChatRoomActive($chatRoomDto->{'chatRoomId'}, $chatRoomDto->{'chatRoomIsActive'});
+        Repo\ChatRoomRepository::updateChatRoom($chatRoomDto);
     }
 
     public static function removeUserFromChat($userId, $chatRoomId)

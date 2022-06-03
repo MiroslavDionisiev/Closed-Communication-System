@@ -87,16 +87,19 @@ class UserChatRepository
         $con->query($query, $params);
     }
 
-    public static function updateUserLastSeen($chatRoomId, $userId, $timestamp)
-    {
+    public static function updateUserLastSeen(
+        $chatRoomId,
+        $userId,
+        $timestamp
+    ) {
         $con = new DB();
         $query = "UPDATE user_chats\n" .
             "SET userChatLastSeen = :lastSeen\n" .
             "WHERE chatRoomId = :chatRoomId AND userId = :userId";
         $params = [
             "chatRoomId" => $chatRoomId,
-            "userId" => $userId,
-            "lastSeen" => $timestamp
+            "userId"     => $userId,
+            "lastSeen"   => $timestamp
         ];
 
         $con->query($query, $params);

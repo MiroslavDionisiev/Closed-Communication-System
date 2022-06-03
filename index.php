@@ -27,16 +27,6 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 session_start();
 
-### FOR TESTING PURPOSES ###
-use CCS\Models\Entities\Teacher;
-require_once(APP_ROOT . '/Models/Entities/Teacher.php');
-$u = new Teacher();
-$u->userRole = 'ADMIN';
-$u->userId = '59971315-e2bb-11ec-8927-b05adad6ff7b';
-$u->userName = 'Doe';
-$_SESSION['user'] = $u;
-### FOR TESTING PURPOSES ###
-
 $routes = array_filter(ROUTES, function ($k) use ($requestMethod) {
     return str_starts_with($k, $requestMethod);
 }, ARRAY_FILTER_USE_KEY);

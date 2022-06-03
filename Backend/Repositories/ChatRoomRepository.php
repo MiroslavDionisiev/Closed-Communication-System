@@ -37,17 +37,16 @@ class ChatRoomRepository
         return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $result);
     }
 
-    public static function updateChatRoomActive(
-        $chatRoomId,
-        $chatRoomIsActive
+    public static function updateChatRoom(
+        $chatRoomDto
     ) {
         $con = new DB();
         $query = "UPDATE chat_rooms\n" .
             "SET chatRoomIsActive = :chatRoomIsActive\n" .
             "WHERE chatRoomId = :chatRoomId";
         $params = [
-            "chatRoomId"       => $chatRoomId,
-            "chatRoomIsActive" => $chatRoomIsActive,
+            "chatRoomId"               => $chatRoomDto->{'chatRoomId'},
+            "chatRoomAvailabilityDate" => $chatRoomDto->{'chatRoomAvailabilityDate'},
         ];
 
         $con->query($query, $params);

@@ -3,7 +3,6 @@
 namespace CCS\Services;
 
 use CCS\Repositories as Repo;
-use CCS\Models as Models;
 use MessageManager;
 
 require_once(APP_ROOT . "/Repositories/UserRepository.php");
@@ -17,12 +16,17 @@ foreach (glob(APP_ROOT . '/Models/DTOs/*.php') as $file) {
 class UserService
 {
 
-    private static function updateLastSeen($chatRoomId, $userID) {
-        $date = date('Y/m/d h:i:s a', time());
-        Repo\UserChatRepository::updateUserLastSeen($chatRoomId, $userID, $date);
+    private static function updateLastSeen(
+        $chatRoomId,
+        $userId,
+        $lastSeen
+    ) {
+        Repo\UserChatRepository::updateUserLastSeen($chatRoomId, $userId, $lastSeen);
     }
 
-    public static function getAllUserChats($userId) {
+    public static function getAllUserChats(
+        $userId
+    ) {
         if (!Repo\UserRepository::existsById($userId)) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
@@ -32,7 +36,7 @@ class UserService
 
         $res = [];
         foreach ($userChatRooms as $userChatRoom) {
-            $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'userChatId'}, $userChatRoom->{'userChatLastSeen'});
+            $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'chatRoomId'}, $userChatRoom->{'userChatLastSeen'});
             $res += [
                 [
                     'userChatRoom' => $userChatRoom,
@@ -43,7 +47,10 @@ class UserService
         return $res;
     }
 
-    public static function getAllChatRoomMessages($chatRoomId, $date = null) {
+    public static function getAllChatRoomMessages(
+        $chatRoomId,
+        $date = null
+    ) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
         }
@@ -51,12 +58,11 @@ class UserService
         $chatRoomMessages = null;
         if ($date == null) {
             $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessages($chatRoomId);
-        }
-        else {
+        } else {
             $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($chatRoomId, $date);
         }
 
-        UserService::updateLastSeen($chatRoomId, $_SESSION['user']->{'userId'});
+        UserService::updateLastSeen($chatRoomId, $_SESSION['user']->{'userId'}, $chatRoomMessages[count($chatRoomMessages) - 1]->{'messageTimestamp'} ?? null);
         $chatRoomMessages = array_map('CCS\Models\Mappers\MessageMapper::toDTO', $chatRoomMessages);
         return $chatRoomMessages;
     }
@@ -66,6 +72,11 @@ class UserService
         $chatRoomId,
         $message
     ) {
+        $chatRoom = Repo\ChatRoomRepository::findById($chatRoomId);
+        if (date('Y-m-d H:i:s', $chatRoom->{'chatRoomAvailabilityDate'}) < date('Y-m-d H:i:s')) {
+            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} has expired.");
+        }
+
         $user = Repo\UserRepository::existsById($userId);
         if (!$user) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
@@ -77,11 +88,12 @@ class UserService
         }
 
         $isDisabled = false;
-        if ($userChatRooms->isAnonymous) {
+        if ($userChatRooms->{'userChatIsAnonymous'}) {
             $isDisabled = MessageManager::checkForLeakedCredentials($message, $user->{'userEmail'}, $user->{'userName'});
         }
 
         Repo\MessageRepository::createMessage($userId, $chatRoomId, $message, $isDisabled);
+
+        return $isDisabled;
     }
 }
-

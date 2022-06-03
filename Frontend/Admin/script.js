@@ -1,14 +1,11 @@
-import { authenticate } from '../utils.js';
+import * as util from "../utils.js";
 
-export function authorize(authority) {
-    fetch(`/index.php/auth/authorize?authority=${authority}`).then((resp) => {
-        if (resp.status == 401) {
-            window.location.replace("../Frontend/Login");
-        }
-    });
-}
+(async () => {
+    let user = await util.authenticate();
 
-window.onload = () => {
-    authenticate();
-    authorize('ADMIN');
-};
+    // if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
+    //     window.location.replace("/Frontend/User");
+    // }
+
+    util.setHeader(user);
+})();

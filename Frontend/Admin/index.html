@@ -4,24 +4,17 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Admin Panel</title>
-        <script type="module" src="script.js"></script>
+        <script type="module" src="script.js" defer></script>
         <link href="style.css" rel="stylesheet" />
     </head>
 
     <body>
-        <header>
-            <p class="appName">Closed Communication System</p>
-            <section>
-                <p class="userName">Име</p>
-                <button class="logout">Изход</button>
-            </section>
-        </header>
         <main>
             <h1>Админ панел</h1>
             <section class="panel-wrapper">
                 <a href="/Frontend/Admin/Users" class="panel-tab">Потребители</a>
                 <a href="/Frontend/Admin/BlockedMessages" class="panel-tab">Блокирани съобщения</a>
-                <a href="/Frontend/Admin/UserChats" class="panel-tab">Чат стаи</a>
+                <a href="/Frontend/Admin/ChatRooms" class="panel-tab">Чат стаи</a>
             </section>
         </main>
     </body>
