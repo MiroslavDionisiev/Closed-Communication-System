@@ -97,5 +97,8 @@ window.onload = async () => {
                 list.appendChild(getUserBanner(user));
             }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => err)
+        .then(msg => console.log(msg));
+
+    util.popAlert("asd");
 };

@@ -22,6 +22,7 @@ export async function authenticate() {
 export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
     let alertBox = document.createElement("div");
     alertBox.classList.add("alert-box");
+    alertBox.id = "alert-box";
     alertBox.innerHTML = `
         <div class="alert ${alertType}">
             <p class="alert-msg">${msg}</p>
@@ -35,15 +36,22 @@ export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
 
     let removeAlert = (target) => {
         target.style.opacity = 0;
-        target.addEventListener("transitionend", (event) => {
+        target.addEventListener("transitionend", () => {
             target.parentNode.removeChild(target);
         });
-    }
+    };
 
-    alert.addEventListener("click", (event) => removeAlert(event.currentTarget));
+    alert.addEventListener("click", (event) =>
+        removeAlert(event.currentTarget)
+    );
     setTimeout(removeAlert, 3000, alert);
 
     alert.style.opacity = 0.9;
 
-    document.getElementById("alert-box").appendChild(alert);
+    let box = document.getElementById("alert-box");
+    if (box === null) {
+        document.documentElement.appendChild(alertBox);
+    } else {
+        document.getElementById("alert-box").appendChild(alert);
+    }
 }
