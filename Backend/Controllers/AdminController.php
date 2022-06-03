@@ -40,9 +40,10 @@ class AdminController {
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User added to chatroom successfully."));
     }
 
-    public static function updateChatRoomActive() {
+    public static function updateChatRoom($param) {
         $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
-        AdminService::updateChatRoomActive($chatRoomDto);
+        $chatRoomDto->{'chatRoomId'} = $param['chatRoomId'] ?? null;
+        AdminService::updateChatRoom($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom updated successfully."));
     }
 
@@ -54,7 +55,7 @@ class AdminController {
     }
 
     public static function deleteMessageById($param) {
-        AdminService::deleteMessageById($param['messageId']);
+        AdminService::deleteMessageById($param['messageId'] ?? null);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
 
@@ -73,7 +74,7 @@ class AdminController {
 
     public static function updateMessageIsDisabled($param) {
         $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
-        $msgDto->{'messageId'} = $param['messageId'];
+        $msgDto->{'messageId'} = $param['messageId'] ?? null;
         AdminService::updateMessageIsDisabled($msgDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message updated successfully."));
     }

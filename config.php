@@ -92,11 +92,11 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'createUserChatRoomFromCsv'
     ],
-    "PUT ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
+    "PUT ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms/{$pathParam('chatRoomId')}$" => [
         'authenticate' => true,
         'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
-        'controllerMethod' => 'updateChatRoomActive'
+        'controllerMethod' => 'updateChatRoom'
     ],
     "PUT ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages/{$pathParam('messageId')}$" => [
         'authenticate' => true,

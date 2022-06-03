@@ -31,8 +31,7 @@ CREATE TABLE
   IF NOT EXISTS chat_rooms(
     chatRoomId CHAR(36) PRIMARY KEY DEFAULT UUID(),
     chatRoomName VARCHAR(50) NOT NULL UNIQUE,
-    chatRoomAvailabilityDate DATETIME DEFAULT NULL,
-    chatRoomIsActive BOOLEAN DEFAULT TRUE NOT NULL
+    chatRoomAvailabilityDate DATETIME DEFAULT NULL
   );
 
 CREATE TABLE
