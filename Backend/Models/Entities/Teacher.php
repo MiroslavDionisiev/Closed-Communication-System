@@ -25,7 +25,7 @@ class Teacher extends User
         $instance->{'userEmail'}    = $userEmail;
         $instance->{'userPassword'} = $userPassword;
         $instance->{'userRole'}     = $userRole;
-        $instance->{'userIdentity'} = $userRole;
+        $instance->{'userIdentity'} = $userIdentity;
         return $instance;
     }
 
