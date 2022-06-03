@@ -1,0 +1,162 @@
+body {
+    margin: 0;
+    background-color: #ffffff;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-bottom: 30px solid #272934;
+}
+
+header section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1rem;
+}
+
+.appName {
+    font-size: 2rem;
+    margin: 1rem;
+    color: #04aa6d;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+.userName {
+    margin-right: 1.5rem;
+    color: #04aa6d;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 18px;
+}
+
+.logout {
+    width: 130px;
+    padding: 8px 16px;
+    background-color: #ffc0c7;
+    color: black;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 18px;
+    border-radius: 25px;
+    border: none;
+}
+
+.logout:hover {
+    background-color: #04aa6d;
+}
+
+.noStyle {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}  
+
+h2 {
+    color: #04aa6d;
+}
+
+.chatRoom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    width: 70%;
+    background-color: #98c3b4;
+}
+
+.chatBox {
+    width: 90%;
+    height: 450px;
+    background-color: #d5dde6;
+    overflow-y: scroll;
+}
+
+.byOthers {
+    display: flex;
+    justify-content: start;
+}
+
+.byYou {
+    display: flex;
+    justify-content: end;
+}
+
+.message {
+    width: 50%;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sender {
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.content {
+    padding: 10px;
+    background: #04aa6d;
+    border-radius: 10px;
+}
+
+.messageInputArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    width: 100%;
+}
+
+#message-input {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+}
+
+#message-input div {
+    display: flex;
+    flex-direction: row;
+} 
+
+.messageArea {
+    width: 90%;
+}
+
+.sendMessage {
+    margin-left: 5px;
+    width: 10%;
+}
+
+.sendMessage button {
+    width: 100%;
+    word-wrap: break-word;
+    background-color: #ffc0c7;
+    color: black;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+}
+
+.sendMessage button:hover {
+    background-color: #04aa6d;
+}
+
+#messageInput {
+    width: 100%;
+}

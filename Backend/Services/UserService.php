@@ -17,28 +17,48 @@ foreach (glob(APP_ROOT . '/Models/DTOs/*.php') as $file) {
 class UserService
 {
 
-    public static function getAllUserChats(
-        $userId
-    ) {
+    private static function updateLastSeen($chatRoomId, $userID) {
+        $date = date('Y/m/d h:i:s a', time());
+        Repo\UserChatRepository::updateUserLastSeen($chatRoomId, $userID, $date);
+    }
+
+    public static function getAllUserChats($userId) {
         if (!Repo\UserRepository::existsById($userId)) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
 
         $userChatRooms = Repo\UserChatRepository::getAllUserChats($userId);
+        $userChatRooms = array_map('CCS\Models\Mappers\UserChatMapper::toDTO', $userChatRooms);
 
-        return array_map('CCS\Models\Mappers\UserChatMapper::toDTO', $userChatRooms);
+        $res = [];
+        foreach ($userChatRooms as $userChatRoom) {
+            $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'userChatId'}, $userChatRoom->{'userChatLastSeen'});
+            $res += [
+                [
+                    'userChatRoom' => $userChatRoom,
+                    'unreadMessages' => count($messages)
+                ]
+            ];
+        }
+        return $res;
     }
 
-    public static function getAllChatRoomMessages(
-        $chatRoomId
-    ) {
+    public static function getAllChatRoomMessages($chatRoomId, $date = null) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
         }
 
-        $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessages($chatRoomId);
+        $chatRoomMessages = null;
+        if ($date == null) {
+            $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessages($chatRoomId);
+        }
+        else {
+            $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($chatRoomId, $date);
+        }
 
-        return array_map('CCS\Models\Mappers\MessageMapper::toDto', $chatRoomMessages);
+        UserService::updateLastSeen($chatRoomId, $_SESSION['user']->{'userId'});
+        $chatRoomMessages = array_map('CCS\Models\Mappers\MessageMapper::toDTO', $chatRoomMessages);
+        return $chatRoomMessages;
     }
 
     public static function createMessage(

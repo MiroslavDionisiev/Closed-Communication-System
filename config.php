@@ -20,7 +20,7 @@ define('ROUTES', [
         'controller' => 'AccountController',
         'controllerMethod' => 'logout'
     ],
-    "GET ^" . ENTRY_ROOT . "/index.php/account/isAuthenticated$" => [
+    "GET ^" . ENTRY_ROOT . "/index.php/account/is-authenticated$" => [
         'authenticate' => true,
         'controller' => 'AccountController',
         'controllerMethod' => 'isAuthenticated'
@@ -41,7 +41,7 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllDisabledMessages'
     ],
-    "GET ^" . ENTRY_ROOT . "/index.php/admin/users$" => [
+    "GET ^" . URL_ROOT . "/index.php/admin/users$" => [
         'authenticate' => true,
         'authorize' => ['ADMIN'],
         'controller' => 'AdminController',
@@ -65,7 +65,7 @@ define('ROUTES', [
         'controller' => 'UserController',
         'controllerMethod' => 'getAllUserChats'
     ],
-    "GET ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/messages$" => [
+    "GET ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/{$pathParam('chatRoomId')}/messages$" => [
         'authenticate' => true,
         'authorize' => ['USER', 'ADMIN'],
         'controller' => 'UserController',
@@ -77,7 +77,7 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'createChatRoom'
     ],
-    "POST ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/messages$" => [
+    "POST ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/{$pathParam('chatRoomId')}/messages$" => [
         'authenticate' => true,
         'authorize' => ['USER', 'ADMIN'],
         'controller' => 'UserController',
