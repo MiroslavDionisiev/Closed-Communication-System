@@ -15,23 +15,13 @@
             echo json_encode(UserService::getAllUserChats($userId));
         }
 
-        public static function getAllChatRoomMessages() {
-            $chatRoomId = $_GET['chatRoomId'] ?? null;
-            echo json_encode(UserService::getAllChatRoomMessages($chatRoomId));
+        public static function getAllChatRoomMessages($param) {
+            echo json_encode(UserService::getAllChatRoomMessages($param['chatRoomId'], $_GET['lastTimestamp'] ?? null));
         }
 
-        public static function createMessage() {
-            $body = json_decode(file_get_contents('php://input'));
-            UserService::createMessage($body->{'userId'}, $body->{'chatRoomId'}, $body->{'message'});
-        }
-
-        public static function getUserFromSession() {
-            $res = [
-                "id" => $_SESSION['user']->{'id'},
-                "name" => $_SESSION['user']->{'name'}
-            ];
-
-            echo json_encode($res);
+        public static function createMessage($param) {
+            $body = json_decode(file_get_contents('php://input'), true);
+            UserService::createMessage($_SESSION['user']->{'userId'}, $param['chatRoomId'], $body['message']);
         }
     }
 ?>

@@ -82,7 +82,7 @@ h2 {
     width: 90%;
     height: 450px;
     background-color: #d5dde6;
-    overflow: auto;
+    overflow-y: scroll;
 }
 
 .byOthers {

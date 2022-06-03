@@ -18,9 +18,8 @@ class UserService
 {
 
     private static function updateLastSeen($chatRoomId, $userID) {
-        $date = date('m/d/Y h:i:s a', time());
-        $timestamp = strtotime($date);
-        Repo\UserChatRepository::updateUserLastSeen($chatRoomId, $userID, $timestamp);
+        $date = date('Y/m/d h:i:s a', time());
+        Repo\UserChatRepository::updateUserLastSeen($chatRoomId, $userID, $date);
     }
 
     public static function getAllUserChats($userId) {
@@ -33,7 +32,7 @@ class UserService
 
         $res = [];
         foreach ($userChatRooms as $userChatRoom) {
-            $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'id'}, $userChatRoom->{'lastSeen'});
+            $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'userChatId'}, $userChatRoom->{'userChatLastSeen'});
             $res += [
                 [
                     'userChatRoom' => $userChatRoom,
@@ -44,20 +43,22 @@ class UserService
         return $res;
     }
 
-    public static function getAllChatRoomMessages($chatRoomId, $timestamp = null) {
+    public static function getAllChatRoomMessages($chatRoomId, $date = null) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
         }
 
         $chatRoomMessages = null;
-        if ($timestamp == null) {
+        if ($date == null) {
             $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessages($chatRoomId);
         }
         else {
-            $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($chatRoomId, $timestamp);
+            $chatRoomMessages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($chatRoomId, $date);
         }
 
-        UserService::updateLastSeen($chatRoomId, $_SESSION['user']->{'id'});
+        UserService::updateLastSeen($chatRoomId, $_SESSION['user']->{'userId'});
+        $chatRoomMessages = array_map('CCS\Models\Mappers\MessageMapper::toDTO', $chatRoomMessages);
+        return $chatRoomMessages;
     }
 
     public static function createMessage(

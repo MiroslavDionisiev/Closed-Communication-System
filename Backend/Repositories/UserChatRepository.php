@@ -30,9 +30,9 @@ class UserChatRepository
         $userId
     ) {
         $con = new DB();
-        $query = "SELECT * FROM chat_room\n" .
-            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_room.chatRoomId\n" .
-            "WHERE user_chat.userId = :userId";
+        $query = "SELECT * FROM chat_rooms\n" .
+            "INNER JOIN user_chats ON user_chats.chatRoomId = chat_rooms.chatRoomId\n" .
+            "WHERE user_chats.userId = :userId";
 
         $params = [
             "userId" => $userId
@@ -43,8 +43,8 @@ class UserChatRepository
         $userChats = [];
 
         foreach ($rows as $row) {
-            $chatRoom               = call_user_func('CSS\Models\Mappers\ChatRoomMapper::toEntity', $row);
-            $userChat               = call_user_func('CSS\Models\Mappers\UserChatMapper::toEntity', $row);
+            $chatRoom               = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
+            $userChat               = call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
             $userChat->{'chatRoom'} = $chatRoom;
             $userChats[]            = $userChat;
         }
@@ -57,8 +57,8 @@ class UserChatRepository
         $chatRoomId
     ) {
         $con = new DB();
-        $query = "SELECT * FROM user_chat\n" .
-            "WHERE user_chat.userId = :userId AND user_chat.chatRoomId = :chatRoomId";
+        $query = "SELECT * FROM user_chats\n" .
+            "WHERE user_chats.userId = :userId AND user_chats.chatRoomId = :chatRoomId";
 
         $params = [
             "userId"     => $userId,
@@ -90,8 +90,8 @@ class UserChatRepository
     public static function updateUserLastSeen($chatRoomId, $userId, $timestamp)
     {
         $con = new DB();
-        $query = "UPDATE chat_rooms\n" .
-            "SET lastSeen = :lastSeen\n" .
+        $query = "UPDATE user_chats\n" .
+            "SET userChatLastSeen = :lastSeen\n" .
             "WHERE chatRoomId = :chatRoomId AND userId = :userId";
         $params = [
             "chatRoomId" => $chatRoomId,

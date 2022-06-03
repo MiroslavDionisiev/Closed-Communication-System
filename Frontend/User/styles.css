@@ -90,6 +90,7 @@ main p {
 
 .chatRoom:hover {
     background-color: #03905c;
+    cursor: pointer;
 }
 
 .chatRoom li:not(:first-child) {

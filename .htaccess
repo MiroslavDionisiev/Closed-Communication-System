@@ -1,4 +1,4 @@
 Options -Indexes
 
-RedirectMatch ^(?!.*index.php)(?!.*Frontend)(.*)$ $1Frontend/ChatRoom
+RedirectMatch ^(?!/favicon.ico)(?!.index.php)(?!.Frontend)(.*)$ /Frontend/User
 
