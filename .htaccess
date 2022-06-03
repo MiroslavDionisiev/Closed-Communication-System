@@ -1,4 +1,3 @@
 Options -Indexes
 
-RedirectMatch ^(?!/favicon.ico)(?!.index.php)(?!.Frontend)(.*)$ /Frontend/User
-
+RedirectMatch ^(?!\/favicon.ico)(?!.*index\.php)(?!.*Frontend)(.*)$ /Frontend/User
