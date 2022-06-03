@@ -16,7 +16,8 @@ class Teacher extends User
         $userName,
         $userEmail,
         $userPassword,
-        $userRole
+        $userRole,
+        $userIdentity
     ) {
         $instance = new self();
         $instance->{'userId'}       = $userId;
@@ -24,6 +25,7 @@ class Teacher extends User
         $instance->{'userEmail'}    = $userEmail;
         $instance->{'userPassword'} = $userPassword;
         $instance->{'userRole'}     = $userRole;
+        $instance->{'userIdentity'} = $userRole;
         return $instance;
     }
 

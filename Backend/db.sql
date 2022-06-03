@@ -8,7 +8,8 @@ CREATE TABLE
     userName VARCHAR(50) NOT NULL,
     userEmail VARCHAR(100) NOT NULL UNIQUE,
     userPassword VARCHAR(60) NOT NULL,
-    userRole VARCHAR(50) NOT NULL
+    userRole VARCHAR(50) NOT NULL,
+    userIdentity VARCHAR(50) NOT NULL DEFAULT "Student"
   );
 
 CREATE TABLE
@@ -59,11 +60,12 @@ CREATE TABLE
   );
 
 INSERT INTO
-  users(userEmail, userPassword, userName, userRole)
+  users(userEmail, userPassword, userName, userRole, userIdentity)
 VALUES
   (
     'admin@fmi.bg',
     '$2y$10$paihtzq7QNZ7LagK7nTx9ezh3oSyZxSyTQNQWWZ67HeqZHWXEVhTe',
     'Admin Adminchev',
-    'ADMIN'
+    'ADMIN',
+    'Teacher'
   );

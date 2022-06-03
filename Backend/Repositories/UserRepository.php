@@ -100,34 +100,54 @@ class UserRepository
 
     public static function createStudent(
         $name,
-        $facultyNumber,
         $email,
         $password,
         $year,
         $speciality,
-        $faculty
+        $faculty,
+        $facultyNumber,
     ) {
-        $con = new DB();
-        $query = "INSERT INTO users(userName, userEmail, userPassword, userRole)\n" .
-            "VALUES (:userName, :userEmail, :userPassword, :userRole)";
-        $params = [
-            "userName"     => $name,
-            "userEmail"    => $email,
-            "userPassword" => password_hash($password, PASSWORD_BCRYPT),
-            "userRole"     => HELPERS\GlobalConstants::$USER_ROLE
-        ];
+        try {
+            $con = (new DB())->getConnection();
+            $con->beginTransaction();
 
-        $con->query($query, $params);
+            $query = "INSERT INTO users(userName, userEmail, userPassword, userRole)\n" .
+                "VALUES (:userName, :userEmail, :userPassword, :userRole)";
+            $params = [
+                "userName"     => $name,
+                "userEmail"    => $email,
+                "userPassword" => password_hash($password, PASSWORD_BCRYPT),
+                "userRole"     => HELPERS\GlobalConstants::USER_ROLE
+            ];
 
-        $query = "INSERT INTO students(userId, studentFacultyNumber,studentYear, studentSpeciality, studentFaculty)\n" .
-            "VALUES (:userId, :studentFacultyNumber, :studentYear, :studentSpeciality, :studentFaculty)";
-        $params = [
-            "userId" => UserRepository::existsByEmail($email)->{'userId'},
-            "studentFacultyNumber" => $facultyNumber,
-            "studentYear" => $year,
-            "studentSpeciality" => $speciality,
-            "studentFaculty" => $faculty
-        ];
-        $con->query($query, $params);
+            $stmt = $con->prepare($query);
+            $stmt->execute($params);
+
+            $query = "SELECT * FROM users\n" .
+                "WHERE userEmail = :userEmail";
+            $params = [
+                "userEmail" => $email,
+            ];
+
+            $stmt = $con->prepare($query);
+            $stmt->execute($params);
+
+            $query = "INSERT INTO students(userId, studentFacultyNumber, studentYear, studentSpeciality, studentFaculty)\n" .
+                "VALUES (:userId, :studentFacultyNumber, :studentYear, :studentSpeciality, :studentFaculty)";
+            $params = [
+                "userId"               => $stmt->fetch()->{'userId'},
+                "studentFacultyNumber" => $facultyNumber,
+                "studentYear"          => $year,
+                "studentSpeciality"    => $speciality,
+                "studentFaculty"       => $faculty
+            ];
+            $stmt = $con->prepare($query);
+            $stmt->execute($params);
+
+            $con->commit();
+
+        } catch (\PDOException $e) {
+            throw $e;
+        }
     }
 }

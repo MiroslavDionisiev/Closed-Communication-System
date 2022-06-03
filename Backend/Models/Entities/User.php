@@ -9,4 +9,5 @@ abstract class User
     protected $userEmail    = null;
     protected $userPassword = null;
     protected $userRole     = null;
+    protected $userIdentity = null;
 }
