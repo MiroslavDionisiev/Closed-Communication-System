@@ -1,7 +1,7 @@
-import { authenticate, GLOBALS } from "../../utils.js";
+import * as util from "../../utils.js";
 
 window.onload = async () => {
-    // let user = await authenticate();
+    // let user = await util.authenticate();
 
     // if (user.userRole !== GLOBALS.ADMIN_ROLE) {
     //     window.location.replace("/Frontend/User");
@@ -85,11 +85,17 @@ window.onload = async () => {
     };
 
     fetch("/index.php/admin/users")
-        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.status != 200) {
+                return Promise.reject(resp.json());
+            }
+            return resp.json();
+        })
         .then((users) => {
             let list = document.getElementById("list-users");
             for (let user of users) {
                 list.appendChild(getUserBanner(user));
             }
-        });
+        })
+        .catch((err) => console.log(err));
 };

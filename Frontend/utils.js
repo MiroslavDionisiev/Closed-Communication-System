@@ -1,6 +1,13 @@
 export const GLOBALS = {
-    "ADMIN_ROLE": "ADMIN",
-    "USER_ROLE": "USER"
+    ADMIN_ROLE: "ADMIN",
+    USER_ROLE: "USER",
+};
+
+export const ALERT_TYPE = {
+    SUCCESS: "alert-success",
+    DANGER: "alert-danger",
+    WARNING: "alert-warning",
+    INFO: "alert-info",
 };
 
 export async function authenticate() {
@@ -10,4 +17,33 @@ export async function authenticate() {
         }
         return resp.json();
     });
+}
+
+export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
+    let alertBox = document.createElement("div");
+    alertBox.classList.add("alert-box");
+    alertBox.innerHTML = `
+        <div class="alert ${alertType}">
+            <p class="alert-msg">${msg}</p>
+            <button type="button" class="alert-close">
+                <span>&times;</span>
+            </button>
+        </div>
+    `;
+
+    let alert = alertBox.querySelector(".alert");
+
+    let removeAlert = (target) => {
+        target.style.opacity = 0;
+        target.addEventListener("transitionend", (event) => {
+            target.parentNode.removeChild(target);
+        });
+    }
+
+    alert.addEventListener("click", (event) => removeAlert(event.currentTarget));
+    setTimeout(removeAlert, 3000, alert);
+
+    alert.style.opacity = 0.9;
+
+    document.getElementById("alert-box").appendChild(alert);
 }
