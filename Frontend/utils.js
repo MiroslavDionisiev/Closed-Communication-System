@@ -81,7 +81,8 @@ export async function setHeader(user) {
             rightSide.removeChild(btn);
         rightSide.innerHTML = `
             <p class="user-name">${user.userName}</p>
-            <button class="header-btn">Изход</button>
+            ${user.userRole === USER_ROLES.ADMIN_ROLE ? '<a href="/Frontend/Admin" class="header-btn">Админ панел</a>' : ''}
+            <button class="header-btn" type="button">Изход</button>
         `;
         rightSide.querySelector("button").addEventListener("click", () => {
             fetch("/index.php/account/logout")

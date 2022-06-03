@@ -5,3 +5,78 @@
     flex-direction: row;
     list-style: none;
 }
+
+fieldset {
+    display: flex;
+    flex-grow: 1;
+    padding: 1rem;
+    margin: 0.5rem;
+    background-color: #fff;
+}
+
+input {
+    height: fit-content;
+    font-size: 1rem;
+    color: #000;
+    border: 0.1rem solid #ccc;
+    border-radius: 1rem;
+}
+
+input:required + label:after, input.required + label:after {
+    content: "*";
+    color: #f00;
+}
+
+input, input + label {
+    position: relative;
+    display: flex;
+    border-radius: inherit;
+    outline: none;
+    padding: 0.5rem;
+    background-color: transparent;
+}
+
+input + label {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+input:focus {
+    border-color: #00f;
+} 
+
+input:focus + label {
+    color: #00f;
+}
+
+input:focus + label, input:not(:placeholder-shown) + label {
+    transition: 0.3s;
+    transform: scale(0.8) translateY(-80%);
+    opacity: 1;
+    background-color: #fff;
+    padding: 0 0.2rem;
+}
+
+.field-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    position: relative;
+    height: fit-content;
+}
+
+#create-room-btn {
+    align-self: center;
+    background-color: #ffc0c7;
+    width: fit-content;
+    height: fit-content;
+    pointer-events: all;
+}

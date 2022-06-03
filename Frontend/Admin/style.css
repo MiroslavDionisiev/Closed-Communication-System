@@ -1,7 +1,7 @@
 @import "../global.css";
 
 .wrapper {
-    display: grid!important;
+    display: grid;
     grid-template-columns: 2fr 11fr;
     grid-template-areas: 
         "aside title"
@@ -24,12 +24,6 @@ h1 {
     text-align: center;
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
 .panel-tab {
     text-decoration: none;
     background-color: #04aa6d;
@@ -50,6 +44,7 @@ aside {
     flex-direction: column;
     justify-content: flex-start;
     grid-area: aside;
+    text-align: center;
 }
 
 #href-users::before {
@@ -74,10 +69,13 @@ aside {
 }
 
 .nav-a:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.hover-invert:hover {
     -webkit-filter: invert(100%);
     filter: invert(100%);
-    cursor: pointer;
-    transform: scale(1.2) translateX(1.2rem);
 }
 
 .nav-a::before {
@@ -109,4 +107,16 @@ aside {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+@media screen and (max-width: 980px) {
+    .wrapper {
+        display: flex!important;
+        flex-direction: column;
+        height: fit-content;
+    }
+
+    aside {
+        flex-direction: row;
+    }
 }

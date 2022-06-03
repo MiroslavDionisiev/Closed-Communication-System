@@ -36,19 +36,23 @@ import * as util from "../../utils.js";
                     </section>
                 `;
 
-
                 let closeInfo = () => {
-                    info.parentNode.removeChild(info);
-                }
-                
+                    try {
+                        info.parentNode.removeChild(info);
+                    } catch (e) {}
+                };
+
                 info.addEventListener("click", (event) => {
                     if (event.target.classList.contains("curtain")) {
                         closeInfo();
                     }
                 });
-                info.querySelector(".user-info-close").addEventListener("click", () => {
-                    closeInfo(info);
-                });
+                info.querySelector(".user-info-close").addEventListener(
+                    "click",
+                    () => {
+                        closeInfo();
+                    }
+                );
                 document.addEventListener("keydown", (event) => {
                     if (event.key === "Escape") {
                         closeInfo();
@@ -66,7 +70,6 @@ import * as util from "../../utils.js";
                 }
 
                 document.documentElement.appendChild(info);
-                info.focus();
             });
     }
 
@@ -74,7 +77,7 @@ import * as util from "../../utils.js";
         let banner = document.createElement("div");
 
         banner.innerHTML = `
-            <a class="user-banner">
+            <a class="user-banner hover-invert">
                 <figure>
                     <img src="img/img-user.png" alt="User profile picture">
                     <figcaption class="banner-user-name"></figcaption>
