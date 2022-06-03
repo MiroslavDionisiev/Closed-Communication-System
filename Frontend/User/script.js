@@ -1,21 +1,4 @@
-async function getCurrentUser() {
-    let user = await fetch('/index.php/account/is-authenticated', {
-        method: 'GET'
-    })
-    .then(res => {
-        if(res.status == 401) {
-            window.loccation = "/Frontend/Login";
-        }
-        else {      
-            return res.json();
-        }
-    })
-    .then(data => {
-        return data;
-    });
-
-    return user;
-}
+import * as util from "../utils.js";
 
 function redirectToChatRoom(chatRoomId) {
     let url = `/Frontend/ChatRoom?chatRoomId=${chatRoomId}`;
@@ -59,13 +42,13 @@ function getAllChatRooms() {
             ulRoomData.appendChild(liRole);
             ulRoomData.appendChild(liActive);
 
+            div.appendChild(ulRoomData);
             if (element['unreadMessages'] > 0) {
                 let divUnread = document.createElement('div');
                 divUnread.setAttribute('class', 'unreadMessage');
-
+                divUnread.innerText = `Непрочетени съобщения: ${element['unreadMessages']}`;
                 div.appendChild(divUnread);
             }
-            div.appendChild(ulRoomData);
 
             div.addEventListener("click", (e)=>{
                 redirectToChatRoom(element['userChatRoom']['chatRoom']['chatRoomId']);
@@ -79,8 +62,7 @@ function getAllChatRooms() {
 }
 
 (async () => {
-    let user = await getCurrentUser();
-    let username = document.getElementsByClassName('userName')[0];
-    username.innerText = user['userName'];
+    let user = await util.authenticate();
+    util.setHeader(user);
     getAllChatRooms();
 })();

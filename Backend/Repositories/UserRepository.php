@@ -35,8 +35,9 @@ class UserRepository
         return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
     }
 
-    public static function findById($userId)
-    {
+    public static function findById(
+        $userId
+    ) {
         $con = new DB();
         $query = "SELECT u.*, s.studentFacultyNumber, s.studentYear, s.studentSpeciality, s.studentFaculty FROM users u\n" .
             "LEFT OUTER JOIN students s ON s.userId = u.userId\n" .
@@ -82,8 +83,9 @@ class UserRepository
         return $row;
     }
 
-    public static function existsByEmail($email)
-    {
+    public static function existsByEmail(
+        $email
+    ) {
         $con = new DB();
         $query = "SELECT * FROM users\n" .
             "WHERE userEmail = :userEmail";
@@ -96,16 +98,23 @@ class UserRepository
         return $row;
     }
 
-    public static function createStudent($name, $facultyNumber ,$email, $password, $year, $speciality, $faculty)
-    {
+    public static function createStudent(
+        $name,
+        $facultyNumber,
+        $email,
+        $password,
+        $year,
+        $speciality,
+        $faculty
+    ) {
         $con = new DB();
         $query = "INSERT INTO users(userName, userEmail, userPassword, userRole)\n" .
             "VALUES (:userName, :userEmail, :userPassword, :userRole)";
         $params = [
-            "userName" => $name,
-            "userEmail" => $email,
+            "userName"     => $name,
+            "userEmail"    => $email,
             "userPassword" => password_hash($password, PASSWORD_BCRYPT),
-            "userRole" => HELPERS\GlobalConstants::$USER_ROLE
+            "userRole"     => HELPERS\GlobalConstants::$USER_ROLE
         ];
 
         $con->query($query, $params);
@@ -113,7 +122,7 @@ class UserRepository
         $query = "INSERT INTO students(userId, studentFacultyNumber,studentYear, studentSpeciality, studentFaculty)\n" .
             "VALUES (:userId, :studentFacultyNumber, :studentYear, :studentSpeciality, :studentFaculty)";
         $params = [
-            "userId" => UserRepository::existsByEmail($email) -> {'userId'},
+            "userId" => UserRepository::existsByEmail($email)->{'userId'},
             "studentFacultyNumber" => $facultyNumber,
             "studentYear" => $year,
             "studentSpeciality" => $speciality,

@@ -8,7 +8,6 @@ class UserChat
     private $userChatId          = null;
     private $user                = null;
     private $chatRoom            = null;
-    private $userChatLastSeen    = null;
     private $userChatIsAnonymous = null;
     private $userChatLastSeen    = null;
 

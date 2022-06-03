@@ -50,7 +50,7 @@ class AdminController {
     public static function removeUserFromChat() {
         $userId = $_GET['userId'] ?? null;
         $chatRoomId = $_GET['chatRoomId'] ?? null;
-        AdminService::updateChatRoomActive($userId, $chatRoomId);
+        AdminService::removeUserFromChat($userId, $chatRoomId);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User removed successfully."));
     }
 

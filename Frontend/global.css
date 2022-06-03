@@ -57,7 +57,7 @@ body {
     cursor: pointer;
 }
 
-.logout:hover {
+.header-btn:hover {
     background-color: #04aa6d;
 }
 

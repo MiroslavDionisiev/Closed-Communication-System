@@ -39,7 +39,7 @@ class MessageRepository
             "INNER JOIN users ON users.userId = messages.userId\n" .
             "INNER JOIN students ON students.userId = users.userId\n" .
             "INNER JOIN chat_rooms ON chat_rooms.chatRoomId = messages.chatRoomId\n" .
-            "WHERE messageIsDisabled IS TRUE\n".
+            "WHERE messageIsDisabled IS TRUE\n" .
             "ORDER BY messages.messageTimestamp";
 
         $rows = $con->query($query)->fetchAll();
@@ -63,7 +63,7 @@ class MessageRepository
         $query = "SELECT * FROM messages\n" .
             "INNER JOIN users ON users.userId = messages.userId\n" .
             "INNER JOIN user_chats ON user_chats.userId = users.userId\n" .
-            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageIsDisabled IS FALSE\n".
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageIsDisabled IS FALSE\n" .
             "ORDER BY messages.messageTimestamp";
 
         $params = [
@@ -83,12 +83,15 @@ class MessageRepository
         return $messages;
     }
 
-    public static function getAllChatRoomMessagesFromTimestamp($chatRoomId, $timestamp) {
+    public static function getAllChatRoomMessagesFromTimestamp(
+        $chatRoomId,
+        $timestamp
+    ) {
         $con = new DB();
-        $query = "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n".
-            "INNER JOIN users ON users.userId = messages.userId\n".
-            "INNER JOIN user_chats ON user_chats.userId = users.userId\n".
-            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageTimestamp > :timestamp AND messages.messageIsDisabled IS FALSE\n".
+        $query = "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n" .
+            "INNER JOIN users ON users.userId = messages.userId\n" .
+            "INNER JOIN user_chats ON user_chats.userId = users.userId\n" .
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageTimestamp > :timestamp AND messages.messageIsDisabled IS FALSE\n" .
             "ORDER BY messages.messageTimestamp";
 
         $params = [
@@ -98,10 +101,11 @@ class MessageRepository
 
         $rows = $con->query($query, $params)->fetchAll();
         $messages = [];
-        foreach ($rows  as $index => $row) {
-            $message               = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
+
+        foreach ($rows as $row) {
+            $message = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
             if (!$row->{'userChatIsAnonymous'} || $row->{'userId'} == $_SESSION['user']->{'userId'}) {
-                $message->{'user'}     = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+                $message->{'user'} = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             }
             $messages[]            = $message;
         }
