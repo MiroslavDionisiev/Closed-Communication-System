@@ -81,7 +81,6 @@ body {
     padding: 0.25rem 0.50rem;
     border: 1px solid transparent;
     border-radius: 0.25rem;
-    opacity: 0;
     transition: 1s;
     -webkit-transition: 1s;
     width: 30vw;

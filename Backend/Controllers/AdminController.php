@@ -53,9 +53,8 @@ class AdminController {
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User removed successfully."));
     }
 
-    public static function deleteMessageById() {
-        $messageDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
-        AdminService::deleteMessageById($messageDto->{'messageId'});
+    public static function deleteMessageById($param) {
+        AdminService::deleteMessageById($param['messageId']);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
 
@@ -72,9 +71,10 @@ class AdminController {
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatrooms created successfully."));
     }
 
-    public static function updateMessageIsDisabled() {
+    public static function updateMessageIsDisabled($param) {
         $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
+        $msgDto->{'messageId'} = $param['messageId'];
         AdminService::updateMessageIsDisabled($msgDto);
-        echo json_encode(new DTOs\ResponseDtoSuccess(201, "Message updated successfully."));
+        echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message updated successfully."));
     }
 }

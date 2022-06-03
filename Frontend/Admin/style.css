@@ -13,7 +13,6 @@
 main {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
@@ -71,13 +70,13 @@ aside {
     padding: 1rem;
     text-decoration: none;
     color: #120F16;
+    transition: 0.3s;
 }
 
 .nav-a:hover {
     -webkit-filter: invert(100%);
     filter: invert(100%);
     cursor: pointer;
-    transition: 0.3s;
     transform: scale(1.2) translateX(1.2rem);
 }
 

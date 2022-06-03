@@ -54,8 +54,6 @@ export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
     );
     setTimeout(removeAlert, 3000, alert);
 
-    alert.style.opacity = 0.9;
-
     let box = document.getElementById("alert-box");
     if (box === null) {
         document.documentElement.appendChild(alertBox);

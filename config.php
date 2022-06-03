@@ -98,13 +98,13 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'updateChatRoomActive'
     ],
-    "PUT ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
+    "PUT ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages/{$pathParam('messageId')}$" => [
         'authenticate' => true,
         'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',
         'controllerMethod' => 'updateMessageIsDisabled'
     ],
-    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages$" => [
+    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages/{$pathParam('messageId')}$" => [
         'authenticate' => true,
         'authorize' => [Globals::$ADMIN_ROLE],
         'controller' => 'AdminController',

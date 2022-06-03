@@ -10,35 +10,38 @@ import * as util from "../../utils.js";
     util.setHeader(user);
 
     let getMessageBanner = (msg) => {
-        let banner = document.createElement("div");
+        let banner = document.createElement("tr");
         banner.classList.add("message-banner");
         banner.setAttribute("msg-id", msg.messageId);
 
         banner.innerHTML = `
-            <p id="chat-room-name">${msg.chatRoom.chatRoomName}</p>
-            <p id="sender-name">${msg.user.userName}</p>
-            <p id="message-contents">${msg.messageContent ?? ""}</p>
-            <button id="btn-approve" class="btn-green">Одобри</button>
-            <button id="btn-deny" class="btn-red">Отхвърли</button>
+            <td class="chat-room-name">${msg.chatRoom.chatRoomName}</td>
+            <td class="sender-name">${msg.user.userName}</td>
+            <td class="message-contents"><div>${
+                msg.messageContent ?? ""
+            }<div></td>
+            <td>
+                <button type="button" class="btn-approve">Одобри</button>
+                <button type="button" class="btn-deny">Отхвърли</button>
+            </td>
         `;
 
-        banner.querySelector("#btn-deny").addEventListener("click", (event) => {
+        banner.querySelector(".btn-deny").addEventListener("click", (event) => {
+            let node = event.currentTarget.parentNode.parentNode;
+            let msgId = node.getAttribute("msg-id");
+
             let options = {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    messageId: event.target.parentNode.getAttribute("msg-id"),
-                }),
             };
 
-            fetch("/index.php/admin/disabled-messages", options)
+            fetch(`/index.php/admin/disabled-messages/${msgId}`, options)
                 .then(async (resp) => {
-                    if (resp.ok) {
-                        event.target.parentNode.parentNode.removeChild(
-                            event.target.parentNode
-                        );
+                    if (resp.status >= 200 && resp.status < 400) {
+                        node.parentNode.removeChild(node);
+                        util.popAlert((await resp.json()).message);
                     } else {
                         throw await resp.json();
                     }
@@ -49,28 +52,29 @@ import * as util from "../../utils.js";
         });
 
         banner
-            .querySelector("#btn-approve")
+            .querySelector(".btn-approve")
             .addEventListener("click", (event) => {
+                let node = event.currentTarget.parentNode.parentNode;
+                let msgId = node.getAttribute("msg-id");
+
                 let options = {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        messageId:
-                            event.target.parentNode.getAttribute("msg-id"),
                         messageIsDisabled: false,
                     }),
                 };
-                fetch("/index.php/admin/disabled-messages", options).then(
-                    (resp) => {
-                        if (resp.ok) {
-                            event.target.parentNode.parentNode.removeChild(
-                                event.target.parentNode
-                            );
-                        }
+                fetch(
+                    `/index.php/admin/disabled-messages/${msgId}`,
+                    options
+                ).then(async (resp) => {
+                    if (resp.status >= 200 && resp.status < 400) {
+                        node.parentNode.removeChild(node);
+                        util.popAlert((await resp.json()).message);
                     }
-                );
+                });
             });
 
         return banner;
@@ -82,7 +86,9 @@ import * as util from "../../utils.js";
             .then((messages) => {
                 let list = document.getElementById("list-disabled-messages");
                 for (let msg of messages) {
-                    list.appendChild(getMessageBanner(msg));
+                    list.querySelector("tbody").appendChild(
+                        getMessageBanner(msg)
+                    );
                 }
             });
     };
