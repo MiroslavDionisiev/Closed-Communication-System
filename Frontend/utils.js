@@ -1,4 +1,4 @@
-export const GLOBALS = {
+export const USER_ROLES = {
     ADMIN_ROLE: "ADMIN",
     USER_ROLE: "USER",
 };
@@ -11,12 +11,20 @@ export const ALERT_TYPE = {
 };
 
 export async function authenticate() {
-    return fetch("/index.php/account/is-authenticated").then((resp) => {
-        if (resp.status == 401) {
-            window.location.replace("/Frontend/Login");
-        }
-        return resp.json();
-    });
+    return fetch("/index.php/account/is-authenticated")
+        .then(async (resp) => {
+            if (resp.status == 401) {
+                window.location.replace("/Frontend/Login");
+            } else if (resp.status == 200) {
+                return resp.json();
+            } else {
+                throw await resp.json();
+            }
+        })
+        .catch((err) => {
+            console.log(err.error);
+            return null;
+        });
 }
 
 export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
@@ -53,5 +61,42 @@ export function popAlert(msg, alertType = ALERT_TYPE.INFO) {
         document.documentElement.appendChild(alertBox);
     } else {
         document.getElementById("alert-box").appendChild(alert);
+    }
+}
+
+export async function setHeader(user) {
+    let header = document.createElement("header");
+    header.classList.add("site-header");
+    header.innerHTML = `
+    <a href="/Frontend/User" class="app-name">Closed Communication System</a>
+    <section class="right-side">
+        <a href="/Frontend/Login" class="header-btn">Вход</a>
+        <a href="/Frontend/Register" class="header-btn">Регистрация</a>
+    </section>
+    `;
+
+    document.body.insertBefore(header, document.body.firstChild);
+
+    if (user !== null) {
+        let rightSide = header.querySelector(".right-side");
+        for (let btn of rightSide.querySelectorAll("button"))
+            rightSide.removeChild(btn);
+        rightSide.innerHTML = `
+            <p class="user-name">${user.userName}</p>
+            <button class="header-btn">Изход</button>
+        `;
+        rightSide.querySelector("button").addEventListener("click", () => {
+            fetch("/index.php/account/logout")
+                .then(async (resp) => {
+                    if (resp.ok) {
+                        window.location.replace("/Frontend/Login");
+                    } else {
+                        throw await resp.json();
+                    }
+                })
+                .catch((err) => {
+                    popAlert(err.error);
+                });
+        });
     }
 }

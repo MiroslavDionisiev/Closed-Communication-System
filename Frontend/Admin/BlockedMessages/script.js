@@ -1,11 +1,13 @@
-import { authenticate, GLOBALS } from "../../utils.js";
+import * as util from "../../utils.js";
 
-window.onload = async () => {
-    // let user = await authenticate();
+(async () => {
+    let user = await util.authenticate();
 
-    // if (user.userRole !== GLOBALS.ADMIN_ROLE) {
+    // if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
     //     window.location.replace("/Frontend/User");
     // }
+
+    util.setHeader(user);
 
     let getMessageBanner = (msg) => {
         let banner = document.createElement("div");
@@ -30,15 +32,20 @@ window.onload = async () => {
                     messageId: event.target.parentNode.getAttribute("msg-id"),
                 }),
             };
-            fetch("/index.php/admin/disabled-messages", options).then(
-                (resp) => {
+
+            fetch("/index.php/admin/disabled-messages", options)
+                .then(async (resp) => {
                     if (resp.ok) {
                         event.target.parentNode.parentNode.removeChild(
                             event.target.parentNode
                         );
+                    } else {
+                        throw await resp.json();
                     }
-                }
-            );
+                })
+                .catch((err) => {
+                    util.popAlert(err.error);
+                });
         });
 
         banner
@@ -50,7 +57,8 @@ window.onload = async () => {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        messageId: event.target.parentNode.getAttribute("msg-id"),
+                        messageId:
+                            event.target.parentNode.getAttribute("msg-id"),
                         messageIsDisabled: false,
                     }),
                 };
@@ -80,4 +88,4 @@ window.onload = async () => {
     };
 
     fetchMessages();
-};
+})();

@@ -1,9 +1,11 @@
-import { authenticate, GLOBALS } from '../utils.js';
+import * as util from "../utils.js";
 
-window.onload = async () => {
-    let user = await authenticate();
+(async () => {
+    let user = await util.authenticate();
 
-    if (user.userRole !== GLOBALS.ADMIN_ROLE) {
-        window.location.replace("/Frontend/User");
-    }
-};
+    // if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
+    //     window.location.replace("/Frontend/User");
+    // }
+
+    util.setHeader(user);
+})();

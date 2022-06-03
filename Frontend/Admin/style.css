@@ -77,7 +77,8 @@ aside {
     -webkit-filter: invert(100%);
     filter: invert(100%);
     cursor: pointer;
-    font-size: 1.2em;
+    transition: 0.3s;
+    transform: scale(1.2) translateX(1.2rem);
 }
 
 .nav-a::before {

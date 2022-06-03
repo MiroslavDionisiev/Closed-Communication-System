@@ -1,11 +1,13 @@
 import * as util from "../../utils.js";
 
-window.onload = async () => {
-    // let user = await util.authenticate();
+(async () => {
+    let user = await util.authenticate();
 
     // if (user.userRole !== GLOBALS.ADMIN_ROLE) {
     //     window.location.replace("/Frontend/User");
     // }
+
+    util.setHeader(user);
 
     function openUserInfo(userId) {
         fetch(`/index.php/admin/users/${userId}`)
@@ -18,42 +20,49 @@ window.onload = async () => {
             .then((user) => {
                 let info = document.createElement("div");
                 info.classList.add("curtain");
-                info.addEventListener("click", (event) => {
-                    if (event.target.classList.contains("curtain")) {
-                        event.currentTarget.parentNode.removeChild(
-                            event.currentTarget
-                        );
-                    }
-                });
-                document.addEventListener("keydown", (event) => {
-                    if (event.key === "Escape") {
-                        let curtain = document.querySelector(".curtain");
-                        if (curtain) {
-                            curtain.parentNode.removeChild(curtain);
-                        }
-                    }
-                });
 
                 info.innerHTML = `
                     <section class="user-info-wrapper">
-                        <img src="img/img-user.png" alt="User profile picture">
+                        <button type="button" class="user-info-close">
+                            <span>&times;</span>
+                        </button>
+                        <div class="img">
+                            <img src="img/img-user.png" alt="User profile picture">
+                        </div>
                         <div class="user-details">
-                            <ul class="user-info-keys">
-                            </ul>
-                            <ul class="user-info-values">
+                            <ul class="user-info">
                             </ul>
                         </div>
                     </section>
                 `;
 
-                for (let key of Object.keys(user)) {
-                    let li1 = document.createElement("li");
-                    li1.innerHTML = key;
-                    info.querySelector(".user-info-keys").appendChild(li1);
 
-                    let li2 = document.createElement("li");
-                    li2.innerHTML = user[key];
-                    info.querySelector(".user-info-values").appendChild(li2);
+                let closeInfo = () => {
+                    info.parentNode.removeChild(info);
+                }
+                
+                info.addEventListener("click", (event) => {
+                    if (event.target.classList.contains("curtain")) {
+                        closeInfo();
+                    }
+                });
+                info.querySelector(".user-info-close").addEventListener("click", () => {
+                    closeInfo(info);
+                });
+                document.addEventListener("keydown", (event) => {
+                    if (event.key === "Escape") {
+                        closeInfo();
+                    }
+                });
+
+                for (let key of Object.keys(user)) {
+                    let li = document.createElement("li");
+                    li.innerHTML = `
+                        <p class="user-info-key">${key}:</p>
+                        <p class="user-info-value">${user[key]}</p>
+                    `;
+
+                    info.querySelector(".user-info").appendChild(li);
                 }
 
                 document.documentElement.appendChild(info);
@@ -68,12 +77,12 @@ window.onload = async () => {
             <a class="user-banner">
                 <figure>
                     <img src="img/img-user.png" alt="User profile picture">
-                    <figcaption class="user-name"></figcaption>
+                    <figcaption class="banner-user-name"></figcaption>
                 </figure>
             </a>
         `;
 
-        banner.querySelector(".user-name").innerHTML = user.userName;
+        banner.querySelector(".banner-user-name").innerHTML = user.userName;
         banner
             .querySelector("a")
             .addEventListener("click", (event) =>
@@ -97,8 +106,7 @@ window.onload = async () => {
                 list.appendChild(getUserBanner(user));
             }
         })
-        .catch((err) => err)
-        .then(msg => console.log(msg));
-
-    util.popAlert("asd");
-};
+        .catch((err) => {
+            console.log(err);
+        });
+})();

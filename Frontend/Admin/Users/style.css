@@ -40,7 +40,7 @@ h1 {
     padding: 0;
 }
 
-.user-banner .user-name {
+.user-banner .banner-user-name {
     word-wrap: break-word;
 }
 
@@ -50,36 +50,13 @@ h1 {
     object-fit: fill;
 }
 
-.user-info-keys,
-.user-info-values {
-    list-style: none;
-    display: flex;
-    flex-grow: 0;
-    flex-direction: column;
-}
-
-.user-info-keys {
-    align-items: flex-end;
-}
-
-.user-info-values {
-    align-items: flex-start;
-}
-
-.user-info-values li {
-    text-align: justify;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .curtain {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #000;
-    opacity: 0.5;
+    background-color: rgba(0,0,0,0.5);
     z-index: 99;
 }
 
@@ -90,19 +67,63 @@ h1 {
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
     flex-direction: row;
-    justify-self: center;
-    align-self: center;
+    justify-content: center;
+    align-content: center;
     width: 50%;
     height: 50%;
     margin: 0;
-    padding: 0;
+    padding: 2rem;
     background-color: #ccc;
-    opacity: 1;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.user-info li {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.user-info-key {
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.user-info-wrapper.img {
+    display: flex;
+}
+
+.user-info-wrapper img {
+    width: 100%;
+    height: 100%;
 }
 
 .user-details {
     display: flex;
     flex-direction: row;
-    font-size: 1vmax;
     align-items: center;
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.user-info-close {
+    position: absolute;
+    pointer-events: all;
+    border: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: transparent;
+    top: 0;
+    right: 0;
+}
+
+
+.user-info-close:hover {
+    cursor: pointer;
+    transform: scale(1.2);
 }

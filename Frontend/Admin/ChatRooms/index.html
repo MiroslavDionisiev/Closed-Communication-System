@@ -4,18 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Admin Panel</title>
-        <script src="script.js"></script>
+        <script src="script.js" type="module" defer></script>
         <link href="style.css" rel="stylesheet" />
     </head>
 
     <body>
-        <header>
-            <p class="appName">Closed Communication System</p>
-            <section>
-                <p class="userName">Име</p>
-                <button class="logout">Изход</button>
-            </section>
-        </header>
         <div class="wrapper">
             <aside>
                 <a id="href-users" href="../Users" class="nav-a">Потребители</a>
@@ -26,7 +19,9 @@
                 <h1 id="title">Чат стаи</h1>
                 <section id="list-users" class="wrapper-list">
                     <div class="chat-room-banner">
-
+                        <p>name</p>
+                        <p>date</p>
+                        <p>isActive</p>
                     </div>
                 </section>
             </main>
