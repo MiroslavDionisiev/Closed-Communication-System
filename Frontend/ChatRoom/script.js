@@ -94,7 +94,13 @@ function sendMessage() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ message }),
-    });
+    })
+        .then(async (resp) => {
+            if (resp.status >= 400) {
+                throw await resp.json();
+            }
+        })
+        .catch((err) => util.popAlert(err.error));
     document.getElementById("messageInput").value = "";
 }
 
@@ -111,4 +117,3 @@ function sendMessage() {
         e.preventDefault();
     });
 })();
-

@@ -94,9 +94,9 @@ import * as util from "../../utils.js";
     };
 
     fetch("/index.php/admin/users")
-        .then((resp) => {
+        .then(async (resp) => {
             if (resp.status != 200) {
-                return Promise.reject(resp.json());
+                throw await resp.json();
             }
             return resp.json();
         })

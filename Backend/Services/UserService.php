@@ -88,10 +88,12 @@ class UserService
         }
 
         $isDisabled = false;
-        if ($userChatRooms->isAnonymous) {
+        if ($userChatRooms->{'userChatIsAnonymous'}) {
             $isDisabled = MessageManager::checkForLeakedCredentials($message, $user->{'userEmail'}, $user->{'userName'});
         }
 
         Repo\MessageRepository::createMessage($userId, $chatRoomId, $message, $isDisabled);
+
+        return $isDisabled;
     }
 }
