@@ -55,6 +55,7 @@ body {
     margin: 1rem;
     pointer-events: all;
     cursor: pointer;
+    text-align: center;
 }
 
 .header-btn:hover {

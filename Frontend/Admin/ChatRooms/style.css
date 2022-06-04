@@ -1,4 +1,5 @@
 @import "../style.css";
+@import "../Users/style.css";
 
 .chat-room-banner {
     display: flex;
@@ -58,11 +59,16 @@ input:focus + label, input:not(:placeholder-shown) + label {
     padding: 0 0.2rem;
 }
 
-.field-row {
+.fieldset-room {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-evenly;
     flex-wrap: wrap;
+}
+
+.room-data {
+    display: flex;
+    flex-direction: row;
 }
 
 .form-field {
@@ -73,10 +79,84 @@ input:focus + label, input:not(:placeholder-shown) + label {
     height: fit-content;
 }
 
-#create-room-btn {
+.room-form-btns {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.room-form-btns button {
     align-self: center;
     background-color: #ffc0c7;
     width: fit-content;
     height: fit-content;
     pointer-events: all;
+}
+
+#add-users-btn::after {
+    content: "▼";
+}
+
+#add-users-btn.dropped::after {
+    content: "▲";
+}
+
+#select-users {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    top: 100%;
+    right: 0%;
+    width: 0vw;
+    height: fit-content;
+    max-height: 50vh;
+    background-color: #ccc;
+    border: 1px solid #000;
+    overflow-y: auto;
+    transition: 0.3s;
+    opacity: 0;
+    z-index: 1;
+}
+
+.select-user-checkbox {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.users-data-list {
+    list-style: none;
+}
+
+.users-data-list li, .users-data-list div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    margin-top: 0.2rem;
+}
+
+.users-data-list li {
+    border-radius: 2rem;
+    background-color: #0c5;
+}
+
+.users-data-list li.anonymous {
+    background-color: #c50;
+}
+
+@media screen and (max-width: 700px) {
+    .room-data {
+        flex-direction: column;
+    }
+
+    .users-data-list li {
+        flex-direction: column;
+    }
+    .users-data-list div {
+        justify-content: center;
+    }
 }

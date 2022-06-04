@@ -29,8 +29,10 @@ class AdminController {
     }
 
     public static function createChatRoom() {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
-        AdminService::createChatRoom($chatRoomDto);
+        $json = json_decode(file_get_contents('php://input'));
+        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $json);
+        $userChatDtos= $json->{'userChats'};
+        AdminService::createChatRoom($chatRoomDto, $userChatDtos);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatroom created successfully."));
     }
 

@@ -11,7 +11,10 @@
     <body>
         <div class="wrapper">
             <aside>
-                <a id="href-users" href="/Frontend/Admin/Users" class="nav-a"
+                <a
+                    id="href-users"
+                    href="/Frontend/Admin/Users"
+                    class="nav-a hover-invert"
                     >Потребители</a
                 >
                 <a
@@ -20,28 +23,55 @@
                     class="nav-a hover-invert"
                     >Блокирани съобщения</a
                 >
-                <a
-                    id="href-user-chats"
-                    class="nav-a nav-a-selected hover-invert"
+                <a id="href-user-chats" class="nav-a nav-a-selected"
                     >Чат стаи</a
                 >
             </aside>
             <main>
                 <h1 id="title">Чат стаи</h1>
                 <form id="room-create-form">
-                    <fieldset class="field-row">
+                    <fieldset class="fieldset-room">
                         <legend>Създаване на стая</legend>
-                        <div class="form-field">
-                            <input id="room-name" type="text" placeholder=" " required/>
-                            <label for="room-name">Име на стая</label>
-                        </div>
-                        <div class="form-field">
-                            <input id="room-expiry-date" type="datetime-local" placeholder=" " pattern="/^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9]) (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])$/"/>
-                            <label for="room-expiry-date">Краен срок</label>
-                        </div>
-                        <button id="create-room-btn" type="submit" tabindex="0">
-                            Създай
-                        </button>
+                        <section class="room-data">
+                            <div class="form-field">
+                                <input
+                                    id="room-name"
+                                    type="text"
+                                    placeholder=" "
+                                    required
+                                />
+                                <label for="room-name">Име на стая</label>
+                            </div>
+                            <div class="form-field">
+                                <input
+                                    id="room-expiry-date"
+                                    type="datetime-local"
+                                    placeholder=" "
+                                />
+                                <label for="room-expiry-date">Краен срок</label>
+                            </div>
+                            <div class="room-form-btns">
+                                <button
+                                    id="create-room-btn"
+                                    type="submit"
+                                    tabindex="0"
+                                    class="hover-invert"
+                                >
+                                    Създай
+                                </button>
+                                <button
+                                    id="add-users-btn"
+                                    type="button"
+                                    tabindex="0"
+                                    class="hover-invert"
+                                >
+                                    Добави потребители
+                                </button>
+                                <div id="select-users"></div>
+                            </div>
+                        </section>
+                        <ul class="users-data-list">
+                        </ul>
                     </fieldset>
                 </form>
                 <ul id="chatRooms" class="wrapper-list">

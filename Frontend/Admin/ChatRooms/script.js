@@ -1,15 +1,38 @@
 import * as util from "../../utils.js";
+import * as admin from "../utils.js";
 
 (async () => {
     let user = await util.authenticate();
-
-    // if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
-    //     window.location.replace("/Frontend/User");
-    // }
-
+    // admin.authorize(user);
     util.setHeader(user);
 
     function getChatRoomBanner(chatRoom) {}
+
+    function getUserRow(user) {
+        let row = document.createElement("li");
+        row.id = user.userId;
+        row.innerHTML = `
+            <div>${user.userName}</div>
+            <div>${user.userIdentity}</div>
+            <div>
+                <label for="input">Анонимен</label>
+                <input type="checkbox" class="is-anonymous">
+            </div>
+        `;
+
+        let isAnonymous = row.querySelector("input");
+        isAnonymous.addEventListener("change", (event) => {
+            if (isAnonymous.checked) {
+                row.classList.add("anonymous");
+            } else {
+                row.classList.remove("anonymous");
+            }
+        });
+        isAnonymous.checked = true;
+        row.classList.add("anonymous");
+
+        return row;
+    }
 
     document
         .getElementById("create-room-btn")
@@ -32,12 +55,88 @@ import * as util from "../../utils.js";
             let options = {
                 method: "POST",
                 body: JSON.stringify({
-                    chatRoomName             : document.getElementById("room-name").value,
-                    chatRoomAvailabilityDate : document.getElementById("room-expiry-date").value,
+                    chatRoomName: document.getElementById("room-name").value,
+                    chatRoomAvailabilityDate:
+                        document.getElementById("room-expiry-date").value === ""
+                            ? null
+                            : document.getElementById("room-expiry-date").value,
+                    userChats: [
+                        ...document.querySelectorAll(".users-data-list li"),
+                    ].map((li) => {
+                        return {
+                            userId: li.id,
+                            userChatIsAnonymous:
+                                li.querySelector(".is-anonymous").checked,
+                        };
+                    }),
                 }),
-            }
+            };
 
-            fetch("/index.php/admin/chat-rooms")
+            fetch("/index.php/admin/chat-rooms", options).then(async (resp) => {
+                if (resp.status >= 200 && resp.status < 400) {
+                    util.popAlert((await resp.json()).message);
+                } else {
+                    throw await resp.json();
+                }
+            })
+            .catch(err => util.popAlert(err.error, util.ALERT_TYPE.DANGER));
+        });
+
+    let closeSelectUsers = () => {
+        let btn = document.querySelector("#add-users-btn");
+        let select = document.querySelector("#select-users");
+        btn.classList.remove("dropped");
+        select.style.width = "0";
+        select.style.height = "0";
+        select.style.opacity = 0;
+        while (select.lastChild) {
+            select.removeChild(select.lastChild);
+        }
+    };
+
+    document
+        .getElementById("add-users-btn")
+        .addEventListener("click", async (event) => {
+            let btn = event.currentTarget;
+            let select = document.querySelector("#select-users");
+
+            if (!btn.classList.contains("dropped")) {
+                btn.classList.add("dropped");
+                select.style.width = "50vw";
+                select.style.height = "fit-content";
+                select.style.opacity = 1;
+
+                let users = await admin.getAllUsers();
+                for (let user of users) {
+                    let banner = admin.getUserBanner(user);
+                    banner.style.position = "relative";
+
+                    let checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.classList.add("select-user-checkbox");
+
+                    let usersDataList =
+                        document.querySelector(".users-data-list");
+                    if (document.getElementById(`${user.userId}`) != null) {
+                        checkbox.checked = true;
+                    }
+
+                    checkbox.addEventListener("change", (event) => {
+                        if (checkbox.checked) {
+                            usersDataList.appendChild(getUserRow(user));
+                        } else {
+                            usersDataList.removeChild(
+                                document.getElementById(`${user.userId}`)
+                            );
+                        }
+                    });
+
+                    banner.appendChild(checkbox);
+                    select.appendChild(banner);
+                }
+            } else {
+                closeSelectUsers();
+            }
         });
 
     fetch("/index.php/admin/chat-rooms")
@@ -47,5 +146,15 @@ import * as util from "../../utils.js";
             }
             return resp.json();
         })
-        .then((rooms) => {});
+        .then((rooms) => {})
+        .catch((err) => console.log(err.error));
+
+    document.addEventListener("click", (event) => {
+        if (
+            !event.target.matches("#select-users, #select-users *, .curtain") &&
+            !event.target.matches("#add-users-btn")
+        ) {
+            closeSelectUsers();
+        }
+    });
 })();

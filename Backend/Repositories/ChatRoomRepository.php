@@ -11,30 +11,78 @@ class ChatRoomRepository
 {
 
     public static function createChatRoom(
-        $chatRoomName,
-        $chatRoomAvailabilityDate = null,
-        $chatRoomIsActive = true
+        $chatRoomDto
     ) {
-        $con = new DB();
-        $query = "INSERT INTO chat_rooms(chatRoomName, chatRoomAvailabilityDate, chatRoomIsActive)\n" .
-            "VALUES (:chatRoomName, :chatRoomAvailabilityDate, :chatRoomIsActive)";
+        $db = new DB();
+        $con = $db->getConnection();
+        $con->beginTransaction();
+
+        $query = "INSERT INTO chat_rooms(chatRoomName, chatRoomAvailabilityDate)\n" .
+            "VALUES (:chatRoomName, :chatRoomAvailabilityDate)";
         $params = [
-            "chatRoomName"             => $chatRoomName,
-            "chatRoomAvailabilityDate" => $chatRoomAvailabilityDate,
-            "chatRoomIsActive"         => $chatRoomIsActive ?? true
+            "chatRoomName"             => $chatRoomDto->{'chatRoomName'},
+            "chatRoomAvailabilityDate" => $chatRoomDto->{'chatRoomAvailabilityDate'},
         ];
 
-        $con->query($query, $params);
+        $stmt = $con->prepare($query);
+        $stmt->execute($params);
 
         $query = "SELECT * FROM chat_rooms WHERE chatRoomName = :chatRoomName";
-
         $params = [
-            "chatRoomName" => $chatRoomName,
+            "chatRoomName" => $chatRoomDto->{'chatRoomName'},
         ];
 
-        $result = $con->query($query, $params)->fetch();
+        $stmt = $con->prepare($query);
+        $stmt->execute($params);
+
+        $con->commit();
+
+        $result = $stmt->fetch();
 
         return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $result);
+    }
+
+    public static function createChatRoomWithUserChats(
+        $chatRoomDto,
+        $userChatDtos
+    ) {
+        $db = new DB();
+        $con = $db->getConnection();
+        $con->beginTransaction();
+
+        $query = "INSERT INTO chat_rooms(chatRoomName, chatRoomAvailabilityDate)\n" .
+            "VALUES (:chatRoomName, :chatRoomAvailabilityDate)";
+        $params = [
+            "chatRoomName"             => $chatRoomDto->{'chatRoomName'},
+            "chatRoomAvailabilityDate" => $chatRoomDto->{'chatRoomAvailabilityDate'},
+        ];
+
+        $stmt = $con->prepare($query);
+        $stmt->execute($params);
+
+        $query = "SELECT * FROM chat_rooms WHERE chatRoomName = :chatRoomName";
+        $params = [
+            "chatRoomName" => $chatRoomDto->{'chatRoomName'},
+        ];
+
+        $stmt = $con->prepare($query);
+        $stmt->execute($params);
+        $chatRoomId = $stmt->fetch()->{'chatRoomId'};
+
+        $query = "INSERT INTO user_chats(userId, chatRoomId, userChatIsAnonymous)\n" .
+            "VALUES (:userId, :chatRoomId, :userChatIsAnonymous)";
+
+        foreach ($userChatDtos as $userChatDto) {
+            $params = [
+                "userId"              => $userChatDto->{'userId'},
+                "chatRoomId"          => $chatRoomId,
+                "userChatIsAnonymous" => $userChatDto->{'userChatIsAnonymous'}
+            ];
+            $stmt = $con->prepare($query);
+            $stmt->execute($params);
+        }
+
+        $con->commit();
     }
 
     public static function updateChatRoom(
