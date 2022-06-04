@@ -8,6 +8,18 @@ import * as admin from "../utils.js";
 
     function getChatRoomBanner(chatRoom) {}
 
+    async function getAllChatRooms() {
+        return fetch("/index.php/admin/chat-rooms")
+            .then(async (resp) => {
+                if (resp.status != 200) {
+                    throw await resp.json();
+                }
+                return resp.json();
+            })
+            .then((rooms) => {})
+            .catch((err) => console.log(err.error));
+    }
+
     function getUserRow(user) {
         let row = document.createElement("li");
         row.id = user.userId;
@@ -32,6 +44,18 @@ import * as admin from "../utils.js";
         row.classList.add("anonymous");
 
         return row;
+    }
+
+    function closeSelectUsers() {
+        let btn = document.querySelector("#add-users-btn");
+        let select = document.querySelector("#select-users");
+        btn.classList.remove("dropped");
+        select.style.width = "0";
+        select.style.height = "0";
+        select.style.opacity = 0;
+        while (select.lastChild) {
+            select.removeChild(select.lastChild);
+        }
     }
 
     document
@@ -72,27 +96,24 @@ import * as admin from "../utils.js";
                 }),
             };
 
-            fetch("/index.php/admin/chat-rooms", options).then(async (resp) => {
-                if (resp.status >= 200 && resp.status < 400) {
-                    util.popAlert((await resp.json()).message);
-                } else {
-                    throw await resp.json();
-                }
-            })
-            .catch(err => util.popAlert(err.error, util.ALERT_TYPE.DANGER));
-        });
+            fetch("/index.php/admin/chat-rooms", options)
+                .then(async (resp) => {
+                    if (resp.status >= 200 && resp.status < 400) {
+                        util.popAlert((await resp.json()).message);
 
-    let closeSelectUsers = () => {
-        let btn = document.querySelector("#add-users-btn");
-        let select = document.querySelector("#select-users");
-        btn.classList.remove("dropped");
-        select.style.width = "0";
-        select.style.height = "0";
-        select.style.opacity = 0;
-        while (select.lastChild) {
-            select.removeChild(select.lastChild);
-        }
-    };
+                        document.getElementById("room-name").value = "";
+                        let usersList = document.querySelector('.users-data-list');
+                        while(usersList.lastChild) {
+                            usersList.removeChild(usersList.lastChild);
+                        }
+                    } else {
+                        throw await resp.json();
+                    }
+                })
+                .catch((err) =>
+                    util.popAlert(err.error, util.ALERT_TYPE.DANGER)
+                );
+        });
 
     document
         .getElementById("add-users-btn")
@@ -138,16 +159,6 @@ import * as admin from "../utils.js";
                 closeSelectUsers();
             }
         });
-
-    fetch("/index.php/admin/chat-rooms")
-        .then(async (resp) => {
-            if (resp.status != 200) {
-                throw await resp.json();
-            }
-            return resp.json();
-        })
-        .then((rooms) => {})
-        .catch((err) => console.log(err.error));
 
     document.addEventListener("click", (event) => {
         if (
