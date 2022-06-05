@@ -102,6 +102,6 @@ export async function getAllUsers() {
 
 export function authorize(user) {
     if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
-        window.location.replace("/Frontend/User");
+        window.location = "/Frontend/User";
     }
 }

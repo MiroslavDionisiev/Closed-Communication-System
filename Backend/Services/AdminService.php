@@ -44,6 +44,13 @@ class AdminService
         $chatRoomDto,
         $userChatDtos
     ) {
+        if(Repo\ChatRoomRepository::existsByName($chatRoomDto->{'chatRoomName'})) {
+            throw new \InvalidArgumentException("Chatroom with name {$chatRoomDto->{'chatRoomName'}} already exists.");
+        }
+        if ($chatRoomDto->{'chatRoomName'} === '') {
+            throw new \InvalidArgumentException("Chatroom name cannot be empty.");
+        }
+
         if ($userChatDtos) {
             $chatRoom = Repo\ChatRoomRepository::createChatRoomWithUserChats($chatRoomDto, $userChatDtos);
         } else {
@@ -104,7 +111,7 @@ class AdminService
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
     }
 
-    public static function createUserChatRoomFromCsv(
+    public static function createChatRoomFromCsv(
         $csvData
     ) {
         foreach ($csvData as $row) {
@@ -120,6 +127,11 @@ class AdminService
                 if (!$student) {
                     throw new \InvalidArgumentException("Student with faculty number {$row[$i]} doesn't exist.");
                 }
+
+                if (in_array($student->{'userId'}, array_column($userChatDtos, 'userId'))) {
+                    continue;
+                }
+
                 $userChatDtos[] = (object) [
                     'userId'              => $student->{'userId'},
                     'userChatIsAnonymous' => filter_var($row[$i + 1] ?? false, FILTER_VALIDATE_BOOLEAN)

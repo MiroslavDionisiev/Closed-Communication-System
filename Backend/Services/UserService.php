@@ -4,6 +4,7 @@ namespace CCS\Services;
 
 use CCS\Repositories as Repo;
 use MessageManager;
+use CCS\Helpers\GlobalConstants as Globals;
 
 require_once(APP_ROOT . "/Repositories/UserRepository.php");
 require_once(APP_ROOT . "/Repositories/MessageRepository.php");
@@ -37,11 +38,9 @@ class UserService
         $res = [];
         foreach ($userChatRooms as $userChatRoom) {
             $messages = Repo\MessageRepository::getAllChatRoomMessagesFromTimestamp($userChatRoom->{'chatRoom'}->{'chatRoomId'}, $userChatRoom->{'userChatLastSeen'});
-            $res += [
-                [
-                    'userChatRoom' => $userChatRoom,
-                    'unreadMessages' => count($messages)
-                ]
+            $res[] = [
+                'userChatRoom' => $userChatRoom,
+                'unreadMessages' => count($messages)
             ];
         }
         return $res;
@@ -82,13 +81,13 @@ class UserService
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
 
-        $userChatRooms = Repo\UserChatRepository::getUserChatByIds($userId, $chatRoomId);
-        if (!$userChatRooms) {
+        $userChatRooms = Repo\UserChatRepository::existsByIds($userId, $chatRoomId);
+        if (!$userChatRooms && $user->{'userRole'} !== Globals::ADMIN_ROLE) {
             throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} of user with ID {$userId} doesn't exist.");
         }
 
         $isDisabled = false;
-        if ($userChatRooms->{'userChatIsAnonymous'}) {
+        if ($user->{'userRole'} !== Globals::ADMIN_ROLE && $userChatRooms->{'userChatIsAnonymous'}) {
             $isDisabled = MessageManager::checkForLeakedCredentials($message, $user->{'userEmail'}, $user->{'userName'});
         }
 

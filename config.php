@@ -90,7 +90,7 @@ define('ROUTES', [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],
         'controller' => 'AdminController',
-        'controllerMethod' => 'createUserChatRoomFromCsv'
+        'controllerMethod' => 'createChatRoomFromCsv'
     ],
     "PUT ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms/{$pathParam('chatRoomId')}$" => [
         'authenticate' => true,
@@ -110,7 +110,7 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteMessageById'
     ],
-    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
+    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms/{$pathParam('chatRoomId')}$" => [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],
         'controller' => 'AdminController',

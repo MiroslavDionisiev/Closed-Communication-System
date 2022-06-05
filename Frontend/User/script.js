@@ -30,7 +30,7 @@ function getAllChatRooms() {
             let liName = document.createElement('li');
             liName.innerText = element['userChatRoom']['chatRoom']['chatRoomName'];
             let liRole = document.createElement('li');
-            if (element['userChatRoom']['chatRoom']['userChatIsAnonymous'] === true) {
+            if (element['userChatRoom']['userChatIsAnonymous'] === true) {
                 liRole.innerText = "Роля в стаята: анонимен";
             }
             else {

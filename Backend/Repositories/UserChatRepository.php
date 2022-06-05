@@ -23,7 +23,7 @@ class UserChatRepository
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        return array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows ? $rows : []);
     }
 
     public static function getAllUserChats(
@@ -42,7 +42,7 @@ class UserChatRepository
 
         $userChats = [];
 
-        foreach ($rows as $row) {
+        foreach (($rows ? $rows : []) as $row) {
             $chatRoom               = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
             $userChat               = call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
             $userChat->{'chatRoom'} = $chatRoom;
@@ -67,7 +67,24 @@ class UserChatRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row ? $row : null);
+    }
+
+    public static function existsByIds(
+        $userId,
+        $chatRoomId
+    ) {
+        $con = new DB();
+        $query = "SELECT * FROM user_chats\n" .
+            "WHERE user_chats.userId = :userId AND user_chats.chatRoomId = :chatRoomId";
+        $params = [
+            "userId"     => $userId,
+            "chatRoomId" => $chatRoomId
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return $row;
     }
 
     public static function createUserChat(

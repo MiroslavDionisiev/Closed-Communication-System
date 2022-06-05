@@ -14,7 +14,7 @@ export async function authenticate() {
     return fetch("/index.php/account/is-authenticated")
         .then(async (resp) => {
             if (resp.status == 401) {
-                window.location.replace("/Frontend/Login");
+                window.location = "/Frontend/Login";
             } else if (resp.status == 200) {
                 return resp.json();
             } else {
@@ -88,7 +88,7 @@ export async function setHeader(user) {
             fetch("/index.php/account/logout")
                 .then(async (resp) => {
                     if (resp.ok) {
-                        window.location.replace("/Frontend/Login");
+                        window.location = "/Frontend/Login";
                     } else {
                         throw await resp.json();
                     }

@@ -59,22 +59,42 @@
                                 >
                                     Създай
                                 </button>
-                                <button
-                                    id="add-users-btn"
-                                    type="button"
-                                    tabindex="0"
-                                    class="hover-invert"
-                                >
-                                    Добави потребители
-                                </button>
-                                <div id="select-users"></div>
+                                <div class="add-users-wrapper">
+                                    <button
+                                        id="add-users-btn"
+                                        type="button"
+                                        tabindex="0"
+                                        class="hover-invert"
+                                    >
+                                        Добави потребители
+                                    </button>
+                                </div>
+                                <div class="tooltip">
+                                    <span
+                                        class="tooltip-text">Създай от CSV. Файлът трябва да е във
+                                        формат '<име на стая>,<краен
+                                        срок>[,<фн1>,<анонимен
+                                        (true/false)>,<фн2>,<анонимен
+                                        (true/false)>]', където това в
+                                        квадратните скоби не е задължителнo и
+                                        може да се повтаря, в зависимост от това
+                                        колко хора искате да включите към
+                                        стаята</span
+                                    >
+                                    <label for="from-csv">Качи CSV</label>
+                                    <input
+                                        id="from-csv"
+                                        type="file"
+                                        tabindex="0"
+                                        name="file"
+                                    />
+                                </div>
                             </div>
                         </section>
                         <ul class="users-data-list"></ul>
                     </fieldset>
                 </form>
-                <ul id="chatRooms" class="wrapper-list">
-                </ul>
+                <section id="chatRooms" class="wrapper-list"></section>
             </main>
         </div>
     </body>

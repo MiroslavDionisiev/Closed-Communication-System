@@ -2,20 +2,20 @@ import * as util from "../utils.js";
 
 function displayNewMessages(user) {
     let chatRoomId = window.location.href.split("=")[1];
+    let date = null;
     if (
         document.getElementsByClassName("sender")[
             document.getElementsByClassName("sender").length - 1
-        ] === undefined
+        ] !== undefined
     ) {
-        console.log("skip");
-        return;
+        let [first, ...rest] = document
+            .getElementsByClassName("sender")
+            [
+                document.getElementsByClassName("sender").length - 1
+            ].textContent.split(":");
+
+        date = rest.join(":");
     }
-    let [first, ...rest] = document
-        .getElementsByClassName("sender")
-        [
-            document.getElementsByClassName("sender").length - 1
-        ].textContent.split(":");
-    let date = rest.join(":");
 
     fetch(
         `/index.php/user/chat-rooms/${chatRoomId}/messages?lastTimestamp=${date}`,
@@ -99,6 +99,7 @@ function sendMessage() {
             if (resp.status >= 400) {
                 throw await resp.json();
             }
+            return resp.json();
         })
         .catch((err) => util.popAlert(err.error));
     document.getElementById("messageInput").value = "";

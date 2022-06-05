@@ -37,9 +37,9 @@ class ChatRoomRepository
 
         $con->commit();
 
-        $result = $stmt->fetch();
+        $row = $stmt->fetch();
 
-        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $result);
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row ? $row : null);
     }
 
     public static function createChatRoomWithUserChats(
@@ -135,7 +135,7 @@ class ChatRoomRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\ChatRoomMapper::toEntity', $rows ? $rows : []);
     }
 
     public static function findById(
@@ -150,6 +150,21 @@ class ChatRoomRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row ? $row : null);
+    }
+
+    public static function existsByName(
+        $chatRoomName
+    ) {
+        $con = new DB();
+        $query = "SELECT * FROM chat_rooms\n" .
+            "WHERE chatRoomName = :chatRoomName";
+        $params = [
+            "chatRoomName" => $chatRoomName
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+
+        return $row;
     }
 }

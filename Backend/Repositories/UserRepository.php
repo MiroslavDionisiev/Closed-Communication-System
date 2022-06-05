@@ -21,7 +21,7 @@ class UserRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows ? $rows : []);
     }
 
     public static function getAllStudents()
@@ -32,7 +32,7 @@ class UserRepository
 
         $rows = $con->query($query)->fetchAll();
 
-        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows);
+        return array_map('CCS\Models\Mappers\UserMapper::toEntity', $rows ? $rows : []);
     }
 
     public static function findById(
@@ -49,7 +49,7 @@ class UserRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row ? $row : null);
     }
 
     public static function findStudentByFacultyNumber(
@@ -65,7 +65,7 @@ class UserRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row ? $row : null);
     }
 
     public static function existsById(
