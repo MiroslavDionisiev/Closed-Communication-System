@@ -6,7 +6,28 @@ import * as admin from "../utils.js";
     // admin.authorize(user);
     util.setHeader(user);
 
-    function getChatRoomBanner(chatRoom) {}
+    function getChatRoomBanner(chatRoom) {
+        let banner = document.createElement("div");
+        banner.innerHTML = `
+            <li id="${chatRoom.chatRoomId}" class="chat-room-banner hover-invert">
+                <p>${chatRoom.chatRoomName}</p>
+                <p>${chatRoom.chatRoomAvailabilityDate ?? 'Няма срок'}</p>
+            </li>
+        `;
+
+        let li = banner.querySelector('li');
+        let chatRoomAvailabilityDate = Date.parse(chatRoom.chatRoomAvailabilityDate);
+        let now = new Date();
+        if (chatRoomAvailabilityDate > now) {
+            li.classList.add("active");
+        }
+
+        li.addEventListener("click", (event) => {
+            window.location.replace(`/Frontend/ChatRoom?chatRoomId=${chatRoom.chatRoomId}`);
+        });
+
+        return li;
+    }
 
     async function getAllChatRooms() {
         return fetch("/index.php/admin/chat-rooms")
@@ -16,7 +37,7 @@ import * as admin from "../utils.js";
                 }
                 return resp.json();
             })
-            .then((rooms) => {})
+            .then((rooms) => rooms)
             .catch((err) => console.log(err.error));
     }
 
@@ -167,5 +188,11 @@ import * as admin from "../utils.js";
         ) {
             closeSelectUsers();
         }
+    });
+
+    (await getAllChatRooms()).forEach(r => {
+        let list = document.getElementById("chatRooms");
+        console.log(getChatRoomBanner(r));
+        list.appendChild(getChatRoomBanner(r));
     });
 })();
