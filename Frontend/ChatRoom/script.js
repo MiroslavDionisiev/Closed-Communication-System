@@ -104,9 +104,21 @@ function sendMessage() {
     document.getElementById("messageInput").value = "";
 }
 
+/*function populateUserList(user) {
+    let userList = document.getElementsByClassName('userList')[0];
+    //userList.style.height = document.getElementsByClassName('chatRoom')[0].style.height;
+    if (user.userRole === USER_ROLES.ADMIN_ROLE) {
+
+    }
+    else {
+
+    }
+}*/
+
 (async () => {
     let user = await util.authenticate();
     util.setHeader(user);
+    //populateUserList(user)
     displayAllMessages(user);
     setInterval(displayNewMessages, 1000, user);
 
