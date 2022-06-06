@@ -11,7 +11,9 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    height: 80%;
+    box-sizing: border-box;
+    padding-bottom: 3rem;
+    height: fit-content;
 }  
 
 .userList {
@@ -19,7 +21,7 @@ main {
     width: 25%;
     margin-top: 3rem;
     padding-bottom: 12px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .userList p {
@@ -63,9 +65,9 @@ main {
 
 .chatBox {
     width: 90%;
-    height: 450px;
+    height: 600px;
     background-color: #d5dde6;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .byOthers {
@@ -82,6 +84,7 @@ main {
     width: 50%;
     margin-left: 10px;
     margin-right: 10px;
+    word-wrap: break-word;
 }
 
 .sender {
@@ -115,6 +118,10 @@ main {
     flex-direction: row;
 } 
 
+#messageInput {
+    resize: none;
+}
+
 .messageArea {
     width: 90%;
 }
@@ -142,4 +149,21 @@ main {
 
 #messageInput {
     width: 100%;
+}
+
+@media screen and (max-width: 980px) {
+    main {
+        flex-direction: column-reverse;
+        padding: 0 3rem 3rem 3rem;
+    }
+
+    .chatRoom {
+        width: 100%;
+        height: 100%;
+    }
+
+    .userList {
+        width: 100%;
+        height: 100%;
+    }
 }

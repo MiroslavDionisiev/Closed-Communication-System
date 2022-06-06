@@ -1,5 +1,12 @@
 import * as util from "../utils.js";
 
+function scrolledToBottom(element) {
+    if (element.clientHeight + element.scrollTop >= element.scrollHeight) {
+        return true;
+    }
+    return false;
+}
+
 function displayNewMessages(user) {
     let chatRoomId = window.location.href.split("=")[1];
     let date = null;
@@ -29,10 +36,6 @@ function displayNewMessages(user) {
         .then((data) => {
             populateChatRoom(data, user);
         });
-
-    // work in progress
-    // let chatBox = document.getElementsByClassName("chatBox")[0];
-    // chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function displayAllMessages(user) {
@@ -49,9 +52,14 @@ function displayAllMessages(user) {
 }
 
 function populateChatRoom(data, user) {
-    data.forEach((element) => {
-        let chatBox = document.getElementsByClassName("chatBox")[0];
+    let chatBox = document.getElementsByClassName("chatBox")[0];
 
+    let shouldScroll = false;
+    if (scrolledToBottom(chatBox)) {
+        shouldScroll = true;
+    }
+
+    data.forEach((element) => {
         let messageSender = document.createElement("div");
         if (
             element["user"] != undefined &&
@@ -82,6 +90,10 @@ function populateChatRoom(data, user) {
         messageSender.appendChild(messageDiv);
         chatBox.appendChild(messageSender);
     });
+
+    if (shouldScroll) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 }
 
 function sendMessage() {
@@ -106,50 +118,52 @@ function sendMessage() {
 }
 
 function populateUserList(user) {
-    let userList = document.getElementsByClassName('userList')[0];
+    let userList = document.getElementsByClassName("userList")[0];
     let chatRoomId = window.location.href.split("=")[1];
 
-    fetch(`/index.php/${user.userRole.toLowerCase()}/chat-rooms/${chatRoomId}/users`, {
-        method: "GET"
-    })
-    .then(res => {
-        if (res.status >= 400) {
-            throw res.json();
+    fetch(
+        `/index.php/${user.userRole.toLowerCase()}/chat-rooms/${chatRoomId}/users`,
+        {
+            method: "GET",
         }
-        return res.json();
-    })
-    .then(data => {
-        console.log(data);
-        data.forEach((element) => {
-            addUserPanel(userList, element);  
+    )
+        .then((res) => {
+            if (res.status >= 400) {
+                throw res.json();
+            }
+            return res.json();
         })
-    })
-    .catch((err) => util.popAlert(err.error));
+        .then((data) => {
+            data.forEach((element) => {
+                addUserPanel(userList, element);
+            });
+        })
+        .catch((err) => util.popAlert(err.error));
 }
 
 function addUserPanel(userList, user) {
-    let userDiv = document.createElement('div');
-    userDiv.setAttribute('class', 'user');
-                
-    let userImg = document.createElement('img');
-    userImg.setAttribute('src', './img/img-user.png');
-    userImg.setAttribute('class', 'icon');
+    let userDiv = document.createElement("div");
+    userDiv.setAttribute("class", "user");
 
-    let userData = document.createElement('ul');
-    userData.setAttribute('class', 'userData');
+    let userImg = document.createElement("img");
+    userImg.setAttribute("src", "./img/img-user.png");
+    userImg.setAttribute("class", "icon");
 
-    let userName = document.createElement('li');
-    userName.innerText = user['user']['userName'];
+    let userData = document.createElement("ul");
+    userData.setAttribute("class", "userData");
 
-    let userLastSeen = document.createElement('li');
-    userLastSeen.innerText = user['userChatLastSeen'];
+    let userName = document.createElement("li");
+    userName.innerText = user["user"]["userName"];
+
+    let userLastSeen = document.createElement("li");
+    userLastSeen.innerText = user["userChatLastSeen"];
 
     userData.appendChild(userName);
     userData.appendChild(userLastSeen);
 
     userDiv.appendChild(userImg);
     userDiv.appendChild(userData);
-    userList.appendChild(userDiv);    
+    userList.appendChild(userDiv);
 }
 
 (async () => {
@@ -165,4 +179,6 @@ function addUserPanel(userList, user) {
         sendMessage();
         e.preventDefault();
     });
+
+    // document.querySelector("chatBox").addEventListener("scroll", (event) => {});
 })();
