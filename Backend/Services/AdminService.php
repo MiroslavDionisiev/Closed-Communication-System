@@ -35,6 +35,16 @@ class AdminService
         return call_user_func('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::findById($userId));
     }
 
+    public static function getUsersInChatRoom(
+        $chatRoomId
+    ) {
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
+            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
+        }
+
+        return array_map('CCS\Models\Mappers\UserChatMapper::toDto', Repo\UserChatRepository::getUsersInChatRoom($chatRoomId));
+    }
+
     public static function getAllChatRooms()
     {
         return array_map('CCS\Models\Mappers\ChatRoomMapper::toDto', Repo\ChatRoomRepository::getAllChatRooms());

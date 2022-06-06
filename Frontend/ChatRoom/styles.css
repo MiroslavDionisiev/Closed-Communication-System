@@ -9,18 +9,52 @@
 
 main {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 80%;
 }  
 
-h2 {
-    color: #04aa6d;
+.userList {
+    background-color: #737373;
+    width: 25%;
+    margin-top: 3rem;
+    padding-bottom: 12px;
+    overflow-y: scroll;
+}
+
+.userList p {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 10px 0 10px;
+    padding: 5px 5px 0 5px;
+    background-color: #d5dde6;
+}
+
+.icon {
+    width: 13%;
+    height: 13%;
+}
+
+.userData {
+    list-style-type: none;
+    margin-left: 15px;
+    padding-left: 0;
+    text-decoration: none;
 }
 
 .chatRoom {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 3rem;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     width: 70%;

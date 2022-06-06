@@ -105,10 +105,58 @@ function sendMessage() {
     document.getElementById("messageInput").value = "";
 }
 
+function populateUserList(user) {
+    let userList = document.getElementsByClassName('userList')[0];
+    let chatRoomId = window.location.href.split("=")[1];
+
+    fetch(`/index.php/${user.userRole.toLowerCase()}/chat-rooms/${chatRoomId}/users`, {
+        method: "GET"
+    })
+    .then(res => {
+        if (res.status >= 400) {
+            throw res.json();
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log(data);
+        data.forEach((element) => {
+            addUserPanel(userList, element);  
+        })
+    })
+    .catch((err) => util.popAlert(err.error));
+}
+
+function addUserPanel(userList, user) {
+    let userDiv = document.createElement('div');
+    userDiv.setAttribute('class', 'user');
+                
+    let userImg = document.createElement('img');
+    userImg.setAttribute('src', './img/img-user.png');
+    userImg.setAttribute('class', 'icon');
+
+    let userData = document.createElement('ul');
+    userData.setAttribute('class', 'userData');
+
+    let userName = document.createElement('li');
+    userName.innerText = user['user']['userName'];
+
+    let userLastSeen = document.createElement('li');
+    userLastSeen.innerText = user['userChatLastSeen'];
+
+    userData.appendChild(userName);
+    userData.appendChild(userLastSeen);
+
+    userDiv.appendChild(userImg);
+    userDiv.appendChild(userData);
+    userList.appendChild(userDiv);    
+}
+
 (async () => {
     let user = await util.authenticate();
     util.setHeader(user);
     displayAllMessages(user);
+    populateUserList(user);
     setInterval(displayNewMessages, 1000, user);
 
     const sendMessageForm = document.getElementById("message-input");

@@ -3,6 +3,7 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
+use CCS\Models\Entities\UserChat;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
@@ -15,7 +16,8 @@ class UserChatRepository
         $chatRoomId
     ) {
         $con = new DB();
-        $query = "SELECT * FROM user_chats" .
+        $query = "SELECT * FROM user_chats\n" .
+            "INNER JOIN users ON users.userId = user_chats.userId\n".
             "WHERE user_chats.chatRoomId = :chatRoomId";
 
         $params = [
@@ -23,7 +25,15 @@ class UserChatRepository
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
-        return array_map('CCS\Models\Mappers\UserChatMapper::toEntity', $rows ? $rows : []);
+        $res = [];
+
+        foreach ($rows as $row) {
+            $user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            $userChat = call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
+            $userChat->{'user'} = $user;
+            $res[] = $userChat;
+        }
+        return $res;
     }
 
     public static function getAllUserChats(

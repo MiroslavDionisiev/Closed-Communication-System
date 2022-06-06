@@ -46,6 +46,23 @@ class UserService
         return $res;
     }
 
+    public static function getUsersInChatRoom(
+        $chatRoomId
+    ) {
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
+            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
+        }
+
+        $users = array_map('CCS\Models\Mappers\UserChatMapper::toDto', Repo\UserChatRepository::getUsersInChatRoom($chatRoomId));
+        $res = [];
+        foreach($users as $user) {
+            if (!$user->{'userChatIsAnonymous'}) {
+                $res[] = $user;
+            }
+        }
+        return $res;
+    }
+
     public static function getAllChatRoomMessages(
         $chatRoomId,
         $date = null
