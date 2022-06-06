@@ -2,9 +2,6 @@
 
 define('APP_ROOT', str_replace('\\', '/', __DIR__) . '/Backend');
 define('ENTRY_ROOT', str_replace('\\', '/', __DIR__));
-define('URL_ROOT', $_SERVER['DOCUMENT_ROOT']);
-
-assert(URL_ROOT === ENTRY_ROOT, "Make sure the DocumentRoot matches this configuration's directory");
 
 define('JSON_FLAGS', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -18,6 +15,10 @@ $pathParam = function ($name) {
 };
 
 define('ROUTES', [
+    /* "GET ^" . ENTRY_ROOT . "(/|/index.php)$" => [ */
+    /*     'entry' => true, */
+    /*     'homePage' => ENTRY_ROOT . '/Frontend/User/' */
+    /* ], */
     "GET ^" . ENTRY_ROOT . "/index.php/account/logout$" => [
         'authenticate' => true,
         'controller' => 'AccountController',
@@ -28,12 +29,12 @@ define('ROUTES', [
         'controller' => 'AccountController',
         'controllerMethod' => 'isAuthenticated'
     ],
-	"POST ^" . ENTRY_ROOT . "/index.php/account/register$" => [
+    "POST ^" . ENTRY_ROOT . "/index.php/account/register$" => [
         'authenticate' => false,
         'controller' => 'AccountController',
         'controllerMethod' => 'register'
     ],
-	"POST ^" . ENTRY_ROOT . "/index.php/account/login$" => [
+    "POST ^" . ENTRY_ROOT . "/index.php/account/login$" => [
         'authenticate' => false,
         'controller' => 'AccountController',
         'controllerMethod' => 'login'
@@ -44,7 +45,7 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'getAllDisabledMessages'
     ],
-    "GET ^" . URL_ROOT . "/index.php/admin/users$" => [
+    "GET ^" . ENTRY_ROOT . "/index.php/admin/users$" => [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],
         'controller' => 'AdminController',

@@ -10,11 +10,23 @@ export const ALERT_TYPE = {
     INFO: "alert-info",
 };
 
+export function urlFrontend(location) {
+    let parts = window.location.pathname.split(/Frontend/i, 2);
+    parts[1] = location;
+    return parts.join('Frontend');
+}
+
+export function urlBackend(location) {
+    let parts = window.location.pathname.split(/Frontend/i, 2);
+    parts[1] = location;
+    return parts.join('index.php');
+}
+
 export async function authenticate() {
-    return fetch("/index.php/account/is-authenticated")
+    return fetch(urlBackend("/account/is-authenticated"))
         .then(async (resp) => {
             if (resp.status == 401) {
-                window.location = "/Frontend/Login";
+                window.location = urlFrontend("/Login");
             } else if (resp.status == 200) {
                 return resp.json();
             } else {
@@ -66,10 +78,10 @@ export async function setHeader(user) {
     let header = document.createElement("header");
     header.classList.add("site-header");
     header.innerHTML = `
-    <a href="/Frontend/User" class="app-name">Closed Communication System</a>
+    <a href="${urlFrontend('/User')}" class="app-name">Closed Communication System</a>
     <section class="right-side">
-        <a href="/Frontend/Login" class="header-btn">Вход</a>
-        <a href="/Frontend/Register" class="header-btn">Регистрация</a>
+        <a href="${urlFrontend('/Login')}" class="header-btn">Вход</a>
+        <a href="${urlFrontend('/Register')}" class="header-btn">Регистрация</a>
     </section>
     `;
 
@@ -81,17 +93,16 @@ export async function setHeader(user) {
             rightSide.removeChild(btn);
         rightSide.innerHTML = `
             <p class="user-name">${user.userName}</p>
-            ${user.userRole === USER_ROLES.ADMIN_ROLE ? '<a href="/Frontend/Admin" class="header-btn">Админ панел</a>' : ''}
+            ${user.userRole === USER_ROLES.ADMIN_ROLE ? `<a href="${urlFrontend('/Admin')}" class="header-btn">Админ панел</a>` : ''}
             <button class="header-btn" type="button">Изход</button>
         `;
         rightSide.querySelector("button").addEventListener("click", () => {
-            fetch("/index.php/account/logout")
+            fetch(urlBackend("/account/logout"))
                 .then(async (resp) => {
-                    if (resp.ok) {
-                        window.location = "/Frontend/Login";
-                    } else {
+                    if(resp.status >= 400) {
                         throw await resp.json();
                     }
+                    window.location = urlFrontend("/Login");
                 })
                 .catch((err) => {
                     popAlert(err.error);

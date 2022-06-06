@@ -3,7 +3,7 @@ import * as admin from "../utils.js";
 
 (async () => {
     let user = await util.authenticate();
-    // admin.authorize(user);
+    admin.authorize(user);
     util.setHeader(user);
 
     function popConfirm(parent, func, ...args) {
@@ -26,7 +26,9 @@ import * as admin from "../utils.js";
     }
 
     function deleteChatRoom(chatRoomId) {
-        fetch(`/index.php/admin/chat-rooms/${chatRoomId}`, { method: "DELETE" })
+        fetch(util.urlBackend(`/admin/chat-rooms/${chatRoomId}`), {
+            method: "DELETE",
+        })
             .then(async (resp) => {
                 if (resp.status >= 400) {
                     throw await resp.json();
@@ -81,7 +83,7 @@ import * as admin from "../utils.js";
 
         banner.addEventListener("click", (event) => {
             if (event.target.tagName !== "BUTTON") {
-                window.location = `/Frontend/ChatRoom?chatRoomId=${chatRoom.chatRoomId}`;
+                window.location = util.urlFrontend(`/ChatRoom?chatRoomId=${chatRoom.chatRoomId}`);
             }
         });
 
@@ -89,7 +91,7 @@ import * as admin from "../utils.js";
     }
 
     async function getAllChatRooms() {
-        return fetch("/index.php/admin/chat-rooms")
+        return fetch(util.urlBackend("/admin/chat-rooms"))
             .then(async (resp) => {
                 if (resp.status != 200) {
                     throw await resp.json();
@@ -206,7 +208,7 @@ import * as admin from "../utils.js";
                     }),
                 };
 
-                fetch("/index.php/admin/chat-rooms", options)
+                fetch(util.urlBackend("/admin/chat-rooms"), options)
                     .then(async (resp) => {
                         if (resp.status >= 200 && resp.status < 400) {
                             util.popAlert(
@@ -232,7 +234,7 @@ import * as admin from "../utils.js";
                     body: data,
                 };
 
-                fetch("/index.php/admin/chat-rooms/from-csv", options)
+                fetch(util.urlBackend("/admin/chat-rooms/from-csv"), options)
                     .then(async (resp) => {
                         if (resp.status >= 200 && resp.status < 400) {
                             util.popAlert(

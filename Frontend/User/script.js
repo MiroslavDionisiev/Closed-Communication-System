@@ -1,12 +1,12 @@
 import * as util from "../utils.js";
 
 function redirectToChatRoom(chatRoomId) {
-    let url = `/Frontend/ChatRoom?chatRoomId=${chatRoomId}`;
-    window.location = url;
+    let url = `/ChatRoom?chatRoomId=${chatRoomId}`;
+    window.location = util.urlFrontend(url);
 }
 
 function getAllChatRooms() {
-    fetch('/index.php/user/chat-rooms', {
+    fetch(util.urlBackend('/user/chat-rooms'), {
         method: 'GET'
     })
     .then(res => {

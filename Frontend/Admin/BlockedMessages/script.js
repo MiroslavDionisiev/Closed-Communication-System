@@ -1,8 +1,9 @@
 import * as util from "../../utils.js";
+import * as admin from "../utils.js";
 
 (async () => {
     let user = await util.authenticate();
-    // admin.authorize(user);
+    admin.authorize(user);
     util.setHeader(user);
 
     let getMessageBanner = (msg) => {
@@ -30,7 +31,7 @@ import * as util from "../../utils.js";
                 },
             };
 
-            fetch(`/index.php/admin/disabled-messages/${msgId}`, options)
+            fetch(util.urlBackend(`/admin/disabled-messages/${msgId}`), options)
                 .then(async (resp) => {
                     if (resp.status >= 200 && resp.status < 400) {
                         node.parentNode.removeChild(node);
@@ -60,7 +61,7 @@ import * as util from "../../utils.js";
                     }),
                 };
                 fetch(
-                    `/index.php/admin/disabled-messages/${msgId}`,
+                    util.urlBackend(`/admin/disabled-messages/${msgId}`),
                     options
                 ).then(async (resp) => {
                     if (resp.status >= 200 && resp.status < 400) {
@@ -74,7 +75,7 @@ import * as util from "../../utils.js";
     };
 
     let fetchMessages = () => {
-        fetch("/index.php/admin/disabled-messages")
+        fetch(util.urlBackend("/index.php/admin/disabled-messages"))
             .then((resp) => resp.json())
             .then((messages) => {
                 let list = document.getElementById("list-disabled-messages");

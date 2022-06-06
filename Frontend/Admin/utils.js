@@ -1,5 +1,7 @@
+import * as util from "../utils.js";
+
 export function openUserInfo(userId) {
-    fetch(`/index.php/admin/users/${userId}`)
+    fetch(util.urlBackend(`/admin/users/${userId}`))
         .then((resp) => {
             if (resp.status != 200) {
                 alert("User doesn't exist");
@@ -16,7 +18,7 @@ export function openUserInfo(userId) {
                             <span>&times;</span>
                         </button>
                         <div class="img">
-                            <img src="/Frontend/Admin/Users/img/img-user.png" alt="User profile picture">
+                            <img src="${util.urlFrontend('/Admin/Users/img/img-user.png')}" alt="User profile picture">
                         </div>
                         <div class="user-details">
                             <ul class="user-info">
@@ -68,7 +70,7 @@ export function getUserBanner(user) {
     banner.innerHTML = `
             <a class="user-banner hover-invert">
                 <figure>
-                    <img src="/Frontend/Admin/Users/img/img-user.png" alt="User profile picture">
+                    <img src="${util.urlFrontend('/Admin/Users/img/img-user.png')}" alt="User profile picture">
                     <figcaption class="banner-user-name">
                         <div>${user.userName}</div>
                         <div>${user.userIdentity}</div>
@@ -88,7 +90,7 @@ export function getUserBanner(user) {
 }
 
 export async function getAllUsers() {
-    return fetch("/index.php/admin/users")
+    return fetch(util.urlBackend("/admin/users"))
         .then(async (resp) => {
             if (resp.status != 200) {
                 throw await resp.json();
@@ -101,7 +103,7 @@ export async function getAllUsers() {
 }
 
 export function authorize(user) {
-    if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
-        window.location = "/Frontend/User";
+    if (user.userRole !== util.USER_ROLES.ADMIN_ROLE) {
+        util.reditectTo("/User");
     }
 }

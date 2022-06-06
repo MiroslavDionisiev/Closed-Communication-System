@@ -21,7 +21,7 @@ header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 header('Access-Control-Max-Age: 3600');
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-$uri = trim(strtok(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '?'));
+$uri = $_SERVER['DOCUMENT_ROOT'] . trim(strtok(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '?'));
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -36,7 +36,7 @@ foreach ($routes as $key => $conf) {
     $routeMethod = $split[0];
     $route       = $split[1];
 
-    if (preg_match("#" . $route . "#mi", URL_ROOT . $uri, $positionalParameters)) {
+    if (preg_match("#" . $route . "#mi", $uri, $positionalParameters)) {
         if ($routeMethod !== $requestMethod) {
             echo json_encode(
                 new DTOs\ResponseDtoError(
@@ -47,6 +47,12 @@ foreach ($routes as $key => $conf) {
             );
             exit();
         }
+
+        /* if(isset($conf['entry'])) { */
+        /*     header("Location: ${conf['homePage']}"); */
+        /*     http_response_code(301); */
+        /*     exit(); */
+        /* } */
 
         if (isset($conf['authenticate']) && $conf['authenticate']) {
 

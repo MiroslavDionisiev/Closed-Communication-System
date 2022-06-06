@@ -25,7 +25,7 @@ function displayNewMessages(user) {
     }
 
     fetch(
-        `/index.php/user/chat-rooms/${chatRoomId}/messages?lastTimestamp=${date}`,
+        util.urlBackend(`/user/chat-rooms/${chatRoomId}/messages?lastTimestamp=${date}`),
         {
             method: "GET",
         }
@@ -40,7 +40,7 @@ function displayNewMessages(user) {
 
 function displayAllMessages(user) {
     let chatRoomId = window.location.href.split("=")[1];
-    fetch(`/index.php/user/chat-rooms/${chatRoomId}/messages`, {
+    fetch(util.urlBackend(`/user/chat-rooms/${chatRoomId}/messages`), {
         method: "GET",
     })
         .then(async (res) => {
@@ -109,7 +109,7 @@ function sendMessage() {
     let message = document.getElementById("messageInput").value;
     let chatRoomId = window.location.href.split("=")[1];
 
-    fetch(`/index.php/user/chat-rooms/${chatRoomId}/messages`, {
+    fetch(util.urlBackend(`/user/chat-rooms/${chatRoomId}/messages`), {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -136,7 +136,7 @@ function populateUserList(user) {
     let chatRoomId = window.location.href.split("=")[1];
 
     fetch(
-        `/index.php/${user.userRole.toLowerCase()}/chat-rooms/${chatRoomId}/users`,
+        util.urlBackend(`/${user.userRole.toLowerCase()}/chat-rooms/${chatRoomId}/users`),
         {
             method: "GET",
         }
@@ -193,6 +193,4 @@ function addUserPanel(userList, user) {
         sendMessage();
         e.preventDefault();
     });
-
-    // document.querySelector("chatBox").addEventListener("scroll", (event) => {});
 })();
