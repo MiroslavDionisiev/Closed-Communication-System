@@ -29,8 +29,10 @@ class AdminController {
     }
 
     public static function createChatRoom() {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
-        AdminService::createChatRoom($chatRoomDto);
+        $json         = json_decode(file_get_contents('php://input'));
+        $chatRoomDto  = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $json);
+        $userChatDtos = $json->{'userChats'} ?? [];
+        AdminService::createChatRoom($chatRoomDto, $userChatDtos);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatroom created successfully."));
     }
 
@@ -41,14 +43,14 @@ class AdminController {
     }
 
     public static function updateChatRoom($param) {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
+        $chatRoomDto                 = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input')));
         $chatRoomDto->{'chatRoomId'} = $param['chatRoomId'] ?? null;
         AdminService::updateChatRoom($chatRoomDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom updated successfully."));
     }
 
     public static function removeUserFromChat() {
-        $userId = $_GET['userId'] ?? null;
+        $userId     = $_GET['userId'] ?? null;
         $chatRoomId = $_GET['chatRoomId'] ?? null;
         AdminService::removeUserFromChat($userId, $chatRoomId);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "User removed successfully."));
@@ -59,21 +61,20 @@ class AdminController {
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message deleted successfully."));
     }
 
-    public static function deleteChatRoomById() {
-        $chatRoomDto = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', json_decode(file_get_contents('php://input'), true));
-        AdminService::deleteMessageById($chatRoomDto->{'chatRoomId'});
+    public static function deleteChatRoomById($param) {
+        AdminService::deleteChatRoomById($param['chatRoomId']);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom deleted successfully."));
     }
 
-    public static function createUserChatRoomFromCsv() {
+    public static function createChatRoomFromCsv() {
         $csvFile = $_FILES['file']['tmp_name'];
         $csvData = array_map('str_getcsv', file($csvFile));
-        AdminService::createUserChatRoomFromCsv($csvData);
+        AdminService::createChatRoomFromCsv($csvData);
         echo json_encode(new DTOs\ResponseDtoSuccess(201, "Chatrooms created successfully."));
     }
 
     public static function updateMessageIsDisabled($param) {
-        $msgDto = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
+        $msgDto                = call_user_func('CCS\Models\Mappers\MessageMapper::toDto', json_decode(file_get_contents('php://input')));
         $msgDto->{'messageId'} = $param['messageId'] ?? null;
         AdminService::updateMessageIsDisabled($msgDto);
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Message updated successfully."));

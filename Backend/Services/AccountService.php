@@ -23,12 +23,12 @@ class AccountService
 
         Repo\UserRepository::createStudent(
             $studentDto->{'userName'},
-            $studentDto->{'studentFacultyNumber'},
             $studentDto->{'userEmail'},
-            $studentDto->{'UserPassword'},
+            $studentDto->{'userPassword'},
             $studentDto->{'studentYear'},
             $studentDto->{'studentSpeciality'},
-            $studentDto->{'studentFaculty'}
+            $studentDto->{'studentFaculty'},
+            $studentDto->{'studentFacultyNumber'},
         );
     }
 

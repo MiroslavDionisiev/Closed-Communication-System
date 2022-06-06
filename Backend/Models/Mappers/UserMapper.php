@@ -19,13 +19,14 @@ class UserMapper
     {
         if(is_null($from)) return null;
 
-        if (($from->{'userRole'} ?? null) === Globals::$ADMIN_ROLE) {
+        if (($from->{'userIdentity'} ?? null) === Globals::TEACHER_IDENTITY) {
             return Enti\Teacher::fill(
                 $from->{'userId'}       ?? null,
                 $from->{'userName'}     ?? null,
                 $from->{'userEmail'}    ?? null,
                 $from->{'userPassword'} ?? null,
                 $from->{'userRole'}     ?? null,
+                $from->{'userIdentity'} ?? null,
             );
         } else {
             return Enti\Student::fill(
@@ -34,6 +35,7 @@ class UserMapper
                 $from->{'userEmail'}            ?? null,
                 $from->{'userPassword'}         ?? null,
                 $from->{'userRole'}             ?? null,
+                $from->{'userIdentity'}         ?? null,
                 $from->{'studentFacultyNumber'} ?? null,
                 $from->{'studentYear'}          ?? null,
                 $from->{'studentSpeciality'}    ?? null,
@@ -46,12 +48,13 @@ class UserMapper
     {
         if(is_null($from)) return null;
 
-        if (($from->{'userRole'} ?? null) === Globals::$ADMIN_ROLE) {
+        if (($from->{'userIdentity'} ?? null) === Globals::TEACHER_IDENTITY) {
             return DTOs\TeacherDto::fill(
                 $from->{'userId'}       ?? null,
                 $from->{'userName'}     ?? null,
                 $from->{'userEmail'}    ?? null,
                 $from->{'userRole'}     ?? null,
+                $from->{'userIdentity'} ?? null,
             );
         } else {
             return DTOs\StudentDto::fill(
@@ -59,6 +62,7 @@ class UserMapper
                 $from->{'userName'}             ?? null,
                 $from->{'userEmail'}            ?? null,
                 $from->{'userRole'}             ?? null,
+                $from->{'userIdentity'}         ?? null,
                 $from->{'studentFacultyNumber'} ?? null,
                 $from->{'studentYear'}          ?? null,
                 $from->{'studentSpeciality'}    ?? null,

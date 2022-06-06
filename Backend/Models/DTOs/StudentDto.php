@@ -21,6 +21,7 @@ class StudentDto extends UserDto implements \JsonSerializable
         $userName,
         $userEmail,
         $userRole,
+        $userIdentity,
         $studentFacultyNumber,
         $studentYear,
         $studentSpeciality,
@@ -31,6 +32,7 @@ class StudentDto extends UserDto implements \JsonSerializable
         $instance->{'userName'}             = $userName;
         $instance->{'userEmail'}            = $userEmail;
         $instance->{'userRole'}             = $userRole;
+        $instance->{'userIdentity'}         = $userIdentity;
         $instance->{'studentFacultyNumber'} = $studentFacultyNumber;
         $instance->{'studentYear'}          = $studentYear;
         $instance->{'studentSpeciality'}    = $studentSpeciality;
