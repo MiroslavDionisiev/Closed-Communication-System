@@ -2,24 +2,17 @@ import * as util from "../../utils.js";
 
 (async () => {
     let user = await util.authenticate();
-
-    // if (user.userRole !== USER_ROLES.ADMIN_ROLE) {
-    //     window.location.replace("/Frontend/User");
-    // }
-
+    // admin.authorize(user);
     util.setHeader(user);
 
     let getMessageBanner = (msg) => {
         let banner = document.createElement("tr");
-        banner.classList.add("message-banner");
         banner.setAttribute("msg-id", msg.messageId);
 
         banner.innerHTML = `
-            <td class="chat-room-name">${msg.chatRoom.chatRoomName}</td>
-            <td class="sender-name">${msg.user.userName}</td>
-            <td class="message-contents"><div>${
-                msg.messageContent ?? ""
-            }<div></td>
+            <td class="chat-room-name"><div>${msg.chatRoom.chatRoomName}</div></td>
+            <td class="sender-name"><div>${msg.user.userName}</div></td>
+            <td class="message-contents"><div>${msg.messageContent}</div></td>
             <td>
                 <button type="button" class="btn-approve">Одобри</button>
                 <button type="button" class="btn-deny">Отхвърли</button>

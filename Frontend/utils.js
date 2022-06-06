@@ -14,7 +14,7 @@ export async function authenticate() {
     return fetch("/index.php/account/is-authenticated")
         .then(async (resp) => {
             if (resp.status == 401) {
-                window.location.replace("/Frontend/Login");
+                window.location = "/Frontend/Login";
             } else if (resp.status == 200) {
                 return resp.json();
             } else {
@@ -81,13 +81,14 @@ export async function setHeader(user) {
             rightSide.removeChild(btn);
         rightSide.innerHTML = `
             <p class="user-name">${user.userName}</p>
-            <button class="header-btn">Изход</button>
+            ${user.userRole === USER_ROLES.ADMIN_ROLE ? '<a href="/Frontend/Admin" class="header-btn">Админ панел</a>' : ''}
+            <button class="header-btn" type="button">Изход</button>
         `;
         rightSide.querySelector("button").addEventListener("click", () => {
             fetch("/index.php/account/logout")
                 .then(async (resp) => {
                     if (resp.ok) {
-                        window.location.replace("/Frontend/Login");
+                        window.location = "/Frontend/Login";
                     } else {
                         throw await resp.json();
                     }

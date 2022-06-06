@@ -3,6 +3,7 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
+use CCS\Helpers\GlobalConstants as Globals;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/MessageMapper.php');
@@ -37,7 +38,6 @@ class MessageRepository
         $con = new DB();
         $query = "SELECT * FROM messages\n" .
             "INNER JOIN users ON users.userId = messages.userId\n" .
-            "INNER JOIN students ON students.userId = users.userId\n" .
             "INNER JOIN chat_rooms ON chat_rooms.chatRoomId = messages.chatRoomId\n" .
             "WHERE messageIsDisabled IS TRUE\n" .
             "ORDER BY messages.messageTimestamp";
@@ -46,7 +46,7 @@ class MessageRepository
 
         $messages = [];
 
-        foreach ($rows as $row) {
+        foreach (($rows ? $rows : []) as $row) {
             $message               = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
             $message->{'user'}     = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             $message->{'chatRoom'} = call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row);
@@ -60,24 +60,31 @@ class MessageRepository
         $chatRoomId
     ) {
         $con = new DB();
-        $query = "SELECT * FROM messages\n" .
+        $query = "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n" .
             "INNER JOIN users ON users.userId = messages.userId\n" .
-            "INNER JOIN user_chats ON user_chats.userId = users.userId\n" .
-            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageIsDisabled IS FALSE\n" .
-            "ORDER BY messages.messageTimestamp";
+            "INNER JOIN user_chats ON user_chats.userId = users.userId AND messages.chatRoomId = user_chats.chatRoomId\n" .
+            "WHERE messages.chatRoomId = :chatRoomId AND  messages.messageIsDisabled IS FALSE\n" .
+            "UNION\n" .
+            "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n" .
+            "INNER JOIN users ON users.userId = messages.userId\n" .
+            "LEFT JOIN user_chats ON user_chats.userId = users.userId AND messages.chatRoomId = user_chats.chatRoomId\n" .
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageIsDisabled IS FALSE AND users.userRole = :adminRole\n" .
+            "ORDER BY messageTimestamp";
 
         $params = [
-            "chatRoomId" => $chatRoomId
+            "chatRoomId" => $chatRoomId,
+            "adminRole"  => Globals::ADMIN_ROLE
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
         $messages = [];
-        foreach ($rows  as $index => $row) {
-            $message               = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
-            if (!$row->{'userChatIsAnonymous'} || $row->{'userId'} == $_SESSION['user']->{'userId'}) {
-                $message->{'user'}     = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+
+        foreach (($rows ? $rows : []) as $row) {
+            $message = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
+            if (!$row->{'userChatIsAnonymous'} || $row->{'userId'} == $_SESSION['user']->{'userId'} || $_SESSION['user']->{'userRole'} === Globals::ADMIN_ROLE) {
+                $message->{'user'} = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             }
-            $messages[]            = $message;
+            $messages[] = $message;
         }
 
         return $messages;
@@ -90,24 +97,30 @@ class MessageRepository
         $con = new DB();
         $query = "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n" .
             "INNER JOIN users ON users.userId = messages.userId\n" .
-            "INNER JOIN user_chats ON user_chats.userId = users.userId\n" .
+            "INNER JOIN user_chats ON user_chats.userId = users.userId AND messages.chatRoomId = user_chats.chatRoomId\n" .
             "WHERE messages.chatRoomId = :chatRoomId AND messages.messageTimestamp > :timestamp AND messages.messageIsDisabled IS FALSE\n" .
-            "ORDER BY messages.messageTimestamp";
+            "UNION\n" .
+            "SELECT messages.*, users.*, user_chats.userChatIsAnonymous FROM messages\n" .
+            "INNER JOIN users ON users.userId = messages.userId\n" .
+            "LEFT JOIN user_chats ON user_chats.userId = users.userId AND messages.chatRoomId = user_chats.chatRoomId\n" .
+            "WHERE messages.chatRoomId = :chatRoomId AND messages.messageTimestamp > :timestamp AND messages.messageIsDisabled IS FALSE AND users.userRole = :adminRole\n" .
+            "ORDER BY messageTimestamp";
 
         $params = [
             "chatRoomId" => $chatRoomId,
-            "timestamp" => $timestamp
+            "timestamp"  => $timestamp,
+            "adminRole"  => Globals::ADMIN_ROLE
         ];
 
         $rows = $con->query($query, $params)->fetchAll();
         $messages = [];
 
-        foreach ($rows as $row) {
+        foreach (($rows ? $rows : []) as $row) {
             $message = call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
-            if (!$row->{'userChatIsAnonymous'} || $row->{'userId'} == $_SESSION['user']->{'userId'}) {
+            if (!$row->{'userChatIsAnonymous'} || $row->{'userId'} == $_SESSION['user']->{'userId'} || $_SESSION['user']->{'userRole'} === Globals::ADMIN_ROLE) {
                 $message->{'user'} = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
             }
-            $messages[]            = $message;
+            $messages[] = $message;
         }
 
         return $messages;
@@ -138,7 +151,7 @@ class MessageRepository
 
         $row = $con->query($query, $params)->fetch();
 
-        return call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row);
+        return call_user_func('CCS\Models\Mappers\MessageMapper::toEntity', $row ? $row : null);
     }
 
     public static function existsById(

@@ -15,13 +15,15 @@ class TeacherDto extends UserDto implements \JsonSerializable
         $userId,
         $userName,
         $userEmail,
-        $userRole
+        $userRole,
+        $userIdentity
     ) {
         $instance = new self();
-        $instance->{'userId'}    = $userId;
-        $instance->{'userName'}  = $userName;
-        $instance->{'userEmail'} = $userEmail;
-        $instance->{'userRole'}  = $userRole;
+        $instance->{'userId'}       = $userId;
+        $instance->{'userName'}     = $userName;
+        $instance->{'userEmail'}    = $userEmail;
+        $instance->{'userRole'}     = $userRole;
+        $instance->{'userIdentity'} = $userIdentity;
         return $instance;
     }
 

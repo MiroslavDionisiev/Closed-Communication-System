@@ -22,6 +22,7 @@ class Student extends User
         $userEmail,
         $userPassword,
         $userRole,
+        $userIdentity,
         $studentFacultyNumber,
         $studentYear,
         $studentSpeciality,
@@ -33,6 +34,7 @@ class Student extends User
         $instance->{'userEmail'}            = $userEmail;
         $instance->{'userPassword'}         = $userPassword;
         $instance->{'userRole'}             = $userRole;
+        $instance->{'userIdentity'}         = $userIdentity;
         $instance->{'studentFacultyNumber'} = $studentFacultyNumber;
         $instance->{'studentYear'}          = $studentYear;
         $instance->{'studentSpeciality'}    = $studentSpeciality;

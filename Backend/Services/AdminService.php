@@ -26,7 +26,9 @@ class AdminService
         return array_map('CCS\Models\Mappers\UserMapper::toDto', Repo\UserRepository::getAllUsers());
     }
 
-    public static function getUserById($userId) {
+    public static function getUserById(
+        $userId
+    ) {
         if (!Repo\UserRepository::existsById($userId)) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
         }
@@ -38,14 +40,28 @@ class AdminService
         return array_map('CCS\Models\Mappers\ChatRoomMapper::toDto', Repo\ChatRoomRepository::getAllChatRooms());
     }
 
-    public static function createChatRoom($chatRoomDto)
-    {
-        $chatRoom = Repo\ChatRoomRepository::createChatRoom($chatRoomDto->{'chatRoomName'}, $chatRoomDto->{'chatRoomAvailabilityDate'}, $chatRoomDto->{'chatRoomIsActive'});
+    public static function createChatRoom(
+        $chatRoomDto,
+        $userChatDtos
+    ) {
+        if(Repo\ChatRoomRepository::existsByName($chatRoomDto->{'chatRoomName'})) {
+            throw new \InvalidArgumentException("Chatroom with name {$chatRoomDto->{'chatRoomName'}} already exists.");
+        }
+        if ($chatRoomDto->{'chatRoomName'} === '') {
+            throw new \InvalidArgumentException("Chatroom name cannot be empty.");
+        }
+
+        if ($userChatDtos) {
+            $chatRoom = Repo\ChatRoomRepository::createChatRoomWithUserChats($chatRoomDto, $userChatDtos);
+        } else {
+            $chatRoom = Repo\ChatRoomRepository::createChatRoom($chatRoomDto);
+        }
         return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toDto', $chatRoom);
     }
 
-    public static function addUserToChatRoom($userChatDto)
-    {
+    public static function addUserToChatRoom(
+        $userChatDto
+    ) {
         if (!Repo\ChatRoomRepository::existsById($userChatDto->{'chatRoomId'})) {
             throw new \InvalidArgumentException("Chatroom with ID {$userChatDto->{'chatRoomId'}} doesn't exist.");
         }
@@ -55,16 +71,19 @@ class AdminService
         Repo\UserChatRepository::createUserChat($userChatDto->{'chatRoomId'}, $userChatDto->{'userId'}, $userChatDto->{'userChatIsAnonymous'});
     }
 
-    public static function updateChatRoom($chatRoomDto)
-    {
+    public static function updateChatRoom(
+        $chatRoomDto
+    ) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomDto->{'id'})) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomDto->{'chatRoomId'}} doesn't exist.");
         }
         Repo\ChatRoomRepository::updateChatRoom($chatRoomDto);
     }
 
-    public static function removeUserFromChat($userId, $chatRoomId)
-    {
+    public static function removeUserFromChat(
+        $userId,
+        $chatRoomId
+    ) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomId} doesn't exist.");
         }
@@ -74,42 +93,58 @@ class AdminService
         Repo\UserChatRepository::deleteUserChatByUserIdAndChatRoomId($userId, $chatRoomId);
     }
 
-    public static function deleteMessageById($messageId)
-    {
+    public static function deleteMessageById(
+        $messageId
+    ) {
         if (!Repo\MessageRepository::existsById($messageId)) {
             throw new \InvalidArgumentException("Message with ID {$messageId} doesn't exist.");
         }
         Repo\MessageRepository::deleteMessageById($messageId);
     }
 
-    public static function deleteChatRoomById($chatRoomId)
-    {
+    public static function deleteChatRoomById(
+        $chatRoomId
+    ) {
         if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomId} doesn't exist.");
         }
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
     }
 
-    public static function createUserChatRoomFromCsv($csvData)
-    {
+    public static function createChatRoomFromCsv(
+        $csvData
+    ) {
         foreach ($csvData as $row) {
-            $chatRoom = Repo\ChatRoomRepository::createChatRoom($row[0], $row[1]);
+            $chatRoomDto = (object) [
+                'chatRoomName'             => $row[0],
+                'chatRoomAvailabilityDate' => $row[1] === 'null' ? null : $row[1]
+            ];
+
+            $userChatDtos = [];
 
             for ($i = 2; $i < count($row); $i += 2) {
-                $facultyNumber = $row[$i];
-                $isAnonymous = filter_var($row[$i + 1] ?? false, FILTER_VALIDATE_BOOLEAN);
-
-                $student = Repo\UserRepository::findStudentByFacultyNumber($facultyNumber);
+                $student = Repo\UserRepository::findStudentByFacultyNumber($row[$i]);
                 if (!$student) {
-                    throw new \InvalidArgumentException("Student with faculty number {$facultyNumber} doesn't exist.");
+                    throw new \InvalidArgumentException("Student with faculty number {$row[$i]} doesn't exist.");
                 }
-                Repo\UserChatRepository::createUserChat($chatRoom->{'chatRoomId'}, $student->{'userId'}, $isAnonymous);
+
+                if (in_array($student->{'userId'}, array_column($userChatDtos, 'userId'))) {
+                    continue;
+                }
+
+                $userChatDtos[] = (object) [
+                    'userId'              => $student->{'userId'},
+                    'userChatIsAnonymous' => filter_var($row[$i + 1] ?? false, FILTER_VALIDATE_BOOLEAN)
+                ];
             }
+
+            Repo\ChatRoomRepository::createChatRoomWithUserChats($chatRoomDto, $userChatDtos);
         }
     }
 
-    public static function updateMessageIsDisabled($msgDto)
-    {
+    public static function updateMessageIsDisabled(
+        $msgDto
+    ) {
         if (!Repo\MessageRepository::existsById($msgDto->{'messageId'})) {
             throw new \InvalidArgumentException("Message with ID {$msgDto->{'messageId'}} doesn't exist.");
         }

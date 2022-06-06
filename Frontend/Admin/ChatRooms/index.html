@@ -11,19 +11,90 @@
     <body>
         <div class="wrapper">
             <aside>
-                <a id="href-users" href="../Users" class="nav-a">Потребители</a>
-                <a id="href-blocked-messages" href="../BlockedMessages" class="nav-a">Блокирани съобщения</a>
-                <a id="href-user-chats" class="nav-a nav-a-selected">Чат стаи</a>
+                <a
+                    id="href-users"
+                    href="/Frontend/Admin/Users"
+                    class="nav-a hover-invert"
+                    >Потребители</a
+                >
+                <a
+                    id="href-blocked-messages"
+                    href="/Frontend/Admin/BlockedMessages"
+                    class="nav-a hover-invert"
+                    >Блокирани съобщения</a
+                >
+                <a id="href-user-chats" class="nav-a nav-a-selected"
+                    >Чат стаи</a
+                >
             </aside>
             <main>
                 <h1 id="title">Чат стаи</h1>
-                <ul id="list-users" class="wrapper-list">
-                    <li class="chat-room-banner">
-                        <p>name</p>
-                        <p>date</p>
-                        <p>isActive</p>
-                    </li>
-                </ul>
+                <form id="room-create-form">
+                    <fieldset class="fieldset-room">
+                        <legend>Създаване на стая</legend>
+                        <section class="room-data">
+                            <div class="form-field">
+                                <input
+                                    id="room-name"
+                                    type="text"
+                                    placeholder=" "
+                                    required
+                                />
+                                <label for="room-name">Име на стая</label>
+                            </div>
+                            <div class="form-field">
+                                <input
+                                    id="room-expiry-date"
+                                    type="datetime-local"
+                                    placeholder=" "
+                                />
+                                <label for="room-expiry-date">Краен срок</label>
+                            </div>
+                            <div class="room-form-btns">
+                                <button
+                                    id="create-room-btn"
+                                    type="submit"
+                                    tabindex="0"
+                                    class="hover-invert"
+                                >
+                                    Създай
+                                </button>
+                                <div class="add-users-wrapper">
+                                    <button
+                                        id="add-users-btn"
+                                        type="button"
+                                        tabindex="0"
+                                        class="hover-invert"
+                                    >
+                                        Добави потребители
+                                    </button>
+                                </div>
+                                <div class="tooltip">
+                                    <span
+                                        class="tooltip-text">Създай от CSV. Файлът трябва да е във
+                                        формат '<име на стая>,<краен
+                                        срок>[,<фн1>,<анонимен
+                                        (true/false)>,<фн2>,<анонимен
+                                        (true/false)>]', където това в
+                                        квадратните скоби не е задължителнo и
+                                        може да се повтаря, в зависимост от това
+                                        колко хора искате да включите към
+                                        стаята</span
+                                    >
+                                    <label for="from-csv">Качи CSV</label>
+                                    <input
+                                        id="from-csv"
+                                        type="file"
+                                        tabindex="0"
+                                        name="file"
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                        <ul class="users-data-list"></ul>
+                    </fieldset>
+                </form>
+                <section id="chatRooms" class="wrapper-list"></section>
             </main>
         </div>
     </body>
