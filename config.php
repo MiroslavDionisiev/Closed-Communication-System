@@ -56,6 +56,18 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'getUserById'
     ],
+    "GET ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms/{$pathParam('chatRoomId')}/users$" => [
+        'authenticate' => true,
+        'authorize' => [Globals::ADMIN_ROLE],
+        'controller' => 'AdminController',
+        'controllerMethod' => 'getUsersInChatRoom'
+    ],
+    "GET ^" . ENTRY_ROOT . "/index.php/user/chat-rooms/{$pathParam('chatRoomId')}/users$" => [
+        'authenticate' => true,
+        'authorize' => [Globals::USER_ROLE],
+        'controller' => 'UserController',
+        'controllerMethod' => 'getUsersInChatRoom'
+    ],
     "GET ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],

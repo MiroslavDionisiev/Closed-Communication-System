@@ -23,6 +23,10 @@ class UserController
         echo json_encode(UserService::getAllChatRoomMessages($param['chatRoomId'], $_GET['lastTimestamp'] ?? null));
     }
 
+    public static function getUsersInChatRoom($path) {
+        echo json_encode(UserService::getUsersInChatRoom($path['chatRoomId']), JSON_FLAGS);
+    }
+
     public static function createMessage($param)
     {
         $body = json_decode(file_get_contents('php://input'), true);
