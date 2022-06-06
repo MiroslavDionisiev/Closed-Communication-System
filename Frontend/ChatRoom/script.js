@@ -43,11 +43,20 @@ function displayAllMessages(user) {
     fetch(`/index.php/user/chat-rooms/${chatRoomId}/messages`, {
         method: "GET",
     })
-        .then((res) => {
+        .then(async (res) => {
+            if (res.status >= 400) {
+                throw await res.json();
+            }
             return res.json();
         })
         .then((data) => {
             populateChatRoom(data, user);
+        })
+        .catch(err => {
+            switch (err.status) {
+                default:
+                    window.location = '/Frontend/User';
+            }
         });
 }
 
@@ -113,7 +122,12 @@ function sendMessage() {
             }
             return resp.json();
         })
-        .catch((err) => util.popAlert(err.error));
+        .catch((err) => {
+            if(err.error.match(/expired/)) {
+                util.popAlert('This room has expired.', util.ALERT_TYPE.WARNING);
+                document.getElementById('messageInput').disabled = true;
+            }
+        });
     document.getElementById("messageInput").value = "";
 }
 
@@ -138,7 +152,7 @@ function populateUserList(user) {
                 addUserPanel(userList, element);
             });
         })
-        .catch((err) => util.popAlert(err.error));
+        .catch((err) => util.popAlert(err.error, util.ALERT_TYPE.WARNING));
 }
 
 function addUserPanel(userList, user) {
