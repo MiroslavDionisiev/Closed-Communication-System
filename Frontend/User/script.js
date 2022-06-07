@@ -37,7 +37,7 @@ function getAllChatRooms() {
                 liRole.innerText = "Роля в стаята: неанонимен"; 
             }
             let liActive = document.createElement('li');
-            liActive.innerText = 'Активна до: '.concat(element['userChatRoom']['chatRoom']['chatRoomAvailabilityDate']);
+            liActive.innerText = 'Активна до: '.concat(element['userChatRoom']['chatRoom']['chatRoomAvailabilityDate'] ?? 'няма срок');
             ulRoomData.appendChild(liName);
             ulRoomData.appendChild(liRole);
             ulRoomData.appendChild(liActive);
