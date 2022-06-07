@@ -75,7 +75,7 @@ import * as admin from "../utils.js";
     };
 
     let fetchMessages = () => {
-        fetch(util.urlBackend("/index.php/admin/disabled-messages"))
+        fetch(util.urlBackend("/admin/disabled-messages"))
             .then((resp) => resp.json())
             .then((messages) => {
                 let list = document.getElementById("list-disabled-messages");

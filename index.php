@@ -48,11 +48,11 @@ foreach ($routes as $key => $conf) {
             exit();
         }
 
-        /* if(isset($conf['entry'])) { */
-        /*     header("Location: ${conf['homePage']}"); */
-        /*     http_response_code(301); */
-        /*     exit(); */
-        /* } */
+        if(isset($conf['entry'])) {
+            $homePage = str_replace($_SERVER['DOCUMENT_ROOT'], '', $conf['homePage']);
+            header("Location: {$homePage}");
+            exit();
+        }
 
         if (isset($conf['authenticate']) && $conf['authenticate']) {
 

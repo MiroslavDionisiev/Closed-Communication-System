@@ -1,3 +1,2 @@
 Options -Indexes
 
-RedirectMatch "^(?!\/favicon.ico)(?!.*index\.php)(?!.*Frontend)(.*)$" "$1/Frontend/User"
