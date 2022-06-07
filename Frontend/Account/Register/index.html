@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link href="style.css" rel="stylesheet" />
+        <script src="script.js" type="module" defer></script>
+        <title>Register</title>
+    </head>
+    <body>
+        <section class="form-main-body">
+            <section class="title">
+                <label>Register</label>
+            </section>
+            <section class="input-body">
+                <span>Name</span>
+                <input id="fullName" placeholder="Enter your name" />
+            </section>
+            <section class="input-body">
+                <span>Email</span>
+                <section id="error-email" class="error-message-body">
+                    <span>Invalid email address</span>
+                </section>
+                <input id="email" placeholder="Enter email address" />
+            </section>
+            <section class="input-body">
+                <span>Password</span>
+                <section id="error-password" class="error-message-body">
+                    <span>Password must be between 6 and 16 symbols, to have at least one numeric and special symbol </span>
+                </section>
+                <input id="password" type="password" placeholder="Enterpassword" />
+            </section>
+            <section class="input-body">
+                <span>Faculty</span>
+                <input id="faculty" type="text" placeholder="" />
+            </section>
+            <section class="input-body">
+                <span>Speciality</span>
+                <input id="speciality" type="text" placeholder="" />
+            </section>
+            <section class="input-body">
+                <span>Faculty Number</span>
+                <input id="facultyNumber" placeholder="" />
+            </section>
+            <section class="input-body">
+                <span>Course</span>
+                <input id="course" type="number" placeholder="" />
+            </section>
+            <section class="button-body">
+                <button id="register">Register</button>
+            </section>
+        </section>
+    </body>
+</html>

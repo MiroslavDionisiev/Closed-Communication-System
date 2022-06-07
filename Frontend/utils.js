@@ -26,7 +26,7 @@ export async function authenticate() {
     return fetch(urlBackend("/account/is-authenticated"))
         .then(async (resp) => {
             if (resp.status == 401) {
-                window.location = urlFrontend("/Login");
+                window.location = urlFrontend("/Account/Login");
             } else if (resp.status == 200) {
                 return resp.json();
             } else {
@@ -80,8 +80,8 @@ export async function setHeader(user) {
     header.innerHTML = `
     <a href="${urlFrontend('/User')}" class="app-name">Closed Communication System</a>
     <section class="right-side">
-        <a href="${urlFrontend('/Login')}" class="header-btn">Вход</a>
-        <a href="${urlFrontend('/Register')}" class="header-btn">Регистрация</a>
+        <a href="${urlFrontend('/Account/Login')}" class="header-btn">Вход</a>
+        <a href="${urlFrontend('/Account/Register')}" class="header-btn">Регистрация</a>
     </section>
     `;
 
@@ -102,7 +102,7 @@ export async function setHeader(user) {
                     if(resp.status >= 400) {
                         throw await resp.json();
                     }
-                    window.location = urlFrontend("/Login");
+                    window.location = urlFrontend("/Account/Login");
                 })
                 .catch((err) => {
                     popAlert(err.error);
