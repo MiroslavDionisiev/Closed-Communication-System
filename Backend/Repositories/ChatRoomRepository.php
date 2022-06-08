@@ -82,7 +82,7 @@ class ChatRoomRepository
             $stmt->execute($params);
         }
 
-        $con->commit();
+        return $con->commit();
     }
 
     public static function updateChatRoom(
@@ -166,5 +166,27 @@ class ChatRoomRepository
         $row = $con->query($query, $params)->fetch();
 
         return $row;
+    }
+
+    public static function deleteBatch(
+        $chatRoomIds
+    ) {
+        $db = new DB();
+        $con = $db->getConnection();
+        $con->beginTransaction();
+
+        $query = "DELETE FROM chat_rooms\n" .
+            "WHERE chatRoomId = :chatRoomId";
+
+        foreach ($chatRoomIds as $chatRoomId) {
+            $params = [
+                'chatRoomId' => $chatRoomId
+            ];
+
+            $stmt = $con->prepare($query);
+            $stmt->execute($params);
+        }
+
+        return $con->commit();
     }
 }

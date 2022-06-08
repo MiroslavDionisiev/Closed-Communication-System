@@ -54,7 +54,7 @@ class AdminService
         $chatRoomDto,
         $userChatDtos
     ) {
-        if(Repo\ChatRoomRepository::existsByName($chatRoomDto->{'chatRoomName'})) {
+        if (Repo\ChatRoomRepository::existsByName($chatRoomDto->{'chatRoomName'})) {
             throw new \InvalidArgumentException("Chatroom with name {$chatRoomDto->{'chatRoomName'}} already exists.");
         }
         if ($chatRoomDto->{'chatRoomName'} === '') {
@@ -119,6 +119,19 @@ class AdminService
             throw new \InvalidArgumentException("Chatroom with ID {$chatRoomId} doesn't exist.");
         }
         Repo\ChatRoomRepository::deleteChatRoomById($chatRoomId);
+    }
+
+    public static function deleteChatRoomBatch(
+        $chatRoomIds
+    ) {
+        foreach ($chatRoomIds as $id) {
+            if (!Repo\ChatRoomRepository::existsById($id)) {
+                throw new \InvalidArgumentException("Chatroom with ID {$id} doesn't exist.");
+            }
+        }
+        if (!Repo\ChatRoomRepository::deleteBatch($chatRoomIds)) {
+            throw new \InvalidArgumentException("Could not delete batch of chat rooms.");
+        }
     }
 
     public static function createChatRoomFromCsv(

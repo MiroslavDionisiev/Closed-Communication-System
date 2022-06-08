@@ -33,10 +33,10 @@ import * as admin from "../utils.js";
                 if (resp.status >= 400) {
                     throw await resp.json();
                 }
-                util.popAlert(
-                    "Chatroom deleted successfully",
-                    util.ALERT_TYPE.SUCCESS
-                );
+                return resp.json();
+            })
+            .then((msg) => {
+                util.popAlert(msg.message, util.ALERT_TYPE.SUCCESS);
                 fillChatRooms();
             })
             .catch((err) => {
@@ -44,13 +44,52 @@ import * as admin from "../utils.js";
             });
     }
 
+    function deleteChatRoomBatch(chatRoomIds) {
+        fetch(util.urlBackend(`/admin/chat-rooms`), {
+            method: "DELETE",
+            body: chatRoomIds,
+        })
+            .then(async (resp) => {
+                if (resp.status >= 400) {
+                    throw await resp.json();
+                }
+                return resp.json();
+            })
+            .then((msg) => {
+                util.popAlert(msg.message, util.ALERT_TYPE.SUCCESS);
+                fillChatRooms();
+                document.getElementById("select-all-rooms").checked = false;
+            })
+            .catch((err) => {
+                util.popAlert(err.error, util.ALERT_TYPE.DANGER);
+            });
+    }
+
+    function updateSelected(checkbox) {
+        let btnDelete = document.getElementById("delete-selected");
+
+        if (checkbox.checked) {
+            btnDelete.disabled = false;
+        } else {
+            for (let s of document.querySelectorAll(".select-chat-room")) {
+                if (s.checked) {
+                    btnDelete.disabled = false;
+                    return;
+                }
+            }
+            btnDelete.disabled = true;
+        }
+    }
+
     function getChatRoomBanner(chatRoom) {
         let div = document.createElement("div");
         div.innerHTML = `
-            <a class="chat-room-banner hover-invert">
+            <a class="chat-room-banner hover-invert" id="${
+                chatRoom.chatRoomId
+            }">
                 <p>${chatRoom.chatRoomName}</p>
                 <p>${chatRoom.chatRoomAvailabilityDate ?? "Няма срок"}</p>
-                <button type="button" class="delete-room-btn hover-invert">X</button>
+                <input type="checkbox" class="select-chat-room">
             </a>
         `;
 
@@ -58,32 +97,38 @@ import * as admin from "../utils.js";
         let chatRoomAvailabilityDate = Date.parse(
             chatRoom.chatRoomAvailabilityDate
         );
-        let now = new Date();
-        if (chatRoomAvailabilityDate > now) {
+        let now = new Date().getTime();
+        if (chatRoomAvailabilityDate > now || !chatRoomAvailabilityDate) {
             banner.classList.add("active");
         }
 
-        let deleteBtn = banner.querySelector("button");
-        deleteBtn.addEventListener("click", (event) => {
-            let confirm = deleteBtn.querySelector(".confirm");
-            if (event.target !== event.currentTarget) {
-                return;
-            }
+        let checkbox = banner.querySelector(".select-chat-room");
+        checkbox.addEventListener("change", (event) =>
+            updateSelected(checkbox)
+        );
 
-            if (confirm) {
-                deleteBtn.removeChild(confirm);
-            } else {
-                popConfirm(
-                    event.currentTarget,
-                    deleteChatRoom,
-                    chatRoom.chatRoomId
-                );
-            }
-        });
+        // deleteBtn.addEventListener("click", (event) => {
+        //     let confirm = deleteBtn.querySelector(".confirm");
+        //     if (event.target !== event.currentTarget) {
+        //         return;
+        //     }
+
+        //     if (confirm) {
+        //         deleteBtn.removeChild(confirm);
+        //     } else {
+        //         popConfirm(
+        //             event.currentTarget,
+        //             deleteChatRoom,
+        //             chatRoom.chatRoomId
+        //         );
+        //     }
+        // });
 
         banner.addEventListener("click", (event) => {
-            if (event.target.tagName !== "BUTTON") {
-                window.location = util.urlFrontend(`/ChatRoom?chatRoomId=${chatRoom.chatRoomId}`);
+            if (event.target.tagName !== "INPUT") {
+                window.location = util.urlFrontend(
+                    `/ChatRoom?chatRoomId=${chatRoom.chatRoomId}`
+                );
             }
         });
 
@@ -336,4 +381,27 @@ import * as admin from "../utils.js";
     });
 
     fillChatRooms();
+    let selectAll = document.getElementById("select-all-rooms");
+    selectAll.addEventListener("change", (event) => {
+        document
+            .querySelectorAll(".select-chat-room")
+            .forEach((s) => (s.checked = selectAll.checked));
+        updateSelected(selectAll);
+    });
+
+    let deleteBtn = document.getElementById("delete-selected");
+    deleteBtn.addEventListener("click", (event) => {
+        let chatRoomIds = [
+            ...document.querySelectorAll(
+                ".chat-room-banner .select-chat-room:checked"
+            ),
+        ].map((e) => e.parentNode.id);
+
+        if (chatRoomIds.length > 1) {
+            deleteChatRoomBatch(chatRoomIds);
+        }
+        else {
+            deleteChatRoom(chatRoomIds[0]);
+        }
+    });
 })();

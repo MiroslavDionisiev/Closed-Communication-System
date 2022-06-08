@@ -129,6 +129,12 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'deleteChatRoomById'
     ],
+    "DELETE ^" . ENTRY_ROOT . "/index.php/admin/chat-rooms$" => [
+        'authenticate' => true,
+        'authorize' => [Globals::ADMIN_ROLE],
+        'controller' => 'AdminController',
+        'controllerMethod' => 'deleteChatRoomBatch'
+    ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/user-chats$" => [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],
