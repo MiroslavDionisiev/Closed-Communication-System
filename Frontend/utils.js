@@ -26,7 +26,11 @@ export async function authenticate() {
     return fetch(urlBackend("/account/is-authenticated"))
         .then(async (resp) => {
             if (resp.status == 401) {
-                window.location = urlFrontend("/Account/Login");
+                let urlPathName = window.location.pathname.toLowerCase();
+                if(urlPathName != urlFrontend("/Account/Login/").toLowerCase() && urlPathName != urlFrontend("/Account/Register/").toLowerCase()) { 
+                    window.location = urlFrontend("/Account/Login/");
+                }
+                return null;
             } else if (resp.status == 200) {
                 return resp.json();
             } else {

@@ -1,6 +1,10 @@
 import * as util from "../../utils.js";
 
 (async () => {
+    if (await util.authenticate()) {
+        window.location = util.urlFrontend('/User');
+    }
+    
     document.getElementById("login").addEventListener('click', (event) => {
         let options = {
             method: "Post",
