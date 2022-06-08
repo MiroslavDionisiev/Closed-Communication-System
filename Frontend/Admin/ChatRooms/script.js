@@ -6,23 +6,26 @@ import * as admin from "../utils.js";
     admin.authorize(user);
     util.setHeader(user);
 
-    function popConfirm(parent, func, ...args) {
-        let div = document.createElement("div");
-        div.classList.add("confirm");
-        div.innerHTML = `Are you sure?
-            <button type="button" class="confirm-yes">Yes</button>
-            <button type="button" class="confirm-no">No</button>
+    function popConfirm(func, ...args) {
+        let curtain = document.createElement("curtain");
+        curtain.classList.add("curtain");
+        curtain.innerHTML = `
+            <curtain class="confirm">
+                <p>Are you sure?</p>
+                <button type="button" class="confirm-yes">Yes</button>
+                <button type="button" class="confirm-no">No</button>
+            </curtain>
         `;
 
-        div.querySelector(".confirm-yes").addEventListener("click", (event) => {
+        curtain.querySelector(".confirm-yes").addEventListener("click", (event) => {
             func(...args);
-            parent.removeChild(parent.querySelector(".confirm"));
+            curtain.parentNode.removeChild(curtain);
         });
-        div.querySelector(".confirm-no").addEventListener("click", (event) => {
-            parent.removeChild(parent.querySelector(".confirm"));
+        curtain.querySelector(".confirm-no").addEventListener("click", (event) => {
+            curtain.parentNode.removeChild(curtain);
         });
 
-        parent.appendChild(div);
+        document.documentElement.appendChild(curtain);
     }
 
     function deleteChatRoom(chatRoomId) {
@@ -260,7 +263,6 @@ import * as admin from "../utils.js";
                                 (await resp.json()).message,
                                 util.ALERT_TYPE.SUCCESS
                             );
-
                             clearUsersList();
                             fillChatRooms();
                         } else {
@@ -397,11 +399,12 @@ import * as admin from "../utils.js";
             ),
         ].map((e) => e.parentNode.id);
 
-        if (chatRoomIds.length > 1) {
-            deleteChatRoomBatch(chatRoomIds);
-        }
-        else {
-            deleteChatRoom(chatRoomIds[0]);
-        }
+        popConfirm(() => {
+            if (chatRoomIds.length > 1) {
+                deleteChatRoomBatch(chatRoomIds);
+            } else {
+                deleteChatRoom(chatRoomIds[0]);
+            }
+        }, chatRoomIds);
     });
 })();
