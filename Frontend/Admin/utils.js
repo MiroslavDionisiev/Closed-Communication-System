@@ -18,7 +18,9 @@ export function openUserInfo(userId) {
                             <span>&times;</span>
                         </button>
                         <div class="img">
-                            <img src="${util.urlFrontend('/Admin/Users/img/img-user.png')}" alt="User profile picture">
+                            <img src="${util.urlFrontend(
+                                "/Admin/Users/img/img-user.png"
+                            )}" alt="User profile picture">
                         </div>
                         <div class="user-details">
                             <ul class="user-info">
@@ -65,12 +67,15 @@ export function openUserInfo(userId) {
 }
 
 export function getUserBanner(user) {
-    let banner = document.createElement("div");
+    let banner = document.createElement("li");
+    banner.classList.add("user-banner", "hover-invert");
 
     banner.innerHTML = `
-            <a class="user-banner hover-invert">
+            <a>
                 <figure>
-                    <img src="${util.urlFrontend('/Admin/Users/img/img-user.png')}" alt="User profile picture">
+                    <img src="${util.urlFrontend(
+                        "/Admin/Users/img/img-user.png"
+                    )}" alt="User profile picture">
                     <figcaption class="banner-user-name">
                         <div>${user.userName}</div>
                         <div>${user.userIdentity}</div>
@@ -79,14 +84,15 @@ export function getUserBanner(user) {
             </a>
         `;
 
-    banner.querySelector("a").addEventListener("click", (event) => {
+    let link = banner.querySelector("a");
+    link.addEventListener("click", (event) => {
         if (!event.target.classList.contains("select-user-checkbox")) {
             openUserInfo(event.currentTarget.getAttribute("user-id"));
         }
     });
-    banner.querySelector("a").setAttribute("user-id", user.userId);
+    link.setAttribute("user-id", user.userId);
 
-    return banner.querySelector("a");
+    return banner;
 }
 
 export async function getAllUsers() {
@@ -106,4 +112,55 @@ export function authorize(user) {
     if (user.userRole !== util.USER_ROLES.ADMIN_ROLE) {
         util.reditectTo("/User");
     }
+}
+
+export function createUsersSection(users) {
+    let section = document.createElement("section");
+    section.classList.add("users-section");
+
+    section.innerHTML = `
+        <div class="users-filter">
+            <label for="filter-value">Търси:</label>
+            <input id="filter-value" type="text">
+            <select id="filter-type" title="filterType">
+                <option>Име</option>
+                <option>Факултетен номер</option>
+            </select>
+        </div>
+        <ul id="list-users" class="wrapper-list"></ul>
+    `;
+
+    let list = section.querySelector("#list-users");
+    for (let user of users) {
+        let banner = getUserBanner(user);
+        list.appendChild(banner);
+        user["banner"] = banner;
+    }
+
+    let search = section.querySelector("#filter-value");
+    let filterType = section.querySelector("#filter-type");
+
+    search.addEventListener("input", (event) => {
+        let filter = (() => {
+            switch (filterType.value) {
+                case "Име":
+                    return "userName";
+                default:
+                    return "studentFacultyNumber";
+            }
+        })();
+        let input = event.currentTarget.value;
+
+        for (let user of users) {
+            if (!input || (user[filter] !== undefined && user[filter].match(new RegExp(input, "gi")))) {
+                if (!list.contains(user.banner)) {
+                    list.appendChild(user.banner);
+                }
+            } else if (list.contains(user.banner)) {
+                list.removeChild(user.banner);
+            }
+        }
+    });
+
+    return section;
 }

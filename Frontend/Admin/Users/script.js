@@ -6,9 +6,6 @@ import * as admin from "../utils.js";
     admin.authorize(user);
     util.setHeader(user);
 
-    let users = await admin.getAllUsers();
-    let list = document.getElementById("list-users");
-    for (let user of users) {
-        list.appendChild(admin.getUserBanner(user));
-    }
+    let section = admin.createUsersSection(await admin.getAllUsers());
+    document.querySelector("main").appendChild(section);
 })();

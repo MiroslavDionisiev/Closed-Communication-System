@@ -144,7 +144,12 @@ input:focus + label, input:not(:placeholder-shown) + label {
     z-index: 1;
 }
 
+.select-users li {
+    position: relative;
+}
+
 .select-user-checkbox {
+    background-color: #fff;
     position: absolute;
     top: 0;
     right: 0;

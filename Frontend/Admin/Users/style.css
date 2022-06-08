@@ -5,6 +5,14 @@ h1 {
     text-align: center;
 }
 
+.users-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .wrapper-list {
     display: flex;
     flex-direction: row;
@@ -129,4 +137,39 @@ h1 {
 .user-info-close:hover {
     cursor: pointer;
     transform: scale(1.2);
+}
+
+.users-filter {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    height: fit-content;
+    align-items: center;
+    margin: 1rem;
+}
+
+.users-filter input {
+    background-color: #fff;
+}
+
+#filter-value {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 1rem;
+}
+
+@media screen and (max-width: 850px) {
+    .users-filter {
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .users-filter * {
+        margin: 0.5rem 0;
+    }
+
+    #filter-type {
+        width: fit-content;
+    }
 }

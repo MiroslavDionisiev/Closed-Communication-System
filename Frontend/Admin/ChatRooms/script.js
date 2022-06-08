@@ -271,17 +271,18 @@ import * as admin from "../utils.js";
                 btn.classList.add("dropped");
 
                 let users = await admin.getAllUsers();
-                for (let user of users) {
-                    let banner = admin.getUserBanner(user);
-                    banner.style.position = "relative";
+                let section = admin.createUsersSection(users);
 
+                select.appendChild(section);
+
+                for (let user of users) {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.classList.add("select-user-checkbox");
 
                     let usersDataList =
                         document.querySelector(".users-data-list");
-                    if (document.getElementById(`${user.userId}`) != null) {
+                    if (document.getElementById(user.userId) != null) {
                         checkbox.checked = true;
                     }
 
@@ -295,8 +296,7 @@ import * as admin from "../utils.js";
                         }
                     });
 
-                    banner.appendChild(checkbox);
-                    select.appendChild(banner);
+                    user.banner.appendChild(checkbox);
                 }
             } else {
                 closeSelectUsers();
