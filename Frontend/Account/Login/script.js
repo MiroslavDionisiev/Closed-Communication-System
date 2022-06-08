@@ -13,7 +13,7 @@ import * as util from "../../utils.js";
             }),
         };
 
-        fetch("/index.php/account/login", options).then(
+        fetch(util.urlBackend('/account/login'), options).then(
             (resp) => {
                 if (resp.ok) {
                     document.getElementById("error").style.display = "none";

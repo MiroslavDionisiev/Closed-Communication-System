@@ -44,7 +44,7 @@ import * as util from "../../utils.js";
             }),
         };
 
-        fetch("/index.php/account/register", options).then(
+        fetch(util.urlBackend('/account/register'), options).then(
             (resp) => {
                 if(resp.ok) {
                      window.location = util.urlFrontend('/Account/Login');
