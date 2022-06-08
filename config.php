@@ -17,7 +17,7 @@ $pathParam = function ($name) {
 define('ROUTES', [
     "GET ^" . ENTRY_ROOT . "(/|/index.php)$" => [
         'entry' => true,
-        'homePage' => ENTRY_ROOT . '/Frontend/Login/'
+        'homePage' => ENTRY_ROOT . '/Frontend/Account/Login/'
     ],
     "GET ^" . ENTRY_ROOT . "/index.php/account/logout$" => [
         'authenticate' => true,
