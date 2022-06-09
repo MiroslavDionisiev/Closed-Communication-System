@@ -10,6 +10,7 @@ class UserChatDto implements \JsonSerializable
     protected $chatRoom            = null;
     protected $userChatIsAnonymous = null;
     protected $userChatLastSeen    = null;
+    protected $userChatHasResponded = null;
 
     public function __construct()
     {
@@ -20,7 +21,8 @@ class UserChatDto implements \JsonSerializable
         $user,
         $chatRoom,
         $userChatIsAnonymous,
-        $userChatLastSeen
+        $userChatLastSeen,
+        $userChatHasResponded
     ) {
         $instance = new self();
         $instance->{'userChatId'}          = $userChatId;
@@ -28,6 +30,7 @@ class UserChatDto implements \JsonSerializable
         $instance->{'chatRoom'}            = $chatRoom;
         $instance->{'userChatIsAnonymous'} = is_null($userChatIsAnonymous) ? $userChatIsAnonymous : (bool) $userChatIsAnonymous;
         $instance->{'userChatLastSeen'}    = $userChatLastSeen;
+        $instance->{'userChatHasResponded'}        = $userChatHasResponded;
         return $instance;
     }
 

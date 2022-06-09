@@ -42,6 +42,7 @@ CREATE TABLE
     chatRoomId CHAR(36) NOT NULL,
     userChatLastSeen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     userChatIsAnonymous BOOLEAN DEFAULT TRUE NOT NULL,
+    userChatHasResponded BOOLEAN DEFAULT FALSE NOT NULL,
     CONSTRAINT fk_user_chats__users FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE,
     CONSTRAINT fk_user_chats__chat_rooms FOREIGN KEY(chatRoomId) REFERENCES chat_rooms(chatRoomId) ON DELETE CASCADE,
     UNIQUE(userId, chatRoomId)

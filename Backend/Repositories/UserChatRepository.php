@@ -132,6 +132,24 @@ class UserChatRepository
         $con->query($query, $params);
     }
 
+    public static function updateUserAnonymity(
+        $chatRoomId,
+        $userId,
+        $isAnonymouse
+    ) {
+        $con = new DB();
+        $query = "UPDATE user_chats\n" .
+            "SET userChatIsAnonymous = :isAnonymouse, userChatHasResponded = true\n" .
+            "WHERE chatRoomId = :chatRoomId AND userId = :userId";
+        $params = [
+            "chatRoomId" => $chatRoomId,
+            "userId"     => $userId,
+            "isAnonymouse"   => $isAnonymouse
+        ];
+
+        $con->query($query, $params);
+    }
+
     public static function deleteUserChatByUserIdAndChatRoomId(
         $userId,
         $chatRoomId

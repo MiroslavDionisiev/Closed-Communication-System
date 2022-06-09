@@ -127,6 +127,12 @@ define('ROUTES', [
         'controller' => 'AdminController',
         'controllerMethod' => 'updateMessageIsDisabled'
     ],
+    "PATCH ^" . ENTRY_ROOT . "/index.php/user/chat-rooms$" => [
+        'authenticate' => true,
+        'authorize' => [Globals::USER_ROLE],
+        'controller' => 'UserController',
+        'controllerMethod' => 'updateUserAnonymity'
+    ],
     "DELETE ^" . ENTRY_ROOT . "/index.php/admin/disabled-messages/{$pathParam('messageId')}$" => [
         'authenticate' => true,
         'authorize' => [Globals::ADMIN_ROLE],

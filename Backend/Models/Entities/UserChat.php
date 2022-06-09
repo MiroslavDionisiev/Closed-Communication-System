@@ -10,6 +10,7 @@ class UserChat
     private $chatRoom            = null;
     private $userChatIsAnonymous = null;
     private $userChatLastSeen    = null;
+    private $userChatHasResponded = null;
 
     public function __construct()
     {
@@ -20,7 +21,8 @@ class UserChat
         $user,
         $chatRoom,
         $userChatIsAnonymous,
-        $userChatLastSeen
+        $userChatLastSeen,
+        $userChatHasResponded
     ) {
         $instance = new self();
         $instance->{'userChatId'}          = $userChatId;
@@ -28,6 +30,7 @@ class UserChat
         $instance->{'chatRoom'}            = $chatRoom;
         $instance->{'userChatIsAnonymous'} = $userChatIsAnonymous;
         $instance->{'userChatLastSeen'}    = $userChatLastSeen;
+        $instance->{'userChatHasResponded'}        = $userChatHasResponded;
         return $instance;
     }
 

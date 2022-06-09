@@ -88,12 +88,6 @@ class UserService
         $chatRoomId,
         $message
     ) {
-        $chatRoom = Repo\ChatRoomRepository::findById($chatRoomId);
-        $date = new \DateTime($chatRoom->{'chatRoomAvailabilityDate'});
-        if (date('Y-m-d H:i:s', $date->getTimestamp()) < date('Y-m-d H:i:s')) {
-            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} has expired.");
-        }
-
         $user = Repo\UserRepository::existsById($userId);
         if (!$user) {
             throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
@@ -112,5 +106,21 @@ class UserService
         Repo\MessageRepository::createMessage($userId, $chatRoomId, $message, $isDisabled);
 
         return $isDisabled;
+    }
+
+    public static function updateUserAnonymity(
+        $userId,
+        $chatRoomId,
+        $isAnonymouse
+    ) {
+        if (!Repo\UserRepository::existsById($userId)) {
+            throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
+        }
+
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
+            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
+        }
+
+        Repo\UserChatRepository::updateUserAnonymity($chatRoomId, $userId, $isAnonymouse);
     }
 }

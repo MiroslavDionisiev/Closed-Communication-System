@@ -22,7 +22,7 @@ main section {
 
 main p {
     font-family: sans-serif;
-    font-size: 25px;
+    font-size: 19pt;
     font-weight: bold;
 }
 
@@ -48,7 +48,7 @@ main p {
 
 .chatRoomData {
     font-family: sans-serif;
-    font-size: 18x;
+    font-size: 14pt;
     font-weight: bold;
     color: #ffffff;
 }
@@ -75,6 +75,42 @@ main p {
 .unreadMessage {
     color: #ffffff;
     font-family: sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
+}
+
+
+.rolePicker {
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    background-color: #bebfc0;
+    padding: 10px;
+}
+
+.rolePicker p {
+    font-size: 15pt;
+    text-align: center;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.userChoice {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 10px;
+}
+
+.approve, .decline {
+    padding: 5px;
+    width: 30%;
+}
+
+.approve {
+    background-color: #03905c;
+}
+
+.decline {
+    background-color: #d14051;
 }
