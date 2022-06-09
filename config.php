@@ -29,6 +29,16 @@ define('ROUTES', [
         'controller' => 'AccountController',
         'controllerMethod' => 'isAuthenticated'
     ],
+    "GET ^" . ENTRY_ROOT . "/index.php/account/userExistsByEmail/{$pathParam('userEmail')}$" => [
+        'authenticate' => false,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'userExistsByEmail'
+    ],
+    "GET ^" . ENTRY_ROOT . "/index.php/account/userExistsByFacultyNumber/{$pathParam('studentFacultyNumber')}$" => [
+        'authenticate' => false,
+        'controller' => 'AccountController',
+        'controllerMethod' => 'userExistsByFacultyNumber'
+    ],
     "POST ^" . ENTRY_ROOT . "/index.php/account/register$" => [
         'authenticate' => false,
         'controller' => 'AccountController',

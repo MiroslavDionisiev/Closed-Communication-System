@@ -98,6 +98,21 @@ class UserRepository
         return $row;
     }
 
+    public static function existsByFacultyNumber(
+        $studentFacultyNumber
+    ) {
+        $con = new DB();
+        $query = "SELECT * FROM users\n" .
+            "LEFT JOIN students ON users.userId = students.userId\n" .
+            "WHERE students.studentFacultyNumber = :studentFacultyNumber";
+        $params = [
+            "studentFacultyNumber" => $studentFacultyNumber
+        ];
+
+        $row = $con->query($query, $params)->fetch();
+        return $row;
+    }
+
     public static function createStudent(
         $name,
         $email,
@@ -141,6 +156,7 @@ class UserRepository
                 "studentSpeciality"    => $speciality,
                 "studentFaculty"       => $faculty
             ];
+            
             $stmt = $con->prepare($query);
             $stmt->execute($params);
 

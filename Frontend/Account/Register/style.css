@@ -70,10 +70,19 @@
     background-color: #aaaaaa;
 }
 
+.button-body button:disabled {
+    background-color: #aaaaaa;
+}
+
 .error-message-body {
     display: none;
 }
 
 .error-message-body span {
+    color: red;
+}
+
+.required::after {
+    content: "*";
     color: red;
 }

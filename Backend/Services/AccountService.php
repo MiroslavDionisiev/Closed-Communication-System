@@ -37,7 +37,6 @@ class AccountService
         $password
     ) {
         $user = Repo\UserRepository::existsByEmail($email);
-
         if (!$user) {
             throw new \InvalidArgumentException("Invalid email address or password");
         }
@@ -49,5 +48,16 @@ class AccountService
         Helpers\AuthorizationManager::login($user);
 
         return $user;
+    }
+
+    public static function userExistsByEmail($email) {
+        $result = Repo\UserRepository::existsByEmail($email);
+        return is_bool($result) ? $result : true;
+    }
+
+    public static function userExistsByFacultyNumber($studentFacultyNumber) {
+        $result = Repo\UserRepository::existsByFacultyNumber($studentFacultyNumber);
+        return is_bool($result) ? $result : true;
+
     }
 }

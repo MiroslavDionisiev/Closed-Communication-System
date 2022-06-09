@@ -28,6 +28,18 @@ class AccountController
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Successfully logged."));
     }
 
+    public static function userExistsByEmail($path) {
+        $email = $path['userEmail'];
+        $userExists = AccountService::userExistsByEmail($email); 
+        echo json_encode($userExists);
+    }
+
+    public static function userExistsByFacultyNumber($path) {
+        $studentFacultyNumber = $path['studentFacultyNumber'];
+        $userExists = AccountService::userExistsByFacultyNumber($studentFacultyNumber); 
+        echo json_encode($userExists);
+    }
+
     public static function logout()
     {
         Helpers\AuthorizationManager::logout();
