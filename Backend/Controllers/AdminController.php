@@ -70,6 +70,12 @@ class AdminController {
         echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatroom deleted successfully."));
     }
 
+    public static function deleteChatRoomBatch() {
+        $chatRoomIds = explode(',', file_get_contents('php://input'));
+        AdminService::deleteChatRoomBatch($chatRoomIds);
+        echo json_encode(new DTOs\ResponseDtoSuccess(200, "Chatrooms deleted successfully."));
+    }
+
     public static function createChatRoomFromCsv() {
         $csvFile = $_FILES['file']['tmp_name'];
         $csvData = array_map('str_getcsv', file($csvFile));

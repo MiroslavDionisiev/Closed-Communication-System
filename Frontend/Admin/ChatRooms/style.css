@@ -148,11 +148,11 @@ input:focus + label, input:not(:placeholder-shown) + label {
     position: relative;
 }
 
-.select-user-checkbox {
+.select-user-checkbox, .select-chat-room {
     background-color: #fff;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 1rem;
+    right: 1rem;
 }
 
 .users-data-list {
@@ -193,9 +193,17 @@ input:focus + label, input:not(:placeholder-shown) + label {
 }
 
 .confirm {
-    position: absolute;
-    bottom: 100%;
-    left: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
 }
 
 .tooltip {
@@ -255,6 +263,17 @@ label[for='from-csv'] {
 
 *[disabled] {
     background-color: #ddd;
+}
+
+.selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 1rem;
+}
+
+.selection > button {
+    margin: 0 1rem;
 }
 
 @media screen and (max-width: 700px) {
