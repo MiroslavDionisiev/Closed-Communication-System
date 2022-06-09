@@ -17,18 +17,18 @@
                 <input id="fullName" placeholder="Enter your name" />
             </section>
             <section class="input-body">
-                <span>Email</span>
+                <span class="required">Email</span>
                 <section id="error-email" class="error-message-body">
-                    <span>Invalid email address</span>
+                    <span></span>
                 </section>
                 <input id="email" placeholder="Enter email address" />
             </section>
             <section class="input-body">
-                <span>Password</span>
+                <span class="required">Password</span>
                 <section id="error-password" class="error-message-body">
                     <span>Password must be between 6 and 16 symbols, to have at least one numeric and special symbol </span>
                 </section>
-                <input id="password" type="password" placeholder="Enterpassword" />
+                <input id="password" type="password" placeholder="Enter password" />
             </section>
             <section class="input-body">
                 <span>Faculty</span>
@@ -39,15 +39,18 @@
                 <input id="speciality" type="text" placeholder="" />
             </section>
             <section class="input-body">
-                <span>Faculty Number</span>
+                <span class="required">Faculty Number</span>
+                <section id="error-faculty-number" class="error-message-body">
+                    <span>Faculty number already exists</span>
+                </section>
                 <input id="facultyNumber" placeholder="" />
             </section>
             <section class="input-body">
                 <span>Course</span>
                 <input id="course" type="number" placeholder="" />
             </section>
-            <section class="button-body">
-                <button id="register">Register</button>
+            <section  class="button-body">
+                <button type="button" id="register" disabled>Register</button>
             </section>
         </section>
     </body>
