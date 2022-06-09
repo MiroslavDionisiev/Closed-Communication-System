@@ -121,12 +121,6 @@ function sendMessage() {
                 throw await resp.json();
             }
             return resp.json();
-        })
-        .catch((err) => {
-            if(err.error.match(/expired/)) {
-                util.popAlert('This room has expired.', util.ALERT_TYPE.WARNING);
-                document.getElementById('messageInput').disabled = true;
-            }
         });
     document.getElementById("messageInput").value = "";
 }
