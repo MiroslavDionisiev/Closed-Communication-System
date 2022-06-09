@@ -113,4 +113,20 @@ class UserService
 
         return $isDisabled;
     }
+
+    public static function updateUserAnonymity(
+        $userId,
+        $chatRoomId,
+        $isAnonymouse
+    ) {
+        if (!Repo\UserRepository::existsById($userId)) {
+            throw new \InvalidArgumentException("User with ID {$userId} doesn't exist.");
+        }
+
+        if (!Repo\ChatRoomRepository::existsById($chatRoomId)) {
+            throw new \InvalidArgumentException("Chat room with ID {$chatRoomId} doesn't exist.");
+        }
+
+        Repo\UserChatRepository::updateUserAnonymity($chatRoomId, $userId, $isAnonymouse);
+    }
 }

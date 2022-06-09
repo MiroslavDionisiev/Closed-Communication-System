@@ -12,14 +12,12 @@ foreach (glob(APP_ROOT . '/Models/DTOs.php') as $file) {
 
 class UserController
 {
-    public static function getAllUserChats()
-    {
+    public static function getAllUserChats() {
         $userId = $_SESSION['user']->{'userId'};
         echo json_encode(UserService::getAllUserChats($userId));
     }
 
-    public static function getAllChatRoomMessages($param)
-    {
+    public static function getAllChatRoomMessages($param) {
         echo json_encode(UserService::getAllChatRoomMessages($param['chatRoomId'], $_GET['lastTimestamp'] ?? null));
     }
 
@@ -27,8 +25,7 @@ class UserController
         echo json_encode(UserService::getUsersInChatRoom($path['chatRoomId']), JSON_FLAGS);
     }
 
-    public static function createMessage($param)
-    {
+    public static function createMessage($param) {
         $body = json_decode(file_get_contents('php://input'), true);
         $result = UserService::createMessage($_SESSION['user']->{'userId'}, $param['chatRoomId'], $body['message']);
         if ($result) {
@@ -36,5 +33,10 @@ class UserController
         } else {
             echo json_encode(new DTOs\ResponseDtoError(200, "Message sent successfully."));
         }
+    }
+
+    public static function updateUserAnonymity() {
+        $body = json_decode(file_get_contents('php://input'), true);
+        UserService::updateUserAnonymity($_SESSION['user']->{'userId'}, $body['chatRoomId'], $body['isAnonymouse']);  
     }
 }

@@ -5,6 +5,51 @@ function redirectToChatRoom(chatRoomId) {
     window.location = util.urlFrontend(url);
 }
 
+function setAnonimity(chatRoomId, isAnonymouse) {
+    fetch(util.urlBackend(`/user/chat-rooms`), {
+        method: 'PATCH',
+        body: JSON.stringify({ chatRoomId, isAnonymouse}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    });
+}
+
+function showAnonimityPrompt(chatRoom, chatRoomId) {
+    let rolePickerSection = document.createElement('section');
+    rolePickerSection.setAttribute('class', 'rolePicker');
+
+    let sectionP = document.createElement('p');
+    sectionP.innerText = 'Искаш ли да станеш неанонимен?';
+            
+    let userChoiceDiv = document.createElement('div');
+    userChoiceDiv.setAttribute('class', 'userChoice');
+
+    let approveBtn = document.createElement('button');
+    approveBtn.setAttribute('class', 'approve');
+    approveBtn.innerText = 'Да';
+    approveBtn.addEventListener("click", (e)=>{
+        setAnonimity(chatRoomId, false);
+        getAllChatRooms();
+        e.preventDefault();
+    });
+
+    let declineBtn = document.createElement('button');
+    declineBtn.setAttribute('class', 'decline');
+    declineBtn.innerText = 'Не';
+    declineBtn.addEventListener("click", (e)=>{
+        setAnonimity(chatRoomId, true);
+        getAllChatRooms();
+        e.preventDefault();
+    });
+
+    userChoiceDiv.appendChild(approveBtn);
+    userChoiceDiv.appendChild(declineBtn);
+    rolePickerSection.appendChild(sectionP);
+    rolePickerSection.appendChild(userChoiceDiv);
+    chatRoom.appendChild(rolePickerSection);
+}
+
 function getAllChatRooms() {
     fetch(util.urlBackend('/user/chat-rooms'), {
         method: 'GET'
@@ -14,6 +59,7 @@ function getAllChatRooms() {
     })
     .then(data => {
         let ul = document.getElementById('chatRooms');
+        ul.innerHTML = '';
         data.forEach(element => {
             let li = document.createElement('li');
 
@@ -50,10 +96,35 @@ function getAllChatRooms() {
                 div.appendChild(divUnread);
             }
 
+            let chatRoomAvailabilityDate = Date.parse(
+                element['userChatRoom']['chatRoom']['chatRoomAvailabilityDate']
+            );
+            let now = new Date().getTime();
+
             div.addEventListener("click", (e)=>{
-                redirectToChatRoom(element['userChatRoom']['chatRoom']['chatRoomId']);
+                if (
+                    now > chatRoomAvailabilityDate
+                    && element['userChatRoom']['userChatHasResponded'] == false 
+                    && element['userChatRoom']['userChatIsAnonymous'] == true
+                ) {
+                    util.popAlert(
+                        "Трябва да избереш дали да останеш анонимен",
+                        util.ALERT_TYPE.WARNING
+                    );
+                }
+                else {
+                    redirectToChatRoom(element['userChatRoom']['chatRoom']['chatRoomId']);
+                }
                 e.preventDefault();
             });
+
+            if (
+                now > chatRoomAvailabilityDate
+                && element['userChatRoom']['userChatHasResponded'] == false 
+                && element['userChatRoom']['userChatIsAnonymous'] == true
+            ) {
+                showAnonimityPrompt(div, element['userChatRoom']['chatRoom']['chatRoomId']);
+            }
 
             li.appendChild(div);
             ul.appendChild(li);  

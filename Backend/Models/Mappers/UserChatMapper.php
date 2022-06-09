@@ -23,7 +23,9 @@ class UserChatMapper
             $user,
             $userRoom,
             $from->{'userChatIsAnonymous'} ?? null,
-            $from->{'userChatLastSeen'} ?? null
+            $from->{'userChatLastSeen'} ?? null,
+            $from->{'userChatHasResponded'} ?? null
+
         );
     }
 
@@ -39,7 +41,8 @@ class UserChatMapper
             $user,
             $userRoom,
             $from->{'userChatIsAnonymous'} ?? null,
-            $from->{'userChatLastSeen'} ?? null
+            $from->{'userChatLastSeen'} ?? null,
+            $from->{'userChatHasResponded'} ?? null
         );
     }
 }
