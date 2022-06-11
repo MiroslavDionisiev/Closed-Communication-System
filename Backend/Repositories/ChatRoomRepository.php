@@ -82,7 +82,19 @@ class ChatRoomRepository
             $stmt->execute($params);
         }
 
-        return $con->commit();
+        $query = "SELECT * FROM chat_rooms WHERE chatRoomName = :chatRoomName";
+        $params = [
+            "chatRoomName" => $chatRoomDto->{'chatRoomName'},
+        ];
+
+        $stmt = $con->prepare($query);
+        $stmt->execute($params);
+
+        $con->commit();
+
+        $row = $stmt->fetch();
+
+        return call_user_func('CCS\Models\Mappers\ChatRoomMapper::toEntity', $row ? $row : null);
     }
 
     public static function updateChatRoom(
