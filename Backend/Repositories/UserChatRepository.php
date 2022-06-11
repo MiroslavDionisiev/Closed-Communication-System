@@ -3,7 +3,6 @@
 namespace CCS\Repositories;
 
 use CCS\Database\DatabaseConnection as DB;
-use CCS\Models\Entities\UserChat;
 
 require_once(APP_ROOT . '/Database/DatabaseConnection.php');
 require_once(APP_ROOT . '/Models/Mappers/ChatRoomMapper.php');
@@ -28,10 +27,10 @@ class UserChatRepository
         $res = [];
 
         foreach ($rows as $row) {
-            $user = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
-            $userChat = call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
+            $user               = call_user_func('CCS\Models\Mappers\UserMapper::toEntity', $row);
+            $userChat           = call_user_func('CCS\Models\Mappers\UserChatMapper::toEntity', $row);
             $userChat->{'user'} = $user;
-            $res[] = $userChat;
+            $res[]              = $userChat;
         }
         return $res;
     }

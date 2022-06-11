@@ -161,7 +161,7 @@ function addUserPanel(userList, user) {
     userData.setAttribute("class", "userData");
 
     let userName = document.createElement("li");
-    userName.innerText = user["user"]["userName"];
+    userName.innerText = user["user"] ? user['user']["userName"] : 'Анонимен';
 
     let userLastSeen = document.createElement("li");
     userLastSeen.innerText = user["userChatLastSeen"];

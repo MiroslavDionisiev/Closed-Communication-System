@@ -54,13 +54,12 @@ class UserService
         }
 
         $users = array_map('CCS\Models\Mappers\UserChatMapper::toDto', Repo\UserChatRepository::getUsersInChatRoom($chatRoomId));
-        $res = [];
-        foreach($users as $user) {
-            if (!$user->{'userChatIsAnonymous'}) {
-                $res[] = $user;
+        foreach($users as &$user) {
+            if ($user->{'userChatIsAnonymous'} && $user->{'user'}->{'userId'} != $_SESSION['user']->{'userId'}) {
+                $user->{'user'} = null;
             }
         }
-        return $res;
+        return $users;
     }
 
     public static function getAllChatRoomMessages(
